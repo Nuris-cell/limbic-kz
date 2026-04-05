@@ -1,176 +1,132 @@
 import streamlit as st
+from data_part1 import CHAPTERS_1_3
+from data_part2 import CHAPTERS_4_6
 
-# --- НАСТРОЙКИ СТРАНИЦЫ ---
-st.set_page_config(page_title="Limbic.kz | Population Genetics", page_icon="🧬", layout="wide")
+# Объединяем все базы данных
+FULL_DB = {**CHAPTERS_1_3, **CHAPTERS_4_6}
 
+st.set_page_config(page_title="Limbic.kz | Pro Prep", page_icon="🧬", layout="wide")
+
+# --- СТИЛИЗАЦИЯ ---
 st.markdown("""
     <style>
     .main { background-color: #0d1117; color: #c9d1d9; }
-    [data-testid="stSidebar"] { background-color: #161b22; border-right: 1px solid #30363d; }
+    .stApp { background-image: radial-gradient(circle at 2px 2px, #21262d 1px, transparent 0); background-size: 40px 40px; }
     
-    /* Кнопки */
-    .stButton>button { 
-        background-color: #238636; color: white; border-radius: 8px; 
-        border: none; font-weight: bold; width: 100%; transition: 0.3s;
+    /* Карточки задач */
+    .task-card {
+        background-color: #161b22;
+        padding: 2rem;
+        border-radius: 15px;
+        border: 1px solid #30363d;
+        border-left: 6px solid #58a6ff;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    .stButton>button:hover { background-color: #2ea043; transform: scale(1.02); }
     
-    /* Карточки задач и меню */
-    .task-card { 
-        background-color: #1c2128; padding: 30px; border-radius: 12px; 
-        border-left: 5px solid #58a6ff; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    /* Главное меню */
+    .hero-section {
+        background: linear-gradient(90deg, #0d1117 0%, #161b22 100%);
+        padding: 50px;
+        border-radius: 20px;
+        border: 1px solid #30363d;
+        text-align: center;
+        margin-bottom: 40px;
     }
-    .home-card {
-        background-color: #161b22; padding: 25px; border-radius: 15px;
-        border: 1px solid #30363d; text-align: center; height: 100%;
+    
+    .chapter-box {
+        background-color: #1c2128;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid #30363d;
+        transition: 0.3s;
+        cursor: pointer;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
-    .home-card:hover { border-color: #58a6ff; }
+    .chapter-box:hover { border-color: #58a6ff; transform: translateY(-5px); }
     
-    /* Аккордеоны (Подсказки) */
-    .stExpander { background-color: #0d1117 !important; border: 1px solid #30363d !important; border-radius: 8px !important; }
-    h1, h2, h3 { color: #58a6ff !important; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    
-    /* Текст на главной */
-    .hero-text { font-size: 1.2rem; line-height: 1.8; color: #e6edf3; }
-    .highlight { color: #58a6ff; font-weight: bold; }
+    h1, h2, h3 { color: #58a6ff !important; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- БАЗА ЗАДАЧ (С ДЕТАЛЬНЫМИ ШАГАМИ) ---
-db = {
-    "⚖️ Глава 1: Закон Харди-Вайнберга": [
-        {
-            "id": "1", 
-            "q": "Рядом с озером Алаколь имеется предполагаемая популяция диких кабанов. В этой популяции присутствует ген А, отвечающий за их окраску. При доминантной форме этого гена кабаны проявляют черную окраску, а при рецессивной форме – серую. При недавнем анализе популяции было выявлено 510 черных кабанов из 1000 возможных. Предполагая, что популяция находится в равновесии Харди-Вайнберга, вычислите частоты для доминантного (А) и рецессивного аллеля (а).",
-            "step1": "Анализ условия: У нас есть 1000 кабанов. Черные (доминантные) — это особи с генотипами $AA$ и $Aa$. Их 510. Можем ли мы сразу найти частоту аллеля $A$ из этого числа? Нет, потому что мы не знаем, сколько среди них гетерозигот. Зато мы точно знаем генотип серых кабанов.",
-            "step2": "Выбор стратегии: Серые кабаны — это рецессивные гомозиготы ($aa$). Их количество равно $1000 - 510 = 490$. Доля таких особей в популяции обозначается как $q^2$. Вычислим ее: $490 / 1000 = 0.49$.",
-            "step3": "Математический расчет: Если $q^2 = 0.49$, извлекаем квадратный корень, чтобы найти частоту рецессивного аллеля $a$. Получаем $q = 0.7$. Так как сумма частот аллелей равна единице ($p + q = 1$), частота доминантного аллеля $A$ составит $p = 1 - 0.7 = 0.3$.",
-            "ans": "Частота p(A) = 0.3; Частота q(a) = 0.7"
-        },
-        {
-            "id": "2", 
-            "q": "У куриц острый клюв определяется доминантным аллелем К, а тупой клюв — рецессивным аллелем к. Популяция куриц в загоне фермера находится в равновесии Харди-Вайнберга. Известно, что 36% куриц имеют острый клюв. Вычислите частоты аллелей (К и к) и частоты генотипов (КК, Kk, kk) в этой популяции.",
-            "step1": "Анализ фенотипов: 36% (или 0.36) имеют острый клюв. Это доминантный признак, значит сюда входят генотипы $KK$ ($p^2$) и $Kk$ ($2pq$). Опять же, начинать расчет с доминантного признака — ошибка. Ищем рецессивов.",
-            "step2": "Логика расчета: Если 36% куриц имеют доминантный фенотип, значит остальные $100\% - 36\% = 64\%$ (или 0.64) имеют рецессивный тупой клюв ($kk$). Это значение соответствует $q^2$.",
-            "step3": "Вычисления: $q = \sqrt{0.64} = 0.8$. Тогда $p = 1 - 0.8 = 0.2$. Теперь подставляем эти частоты аллелей в формулу Харди-Вайнберга для генотипов: $KK = p^2 = 0.2^2 = 0.04$; $Kk = 2pq = 2 \cdot 0.2 \cdot 0.8 = 0.32$; $kk = q^2 = 0.64$.",
-            "ans": "Аллели: K = 0.2, k = 0.8. Генотипы: KK = 0.04 (4%), Kk = 0.32 (32%), kk = 0.64 (64%)"
-        },
-        {
-            "id": "3", 
-            "q": "В востоке Казахстана расположен город Риддер, в котором преимущественно живут рыбы рода Хариус. Проанализировав всю популяцию, ученые определили, что процент гетерозигот по гену А, ответственного за длину хвоста, составляет 48%. Предполагая равновесие Харди-Вайнберга, и то, что частота А > а, определите частоты генотипов АА и аа для популяции Хариусов.",
-            "step1": "Анализ: Нам дана только частота гетерозигот $Aa$. По формуле Харди-Вайнберга это $2pq = 0.48$. Также есть важное условие: $p > q$ (частота $A$ больше частоты $a$).",
-            "step2": "Составление уравнения: Мы знаем, что $q = 1 - p$. Подставим это в формулу гетерозигот: $2p(1 - p) = 0.48$. Раскрываем скобки: $2p - 2p^2 = 0.48$. Делим на 2 и переносим все в одну сторону: $p^2 - p + 0.24 = 0$.",
-            "step3": "Решение квадратного уравнения: Корни этого уравнения — 0.6 и 0.4. Так как по условию $p > q$, мы выбираем $p = 0.6$. Тогда $q = 0.4$. Генотипы $AA = p^2 = 0.36$, а $aa = q^2 = 0.16$.",
-            "ans": "Частота AA = 0.36 (36%); Частота aa = 0.16 (16%)"
-        }
-    ],
-    "💉 Глава 2: Множественные аллели и сцепление с полом": [
-        {
-            "id": "9",
-            "q": "Рассмотрим популяцию, в которой частота гемофилии среди женщин составляет 0.09. Этот дефект обусловлен сцепленным с полом рецессивным аллелем. Рассчитайте ожидаемые частоты генотипов среди женщин и среди мужчин.",
-            "step1": "Особенности сцепленного с полом наследования: Женщины имеют две X-хромосомы ($XX$), поэтому болезнь у них проявляется только в гомозиготном состоянии ($X^h X^h$), что математически равно $q^2$. У мужчин одна X-хромосома ($XY$), поэтому частота болезни у них равна частоте самого аллеля ($q$).",
-            "step2": "Расчет частот аллелей: По условию, $q^2$ у женщин = 0.09. Значит, частота рецессивного аллеля $q = \sqrt{0.09} = 0.3$. Тогда частота доминантного здорового аллеля $p = 1 - 0.3 = 0.7$.",
-            "step3": "Расчет генотипов: Для женщин: $X^H X^H = p^2 = 0.49$; $X^H X^h = 2pq = 0.42$; $X^h X^h = q^2 = 0.09$. Для мужчин: здоровые $X^H Y = p = 0.7$; больные $X^h Y = q = 0.3$.",
-            "ans": "Женщины: здоровые гомозиготы = 0.49, носительницы = 0.42, больные = 0.09. Мужчины: здоровые = 0.7, больные = 0.3."
-        }
-    ]
-}
+# --- ЛОГИКА НАВИГАЦИИ ---
+if 'page' not in st.session_state:
+    st.session_state.page = "🏠 Главная"
 
-# --- БОКОВОЕ МЕНЮ ---
+def go_to(page_name):
+    st.session_state.page = page_name
+
+# --- SIDEBAR ---
 with st.sidebar:
     st.title("🧬 Limbic.kz")
-    st.markdown("Интерактивная платформа по популяционной генетике и биостатистике.")
+    st.markdown("### Олимпиадный задачник")
     st.divider()
-    
-    # Кнопки навигации
-    menu_options = ["🏠 Главная страница"] + list(db.keys())
-    choice = st.radio("Навигация по разделам:", menu_options)
-    
+    if st.button("🏠 Вернуться на главную"): go_to("🏠 Главная")
     st.divider()
-    st.caption("Автор задачника: Сайлаубек Нурислам")
-    st.caption("Версия: 1.0 (Interactive Edition)")
+    st.subheader("Разделы:")
+    for ch in FULL_DB.keys():
+        if st.button(ch, key=f"side_{ch}"): go_to(ch)
 
-# --- ЛОГИКА ГЛАВНОЙ СТРАНИЦЫ ---
-if choice == "🏠 Главная страница":
-    st.markdown("<h1 style='text-align: center; font-size: 3rem;'>Добро пожаловать на Limbic.kz</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; font-size: 1.2rem; color: #8b949e;'>Твоя цифровая лаборатория для подготовки к олимпиадам по биологии</p>", unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # Предисловие автора (Взято из PDF)
-    st.markdown("### 📖 Предисловие автора")
+# --- КОНТЕНТ ---
+if st.session_state.page == "🏠 Главная":
     st.markdown("""
-    <div class="hero-text">
-    Всем привет! Этот задачник был создан специально для школьников, которые готовятся к биологическим олимпиадам разного уровня — от областных до республиканских и международных. <br><br>
-    В отличие от стандартных учебников, здесь сделан акцент не на описательный материал, а на <b>строгую математическую логику популяционной генетики и статистики</b>. Каждая задача направлена на развитие умения рассуждать, выводить формулы и понимать, откуда они возникают, а не просто подставлять числа. <br><br>
-    Задачник рассчитан на вдумчивую работу. Рекомендуется не пропускать выводы формул и проверять каждое рассуждение самостоятельно.
-    </div>
+        <div class="hero-section">
+            <h1 style='font-size: 3.5rem;'>Всем привет! 👋</h1>
+            <p style='font-size: 1.5rem; color: #8b949e;'>Добро пожаловать в цифровое издание интерактивного задачника <b>Limbic.kz</b></p>
+            <p style='max-width: 800px; margin: 0 auto; line-height: 1.6;'>
+                Этот проект создан для того, чтобы превратить сложную математическую логику популяционной генетики 
+                в понятный и увлекательный процесс. Здесь собраны все задачи из 1-го издания, разбитые по уровням сложности и темам.
+            </p>
+        </div>
     """, unsafe_allow_html=True)
+
+    st.markdown("### 🗺 Выбери траекторию обучения:")
     
-    st.divider()
+    # Сетка меню
+    cols = st.columns(2)
+    for i, chapter in enumerate(FULL_DB.keys()):
+        with cols[i % 2]:
+            st.markdown(f"""<div class="chapter-box"><h3>{chapter}</h3><p>Нажмите кнопку ниже, чтобы открыть список задач.</p></div>""", unsafe_allow_html=True)
+            if st.button(f"Открыть {chapter[:15]}...", key=f"main_{chapter}"):
+                go_to(chapter)
+                st.rerun()
+            st.write("")
 
-    # Инструкция: Как работать с платформой
-    st.markdown("### 🧠 Как работает система «Socratic Stepper»?")
-    st.markdown("""
-    Мы не даем готовых ответов сразу. Наша цель — научить тебя думать как исследователь:
-    * **Шаг 1: Анализ.** Мы разбираем, какие данные даны в условии и какие ловушки в них скрыты.
-    * **Шаг 2: Стратегия.** Мы подбираем правильную математическую модель (например, уравнение Харди-Вайнберга или критерий Хи-квадрат).
-    * **Шаг 3: Расчет.** Пошаговое вычисление от частот фенотипов к частотам аллелей.
-    """)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # Визуальная сетка разделов
-    st.markdown("### 🚀 Выбери раздел для старта:")
-    c1, c2, c3 = st.columns(3)
-    
-    with c1:
-        st.markdown("""
-        <div class="home-card">
-            <h2>⚖️ Баланс</h2>
-            <p style="color:#8b949e;">Основы закона Харди-Вайнберга, расчет частот аллелей и генотипов в идеальных популяциях.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    with c2:
-        st.markdown("""
-        <div class="home-card">
-            <h2>💉 Кровь и Пол</h2>
-            <p style="color:#8b949e;">Множественные аллели (система AB0) и наследование признаков, сцепленных с X и Y хромосомами.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    with c3:
-        st.markdown("""
-        <div class="home-card">
-            <h2>🎲 Эволюция</h2>
-            <p style="color:#8b949e;">Давление мутаций, генетический дрейф, эффект основателя и коэффициенты отбора.</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-# --- ЛОГИКА СТРАНИЦ ЗАДАЧ ---
 else:
-    st.title(choice)
-    st.markdown("Внимательно прочитай условие. Прежде чем смотреть ответ, попытайся выстроить логику решения самостоятельно, поэтапно открывая подсказки.")
+    # Страница конкретной главы
+    st.title(st.session_state.page)
+    if st.button("⬅️ Назад в меню"): go_to("🏠 Главная"); st.rerun()
+    
     st.divider()
     
-    for task in db[choice]:
+    for task in FULL_DB[st.session_state.page]:
         st.markdown(f"""
             <div class="task-card">
-                <h3 style="margin-top: 0;">Задача №{task['id']}</h3>
-                <p style="font-size: 1.1rem; line-height: 1.6;">{task['q']}</p>
+                <span style="color: #8b949e; font-weight: bold;">ЗАДАЧА №{task['id']}</span>
+                <h2 style="margin-top: 5px;">{task.get('title', 'Без названия')}</h2>
+                <p style="font-size: 1.2rem; line-height: 1.6;">{task['q']}</p>
             </div>
         """, unsafe_allow_html=True)
         
-        # Интерактивные шаги решения (Аккордеоны)
-        with st.expander("🔍 Этап 1: Анализ условия"):
-            st.write(task.get('step1', "Подумай, какие фенотипы нам известны точно?"))
-            
-        with st.expander("📐 Этап 2: Выбор стратегии и формулы"):
-            st.write(task.get('step2', "Какая формула описывает данное состояние популяции?"))
-            
-        with st.expander("🔢 Этап 3: Математический расчет"):
-            st.write(task.get('step3', "Подставь значения в формулу и реши уравнение."))
-            
-        # Финальный ответ
-        if st.button(f"Показать финальный ответ к задаче №{task['id']}", key=f"btn_{task['id']}"):
-            st.success(f"**Ответ:** {task['ans']}")
+        # Socratic Stepper (3 этапа)
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            with st.expander("📝 ЭТАП 1: Анализ"):
+                st.info(task['step1'])
+        with c2:
+            with st.expander("📐 ЭТАП 2: Стратегия"):
+                st.warning(task['step2'])
+        with c3:
+            with st.expander("🔢 ЭТАП 3: Расчет"):
+                st.success(task['step3'])
+        
+        if st.button(f"✨ Показать финальный ответ №{task['id']}", key=f"ans_{task['id']}"):
+            st.balloons()
+            st.markdown(f"""<div style="background-color: #238636; color: white; padding: 15px; border-radius: 10px; text-align: center; font-size: 1.5rem; font-weight: bold;">
+                Ответ: {task['ans']}
+            </div>""", unsafe_allow_html=True)
             
         st.markdown("<br><br>", unsafe_allow_html=True)

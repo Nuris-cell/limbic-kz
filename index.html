@@ -1039,55 +1039,57 @@ function renderTask(task, sectionKey, subKey, idx) {
   const diffMap = {
     regional: ['diff-regional','Областной'],
     national: ['diff-national','Республиканский'],
-    ibo: ['diff-ibo','IBO']
+    ibo: ['diff-ibo','IBO'],
+    practical: ['diff-regional','Практикум']
   };
   const [diffClass, diffLabel] = diffMap[task.diff] || ['diff-regional','Базовый'];
   const taskId = sectionKey + '_' + subKey + '_' + idx;
   const isSolved = solvedTasks.has(taskId);
 
   const hintsHTML = task.hints.map((h, hi) => {
-  const isSol = h.solution;
-  const numClass = isSol ? 'hint-sol' : ['hint-n1','hint-n2','hint-n3'][hi] || 'hint-n1';
-  const numLabel = isSol ? '✓' : (hi + 1);
-  return `<div class="hint-item">
-    <div class="hint-header" onclick="toggleH(this)">
-    <div class="hint-num ${numClass}">${numLabel}</div>
-    <span class="hint-label">${h.label}</span>
-    <span class="hint-arr">▾</span>
-    </div>
-    <div class="hint-body">${h.body}</div>
-  </div>`;
-}).join('');
+    const isSol = h.solution;
+    const numClass = isSol ? 'hint-sol' : ['hint-n1','hint-n2','hint-n3'][hi] || 'hint-n1';
+    const numLabel = isSol ? '✓' : (hi + 1);
+    return `<div class="hint-item">
+      <div class="hint-header" onclick="toggleH(this)">
+        <div class="hint-num ${numClass}">${numLabel}</div>
+        <span class="hint-label">${h.label}</span>
+        <span class="hint-arr">▾</span>
+      </div>
+      <div class="hint-body">${h.body}</div>
+    </div>`;
+  }).join('');
 
   return `
-  <div class="task-card${isSolved?' solved':''}" id="card_${taskId}">
-    <div class="task-header" onclick="toggleTask(this)">
-      <div class="task-num${isSolved?' solved-num':''}">${task.num}</div>
-      <div class="task-header-content">
-        <div class="task-condition">${task.condition}</div>
-        <div class="task-meta">
-          <span class="diff-badge ${diffClass}">${diffLabel}</span>
+    <div class="task-card${isSolved ? ' solved' : ''}" id="card_${taskId}">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-num${isSolved ? ' solved-num' : ''}">${task.num}</div>
+        <div class="task-header-content">
+          <div class="task-condition">${task.condition}</div>
+          <div class="task-meta">
+            <span class="diff-badge ${diffClass}">${diffLabel}</span>
+          </div>
+        </div>
+        <button class="task-toggle">▾</button>
+      </div>
+      <div class="task-body">
+        <div class="answer-zone">
+          <div class="answer-label">Ваш ответ</div>
+          <div class="answer-row">
+            <input class="answer-input" id="inp_${taskId}" placeholder="Введите ответ (числа, формулу...)" onkeydown="if(event.key==='Enter')checkAnswer('${taskId}','hints_${taskId}','inp_${taskId}','fb_${taskId}')">
+            <button class="check-btn" id="btn_${taskId}" onclick="checkAnswer('${taskId}','hints_${taskId}','inp_${taskId}','fb_${taskId}')">Проверить</button>
+          </div>
+          <div class="answer-feedback" id="fb_${taskId}"></div>
+        </div>
+        <div class="hints-area" id="hints_${taskId}" style="display:none">
+          ${hintsHTML}
+        </div>
+        <div style="padding:0 16px 10px;text-align:right">
+          <button onclick="toggleHints('hints_${taskId}')" style="background:none;border:none;color:var(--text-dim);font-size:0.7rem;cursor:pointer;letter-spacing:0.03em">Показать подсказки ↓</button>
         </div>
       </div>
-      <button class="task-toggle">▾</button>
     </div>
-    <div class="task-body">
-      <div class="answer-zone">
-        <div class="answer-label">Ваш ответ</div>
-        <div class="answer-row">
-          <input class="answer-input" id="inp_${taskId}" placeholder="Введите ответ (числа, формулу...)" onkeydown="if(event.key==='Enter')checkAnswer('${taskId}','hints_${taskId}','inp_${taskId}','fb_${taskId}')">
-          <button class="check-btn" id="btn_${taskId}" onclick="checkAnswer('${taskId}','hints_${taskId}','inp_${taskId}','fb_${taskId}')">Проверить</button>
-        </div>
-        <div class="answer-feedback" id="fb_${taskId}"></div>
-      </div>
-      <div class="hints-area" id="hints_${taskId}" style="display:none">
-        ${hintsHTML}
-      </div>
-      <div style="padding:0 16px 10px;text-align:right">
-        <button onclick="toggleHints('hints_${taskId}')" style="background:none;border:none;color:var(--text-dim);font-size:0.7rem;cursor:pointer;letter-spacing:0.03em">Показать подсказки ↓</button>
-      </div>
-    </div>
-  </div>`;
+  `;
 }
 
 // ═══════ UI ═══════

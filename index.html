@@ -1045,9 +1045,9 @@ function renderTask(task, sectionKey, subKey, idx) {
   const taskId = sectionKey + '_' + subKey + '_' + idx;
   const isSolved = solvedTasks.has(taskId);
 
-  // Защита от отсутствия hints
-  const hints = task.hints || [];
-  const hintsHTML = hints.map((h, hi) => {
+  // БЕЗОПАСНО: если hints нет, используем пустой массив
+  const hintsArray = task.hints || [];
+  const hintsHTML = hintsArray.map((h, hi) => {
     const isSol = h.solution;
     const numClass = isSol ? 'hint-sol' : ['hint-n1','hint-n2','hint-n3'][hi] || 'hint-n1';
     const numLabel = isSol ? '✓' : (hi + 1);

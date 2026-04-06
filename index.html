@@ -1045,7 +1045,9 @@ function renderTask(task, sectionKey, subKey, idx) {
   const taskId = sectionKey + '_' + subKey + '_' + idx;
   const isSolved = solvedTasks.has(taskId);
 
-  const hintsHTML = task.hints.map((h, hi) => {
+  // Защита от отсутствия hints
+  const hints = task.hints || [];
+  const hintsHTML = hints.map((h, hi) => {
     const isSol = h.solution;
     const numClass = isSol ? 'hint-sol' : ['hint-n1','hint-n2','hint-n3'][hi] || 'hint-n1';
     const numLabel = isSol ? '✓' : (hi + 1);
@@ -1090,7 +1092,7 @@ function renderTask(task, sectionKey, subKey, idx) {
     </div>
   `;
 }
-
+  
 // ═══════ UI ═══════
 function showHome() {
   document.getElementById('home-page').style.display='block';

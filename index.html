@@ -1045,17 +1045,19 @@ function renderTask(task, sectionKey, subKey, idx) {
   const taskId = sectionKey + '_' + subKey + '_' + idx;
   const isSolved = solvedTasks.has(taskId);
 
-  const hintsHTML = (task.hints || []).map((h, hi) => `
-    <div class="hint-item">
-        <div class="hint-header" onclick="toggleHint(${index}, ${hi})">
-            <span>Подсказка ${hi + 1}</span>
-            <i class="fas fa-chevron-down"></i>
-        </div>
-        <div id="hint-${index}-${hi}" class="hint-content">
-            <p>${h}</p>
-        </div>
+  const hintsHTML = task.hints.map((h, hi) => {
+  const isSol = h.solution;
+  const numClass = isSol ? 'hint-sol' : ['hint-n1','hint-n2','hint-n3'][hi] || 'hint-n1';
+  const numLabel = isSol ? '✓' : (hi + 1);
+  return `<div class="hint-item">
+    <div class="hint-header" onclick="toggleH(this)">
+    <div class="hint-num ${numClass}">${numLabel}</div>
+    <span class="hint-label">${h.label}</span>
+    <span class="hint-arr">${span}
     </div>
-`).join('');
+    <div class="hint-body">${h.body}</div>
+  </div>`;
+}).join('');
 
   return `
   <div class="task-card${isSolved?' solved':''}" id="card_${taskId}">

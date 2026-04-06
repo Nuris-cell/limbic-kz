@@ -1041,7 +1041,7 @@ function renderTask(task, sectionKey, subKey, idx) {
     ibo: ['diff-ibo','IBO']
   };
   const [diffClass, diffLabel] = diffMap[task.diff] || ['diff-regional','Базовый'];
-  const taskId = `${sectionKey}_${subKey}_${idx}`;
+  const taskId = sectionKey + '_' + subKey + '_' + idx;
   const isSolved = solvedTasks.has(taskId);
 
   const hintsHTML = task.hints.map((h, hi) => {

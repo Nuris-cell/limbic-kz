@@ -939,36 +939,35 @@ const SUBTOPICS = {
     }
   },
   biochemistry: {
-        label: 'Биохимия',
-        subtopics: {
-            titration: {
-                title: 'Витамин С: Йодометрическое титрование',
-                desc: 'Определение концентрации аскорбиновой кислоты в растительных соках. Метод прямого титрования йодом.',
-                tasks: [
-                    {
-                        num: '№1',
-                        diff: 'practical',
-                        answer: ['7.4', '7.40', '7,4'],
-                        condition: `
-                            <div class="lab-work">
-                                <p><strong>Условие:</strong> Определите массу аскорбиновой кислоты в 10 мл пробы. Титрант: 0.005 M йод. Индикатор: крахмал.</p>
-                                <div id="titration-sim" style="text-align:center; padding: 20px; background: #111; border-radius: 10px;">
-                                    <div id="buret-visual" style="width: 15px; height: 150px; border: 1px solid #555; margin: 0 auto; background: #222; position: relative;">
-                                        <div id="buret-level" style="width: 100%; height: 100%; background: #add8e666; position: absolute; bottom: 0;"></div>
-                                    </div>
-                                    <div id="flask-visual" style="width: 60px; height: 80px; border: 2px solid #eee; border-radius: 0 0 30px 30px; margin: 10px auto; transition: 0.5s;"></div>
-                                    <button class="nav-link" onmousedown="runTitra()" onmouseup="stopTitra()" style="margin-top:10px;">Зажать кран</button>
-                                    <p>Расход: <span id="v-val">0.00</span> мл</p>
-                                </div>
-                                <p style="margin-top:15px;">Введите ответ в <strong>мг</strong> (округлите до десятых):</p>
-                            </div>  
-                           `
-                    }
-                   ]
-                  
-            }
+  label: 'Биохимия',
+  subtopics: {
+    titration: {
+      title: 'Витамин С: Йодометрическое титрование',
+      desc: 'Определение концентрации аскорбиновой кислоты в растительных соках. Метод прямого титрования йодом.',
+      tasks: [
+        {
+          num: '№1',
+          diff: 'practical',
+          answer: ['7.4', '7.40', '7,4'],
+          hints: [],
+          condition: `
+            <div class="lab-work">
+              <p><strong>Условие:</strong> Определите массу аскорбиновой кислоты в 10 мл пробы. Титрант: 0.005 M йод. Индикатор: крахмал.</p>
+              <div id="titration-sim" style="text-align:center; padding: 20px; background: #111; border-radius: 10px;">
+                <div id="buret-visual" style="width: 15px; height: 150px; border: 1px solid #555; margin: 0 auto; background: #222; position: relative;">
+                  <div id="buret-level" style="width: 100%; height: 100%; background: #add8e666; position: absolute; bottom: 0;"></div>
+                </div>
+                <div id="flask-visual" style="width: 60px; height: 80px; border: 2px solid #eee; border-radius: 0 0 30px 30px; margin: 10px auto; transition: 0.5s;"></div>
+                <button class="nav-link" onmousedown="runTitra()" onmouseup="stopTitra()" style="margin-top:10px;">Зажать кран</button>
+                <p>Расход: <span id="v-val">0.00</span> мл</p>
+              </div>
+              <p style="margin-top:15px;">Введите ответ в <strong>мг</strong> (округлите до десятых):</p>
+            </div>
+          `
         }
+      ]
     }
+  }
 };
 
 // ═══════ STATE ═══════

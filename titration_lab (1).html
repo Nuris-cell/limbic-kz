@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Виртуальная лаборатория: Дыхание семян пшеницы</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono&display=swap');
+
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
+
+        .buret-container { position: relative; display: flex; flex-direction: column; align-items: center; }
+        .buret-body {
+            width: 38px; height: 620px;
+            background: #f0f4f8;
+            border: 1px solid #b2becd;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            position: relative;
+            box-shadow: inset 2px 0 5px rgba(0,0,0,0.05);
+        }
+        .liquid {
+            position: absolute; bottom: 0; width: 100%;
+            background: #fee2e2;
+            transition: height 0.1s linear;
+        }
+        .meniscus {
+            position: absolute; top: -8px; left: 0;
+            width: 100%; height: 16px;
+            background: #f8fafc;
+            border-bottom: 2px solid #ef4444;
+            border-radius: 0 0 50% 50%;
+        }
+        .scale-mark { position: absolute; right: 0; height: 1px; background: #64748b; width: 10px; }
+        .scale-mark.major { width: 18px; height: 2px; background: #1e293b; }
+        .scale-label {
+            position: absolute; left: 5px;
+            font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 700; color: #1e293b;
+            transform: translateY(-50%);
+        }
+        .tap-box {
+            width: 70px; height: 45px;
+            background: #cbd5e1; border: 1px solid #94a3b8; border-radius: 8px;
+            margin-top: 10px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative;
+        }
+        .tap-handle { width: 12px; height: 100%; background: #0f172a; border-radius: 4px; transition: transform 0.3s; }
+        .tap-open { transform: rotate(90deg); }
+
+        .flask { position: relative; width: 140px; height: 170px; cursor: pointer; transition: opacity 0.3s; }
+        .flask:not(.active) { opacity: 0.45; }
+        .flask-svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08)); }
+
+        .ui-card { background: white; border-radius: 1rem; border: 1px solid #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.06); padding: 1rem; }
+        .lbl { font-size: 10px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.75rem; }
+
+        .drop { position: absolute; width: 4px; height: 9px; background: #fca5a5; border-radius: 40%; animation: dripFall 0.5s linear infinite; }
+        @keyframes dripFall { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(220px); opacity: 0; } }
+
+        .result-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 0.45rem 0; border-bottom: 1px solid #f1f5f9; }
+        .result-row:last-child { border-bottom: none; }
+        .result-label { font-size: 11px; color: #64748b; max-width: 55%; }
+        .result-val { font-family: 'JetBrains Mono'; font-size: 12px; font-weight: 700; color: #1e293b; text-align: right; }
+
+        .btn { display: flex; align-items: center; gap: 10px; cursor: pointer; background: none; border: none; padding: 0; }
+        .btn-icon { padding: 12px; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #f1f5f9; transition: background 0.2s; }
+        .btn-label { font-size: 11px; font-weight: 700; color: #475569; text-align: left; }
+        .btn:hover .btn-icon { background: #f8fafc; }
+
+        .tag-green { background: #dcfce7; color: #16a34a; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; display: inline-block; }
+        .tag-red { background: #fee2e2; color: #dc2626; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; display: inline-block; }
+        .tag-gray { background: #f1f5f9; color: #64748b; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; display: inline-block; }
+
+        .pulse { animation: pulse 1.5s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+    </style>
+</head>
+<body class="flex min-h-screen overflow-hidden">
+
+<!-- ===== ЛЕВАЯ ПАНЕЛЬ ===== -->
+<aside class="w-72 bg-white border-r border-slate-100 p-7 flex flex-col gap-6 overflow-y-auto">
+
+    <div>
+        <span class="lbl">Условие задачи</span>
+        <div class="ui-card text-xs text-slate-600 leading-relaxed space-y-2">
+            <p>Семена пшеницы (<strong>10.00 г</strong>) выдержали <strong>2 ч</strong> в колбе с <strong>20.00 мл Ba(OH)₂</strong> (0.05000 моль/л). CO₂ поглощён щёлочью.</p>
+            <p>Остаток Ba(OH)₂ титруют <strong>HCl</strong> (0.1000 моль/л).</p>
+            <p>Индикатор — <strong>фенолфталеин</strong>: малиновый → бесцветный.</p>
+        </div>
+    </div>
+
+    <div class="space-y-3">
+        <span class="lbl">Реагенты</span>
+        <button class="btn w-full" onclick="fillBuret()">
+            <div class="btn-icon"><i data-lucide="arrow-up" class="w-5 h-5 text-red-400"></i></div>
+            <span class="btn-label">HCl в бюретку<br><span style="color:#94a3b8;font-weight:400;">25.00 мл, 0.1000 моль/л</span></span>
+        </button>
+        <button class="btn w-full" onclick="addSample()">
+            <div class="btn-icon"><i data-lucide="flask-conical" class="w-5 h-5 text-amber-500"></i></div>
+            <span class="btn-label">Перенести пробу в колбу<br><span style="color:#94a3b8;font-weight:400;">Ba(OH)₂ + BaCO₃ (осадок)</span></span>
+        </button>
+    </div>
+
+    <div>
+        <span class="lbl">Индикатор</span>
+        <div class="ui-card flex items-center gap-3">
+            <div style="width:12px;height:12px;border-radius:50%;background:#ec4899;flex-shrink:0;"></div>
+            <span class="text-xs font-bold text-slate-600">Фенолфталеин</span>
+            <button onclick="addIndicator()" style="margin-left:auto;background:#ec4899;color:white;border:none;border-radius:8px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;">Добавить</button>
+        </div>
+    </div>
+
+    <div>
+        <span class="lbl">Инструкция</span>
+        <div class="ui-card text-xs text-slate-500 leading-relaxed space-y-1">
+            <p>1. Заполните бюретку HCl</p>
+            <p>2. Перенесите пробу в выбранную колбу</p>
+            <p>3. Добавьте индикатор</p>
+            <p>4. Нажмите на <strong>кран бюретки</strong> — начнётся подача</p>
+            <p>5. Остановите кран при обесцвечивании</p>
+        </div>
+    </div>
+
+    <button class="btn" onclick="resetFlask()" style="margin-top:auto;">
+        <div class="btn-icon"><i data-lucide="rotate-ccw" class="w-4 h-4 text-slate-400"></i></div>
+        <span class="btn-label" style="color:#94a3b8;">Сбросить текущую колбу</span>
+    </button>
+</aside>
+
+<!-- ===== ГЛАВНАЯ СЦЕНА ===== -->
+<main class="flex-1 flex items-center justify-center gap-24">
+
+    <!-- Бюретка -->
+    <div class="buret-container">
+        <div style="font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:#ef4444;margin-bottom:6px;letter-spacing:0.05em;">HCl</div>
+        <div class="buret-body">
+            <div id="buret-liquid" class="liquid" style="height:0%">
+                <div class="meniscus"></div>
+            </div>
+            <div id="buret-scale" class="absolute inset-0 pointer-events-none"></div>
+        </div>
+        <div style="width:6px;height:40px;background:#cbd5e1;"></div>
+        <div class="tap-box" onclick="toggleTap()">
+            <div id="tap-handle" class="tap-handle"></div>
+            <div id="drop-point" style="position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:10px;"></div>
+        </div>
+        <div style="width:6px;height:60px;background:#cbd5e1;border-radius:0 0 4px 4px;"></div>
+        <span style="font-size:10px;font-weight:900;color:#94a3b8;text-transform:uppercase;margin-top:6px;">Кран</span>
+        <div style="font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:#1e293b;margin-top:4px;" id="buret-reading">25.00 мл</div>
+    </div>
+
+    <!-- Колбы -->
+    <div class="flex flex-col items-center gap-10">
+        <div class="flex gap-14">
+            <!-- Колба 1 -->
+            <div class="flex flex-col items-center gap-2">
+                <div onclick="selectFlask(0)" id="flask-0" class="flask active">
+                    <svg class="flask-svg" viewBox="0 0 100 110" preserveAspectRatio="none">
+                        <defs><clipPath id="clip0"><path d="M35 0 L65 0 L105 110 L-5 110 Z"/></clipPath></defs>
+                        <path d="M35 0 L65 0 L105 110 L-5 110 Z" fill="white" stroke="#cbd5e1" stroke-width="2"/>
+                        <path id="liq-0" d="M-5 110 L105 110 L105 110 L-5 110 Z" fill="transparent" class="transition-all duration-300" clip-path="url(#clip0)"/>
+                        <path d="M35 0 L65 0 L105 110 L-5 110 Z" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                    </svg>
+                    <div class="text-center text-xs font-bold text-slate-400 uppercase mt-1">Опыт 1</div>
+                    <div class="text-center text-xs font-mono text-slate-400" id="spent-lbl-0"></div>
+                </div>
+            </div>
+            <!-- Колба 2 -->
+            <div class="flex flex-col items-center gap-2">
+                <div onclick="selectFlask(1)" id="flask-1" class="flask">
+                    <svg class="flask-svg" viewBox="0 0 100 110" preserveAspectRatio="none">
+                        <defs><clipPath id="clip1"><path d="M35 0 L65 0 L105 110 L-5 110 Z"/></clipPath></defs>
+                        <path d="M35 0 L65 0 L105 110 L-5 110 Z" fill="white" stroke="#cbd5e1" stroke-width="2"/>
+                        <path id="liq-1" d="M-5 110 L105 110 L105 110 L-5 110 Z" fill="transparent" class="transition-all duration-300" clip-path="url(#clip1)"/>
+                        <path d="M35 0 L65 0 L105 110 L-5 110 Z" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                    </svg>
+                    <div class="text-center text-xs font-bold text-slate-400 uppercase mt-1">Опыт 2</div>
+                    <div class="text-center text-xs font-mono text-slate-400" id="spent-lbl-1"></div>
+                </div>
+            </div>
+            <!-- Колба 3 -->
+            <div class="flex flex-col items-center gap-2">
+                <div onclick="selectFlask(2)" id="flask-2" class="flask">
+                    <svg class="flask-svg" viewBox="0 0 100 110" preserveAspectRatio="none">
+                        <defs><clipPath id="clip2"><path d="M35 0 L65 0 L105 110 L-5 110 Z"/></clipPath></defs>
+                        <path d="M35 0 L65 0 L105 110 L-5 110 Z" fill="white" stroke="#cbd5e1" stroke-width="2"/>
+                        <path id="liq-2" d="M-5 110 L105 110 L105 110 L-5 110 Z" fill="transparent" class="transition-all duration-300" clip-path="url(#clip2)"/>
+                        <path d="M35 0 L65 0 L105 110 L-5 110 Z" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                    </svg>
+                    <div class="text-center text-xs font-bold text-slate-400 uppercase mt-1">Опыт 3</div>
+                    <div class="text-center text-xs font-mono text-slate-400" id="spent-lbl-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Итоговая таблица (появляется после всех 3 опытов) -->
+        <div id="summary-panel" class="ui-card w-full max-w-xl hidden">
+            <span class="lbl">Сводная таблица результатов</span>
+            <div id="summary-content"></div>
+        </div>
+    </div>
+</main>
+
+<!-- ===== ПРАВАЯ ПАНЕЛЬ ===== -->
+<aside class="w-72 bg-white border-l border-slate-100 p-7 flex flex-col gap-5 overflow-y-auto">
+
+    <div>
+        <span class="lbl">Показания бюретки</span>
+        <div class="ui-card space-y-0">
+            <div class="result-row">
+                <span class="result-label">Начало (V₀)</span>
+                <span class="result-val" id="r-start">0.00 мл</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Конец (V₁)</span>
+                <span class="result-val" id="r-end">—</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">V(HCl) = V₁ − V₀</span>
+                <span class="result-val" id="r-vol">—</span>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <span class="lbl">Статус колбы</span>
+        <div class="ui-card space-y-2">
+            <div class="flex justify-between items-center">
+                <span style="font-size:11px;color:#64748b;">Проба</span>
+                <span id="st-sample" class="tag-gray">не добавлена</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span style="font-size:11px;color:#64748b;">Индикатор</span>
+                <span id="st-ind" class="tag-gray">нет</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span style="font-size:11px;color:#64748b;">Цвет</span>
+                <span id="st-color" class="tag-gray">—</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="calc-block" class="hidden">
+        <span class="lbl">Расчёт (текущий опыт)</span>
+        <div class="ui-card space-y-0" id="calc-rows"></div>
+    </div>
+
+    <div id="reactions-block">
+        <span class="lbl">Реакции</span>
+        <div class="ui-card text-xs text-slate-600 leading-loose space-y-1" style="font-family:'JetBrains Mono';">
+            <div>CO₂ + Ba(OH)₂ →</div>
+            <div style="padding-left:1rem;">BaCO₃↓ + H₂O</div>
+            <div style="margin-top:6px;">Ba(OH)₂ + 2HCl →</div>
+            <div style="padding-left:1rem;">BaCl₂ + 2H₂O</div>
+        </div>
+    </div>
+</aside>
+
+<script>
+lucide.createIcons();
+
+// ─── Константы задачи ───────────────────────────────────────
+const V_BA   = 20.00;   // мл Ba(OH)₂
+const C_BA   = 0.05000; // моль/л
+const C_HCL  = 0.1000;  // моль/л
+const M_SEED = 10.00;   // г семян
+const TIME_H = 2;       // часа
+const M_CO2  = 44.01;   // г/моль
+
+// n(Ba(OH)₂) начальный, ммоль
+const nBA_INIT = C_BA * V_BA; // = 1.0000 ммоль
+
+// Фиксированные значения n(CO₂) для каждого опыта (ммоль)
+// Опыт 1: 0.2700 → V(HCl) = 14.60 мл → I = 0.5941 мг/(г·ч)
+// Опыт 2: 0.2750 → V(HCl) = 14.50 мл → I = 0.6051 мг/(г·ч)
+// Опыт 3: 0.2720 → V(HCl) = 14.56 мл → I = 0.5985 мг/(г·ч)
+// Среднее: 0.599 ≈ 0.60 мг/(г·ч)
+const FIXED_NCO2 = [0.2700, 0.2750, 0.2720];
+
+// ─── Состояние ──────────────────────────────────────────────
+let buretVol = 0;
+let activeIdx = 0;
+let isTapOpen = false;
+let dripInt = null;
+let startVol = 0;
+
+function makeFlask(idx) {
+    const nCO2 = FIXED_NCO2[idx];
+    const nBA_rem = nBA_INIT - nCO2;
+    const nHCL_target = 2 * nBA_rem;
+    const target = nHCL_target / C_HCL;
+    return { hasSample: false, hasInd: false, spent: 0, target, done: false };
+}
+
+const flasks = [makeFlask(0), makeFlask(1), makeFlask(2)];
+
+// ─── Шкала бюретки ──────────────────────────────────────────
+const scaleEl = document.getElementById('buret-scale');
+for (let i = 0; i <= 250; i++) {
+    const m = document.createElement('div');
+    const pos = (i / 250) * 100;
+    const major = i % 10 === 0;
+    m.className = `scale-mark ${major ? 'major' : ''}`;
+    m.style.top = `${pos}%`;
+    scaleEl.appendChild(m);
+    if (major) {
+        const l = document.createElement('div');
+        l.className = 'scale-label';
+        l.style.top = `${pos}%`;
+        l.innerText = i / 10;
+        scaleEl.appendChild(l);
+    }
+}
+
+// ─── Функции управления ─────────────────────────────────────
+function fillBuret() {
+    buretVol = 25;
+    startVol = 0;
+    updateBuret();
+    document.getElementById('r-start').textContent = '0.00 мл';
+    document.getElementById('r-end').textContent   = '—';
+    document.getElementById('r-vol').textContent   = '—';
+}
+
+function selectFlask(i) {
+    if (isTapOpen) toggleTap();
+    activeIdx = i;
+    document.querySelectorAll('.flask').forEach((f, idx) => f.classList.toggle('active', idx === i));
+    startVol = 25 - buretVol;
+    document.getElementById('r-start').textContent = startVol.toFixed(2) + ' мл';
+    document.getElementById('r-end').textContent   = '—';
+    document.getElementById('r-vol').textContent   = '—';
+    updateSide();
+    document.getElementById('calc-block').classList.add('hidden');
+}
+
+function addSample() {
+    const f = flasks[activeIdx];
+    if (f.hasSample) { flash('Проба уже добавлена!'); return; }
+    f.hasSample = true;
+    updateFlask(activeIdx);
+    updateSide();
+}
+
+function addIndicator() {
+    const f = flasks[activeIdx];
+    if (!f.hasSample) { flash('Сначала добавьте пробу в колбу!'); return; }
+    if (f.hasInd) { flash('Индикатор уже добавлен!'); return; }
+    f.hasInd = true;
+    updateFlask(activeIdx);
+    updateSide();
+}
+
+function toggleTap() {
+    const f = flasks[activeIdx];
+    if (!f.hasSample || !f.hasInd) { flash('Добавьте пробу и индикатор!'); return; }
+    if (buretVol <= 0 && !isTapOpen)  { flash('Бюретка пуста!'); return; }
+    if (f.done && !isTapOpen) { flash('Точка эквивалентности уже достигнута!'); return; }
+
+    isTapOpen = !isTapOpen;
+    document.getElementById('tap-handle').classList.toggle('tap-open', isTapOpen);
+
+    if (isTapOpen) {
+        document.getElementById('drop-point').innerHTML = '<div class="drop"></div>';
+        dripInt = setInterval(() => {
+            if (buretVol <= 0 || f.done) { if (isTapOpen) toggleTap(); return; }
+            buretVol -= 0.02;
+            f.spent  += 0.02;
+            updateBuret();
+            updateFlask(activeIdx);
+            updateSide();
+
+            if (f.spent >= f.target && !f.done) {
+                f.done = true;
+                clearInterval(dripInt);
+                isTapOpen = false;
+                document.getElementById('tap-handle').classList.remove('tap-open');
+                document.getElementById('drop-point').innerHTML = '';
+                onEndpoint();
+            }
+        }, 50);
+    } else {
+        clearInterval(dripInt);
+        document.getElementById('drop-point').innerHTML = '';
+    }
+}
+
+function resetFlask() {
+    if (isTapOpen) toggleTap();
+    flasks[activeIdx] = makeFlask(activeIdx);
+    startVol = 25 - buretVol;
+    updateFlask(activeIdx);
+    updateSide();
+    document.getElementById(`spent-lbl-${activeIdx}`).textContent = '';
+    document.getElementById('r-end').textContent = '—';
+    document.getElementById('r-vol').textContent = '—';
+    document.getElementById('calc-block').classList.add('hidden');
+    document.getElementById('summary-panel').classList.add('hidden');
+}
+
+// ─── Обновление UI ──────────────────────────────────────────
+function updateBuret() {
+    document.getElementById('buret-liquid').style.height = `${(buretVol / 25) * 100}%`;
+    document.getElementById('buret-reading').textContent = buretVol.toFixed(2) + ' мл';
+    const curEnd = 25 - buretVol;
+    document.getElementById('r-end').textContent = curEnd.toFixed(2) + ' мл';
+    const diff = curEnd - startVol;
+    document.getElementById('r-vol').textContent = diff > 0 ? diff.toFixed(2) + ' мл' : '—';
+}
+
+function updateFlask(idx) {
+    const f  = flasks[idx];
+    const liq = document.getElementById(`liq-${idx}`);
+
+    if (!f.hasSample) {
+        liq.setAttribute('d', 'M-5 110 L105 110 L105 110 L-5 110 Z');
+        liq.setAttribute('fill', 'transparent');
+        return;
+    }
+
+    const height = 68;
+    const y = 110 - (height * 1.1);
+    const halfW_bottom = 55;
+    const halfW_top = halfW_bottom - height * 0.35;
+    liq.setAttribute('d',
+        `M${50 - halfW_top} ${y} L${50 + halfW_top} ${y} L${50 + halfW_bottom} 110 L${50 - halfW_bottom} 110 Z`
+    );
+
+    if (!f.hasInd) {
+        liq.setAttribute('fill', '#e0f2fe');
+    } else {
+        const rem = f.target - f.spent;
+        if (f.done)         liq.setAttribute('fill', '#f8fafc');
+        else if (rem < 0.6) liq.setAttribute('fill', '#fce7f3');
+        else                liq.setAttribute('fill', '#f9a8d4');
+    }
+
+    document.getElementById(`spent-lbl-${idx}`).textContent =
+        f.spent > 0.01 ? f.spent.toFixed(2) + ' мл HCl' : '';
+}
+
+function updateSide() {
+    const f = flasks[activeIdx];
+    const sEl = document.getElementById('st-sample');
+    const iEl = document.getElementById('st-ind');
+    const cEl = document.getElementById('st-color');
+
+    sEl.className = f.hasSample ? 'tag-green' : 'tag-gray';
+    sEl.textContent = f.hasSample ? '✓ добавлена' : 'не добавлена';
+
+    iEl.className = f.hasInd ? 'tag-green' : 'tag-gray';
+    iEl.textContent = f.hasInd ? '✓ добавлен' : 'нет';
+
+    if (!f.hasInd) {
+        cEl.className = 'tag-gray'; cEl.textContent = '—';
+    } else if (f.done) {
+        cEl.className = 'tag-green'; cEl.textContent = '⬜ бесцветный';
+    } else {
+        const rem = f.target - f.spent;
+        if (rem < 0.6) {
+            cEl.className = 'tag-red'; cEl.textContent = '🌸 бледно-розовый';
+        } else {
+            cEl.className = 'tag-red'; cEl.textContent = '🌺 малиновый';
+        }
+    }
+}
+
+// ─── Точка эквивалентности ──────────────────────────────────
+function onEndpoint() {
+    const f = flasks[activeIdx];
+    updateFlask(activeIdx);
+    updateSide();
+
+    const vHCl      = f.spent;
+    const nHCl      = vHCl * C_HCL;
+    const nBA_rem   = nHCl / 2;
+    const nCO2      = nBA_INIT - nBA_rem;
+    const mCO2_mg   = nCO2 / 1000 * M_CO2 * 1000;
+    const intensity = mCO2_mg / (M_SEED * TIME_H);
+
+    const endReading = startVol + vHCl;
+    document.getElementById('r-end').textContent = endReading.toFixed(2) + ' мл';
+    document.getElementById('r-vol').textContent = vHCl.toFixed(2) + ' мл';
+
+    document.getElementById('calc-block').classList.remove('hidden');
+    document.getElementById('calc-rows').innerHTML = `
+        <div class="result-row"><span class="result-label">V(HCl)</span><span class="result-val">${vHCl.toFixed(2)} мл</span></div>
+        <div class="result-row"><span class="result-label">n(HCl) = V·C</span><span class="result-val">${nHCl.toFixed(4)} ммоль</span></div>
+        <div class="result-row"><span class="result-label">n(Ba(OH)₂) ост. = n(HCl)/2</span><span class="result-val">${nBA_rem.toFixed(4)} ммоль</span></div>
+        <div class="result-row"><span class="result-label">n(CO₂) = n₀ − n ост.</span><span class="result-val">${nCO2.toFixed(4)} ммоль</span></div>
+        <div class="result-row"><span class="result-label">m(CO₂)</span><span class="result-val">${mCO2_mg.toFixed(3)} мг</span></div>
+        <div class="result-row" style="background:#f0fdf4;border-radius:8px;padding:8px;margin-top:4px;border:none;">
+            <span class="result-label" style="color:#16a34a;font-weight:700;">Интенсивность дыхания</span>
+            <span class="result-val" style="color:#16a34a;">${intensity.toFixed(3)} мг/(г·ч)</span>
+        </div>
+    `;
+
+    const done = flasks.filter(x => x.done);
+    if (done.length === 3) showSummary();
+}
+
+function showSummary() {
+    const panel = document.getElementById('summary-panel');
+    panel.classList.remove('hidden');
+
+    let rows = '';
+    let totalInt = 0;
+
+    flasks.forEach((f, i) => {
+        const v    = f.spent;
+        const nHCl = v * C_HCL;
+        const nCO2 = nBA_INIT - nHCl / 2;
+        const mCO2 = nCO2 / 1000 * M_CO2 * 1000;
+        const intens = mCO2 / (M_SEED * TIME_H);
+        totalInt += intens;
+        rows += `<tr>
+            <td class="px-3 py-2 text-center font-mono text-xs">${i+1}</td>
+            <td class="px-3 py-2 text-center font-mono text-xs">${v.toFixed(2)}</td>
+            <td class="px-3 py-2 text-center font-mono text-xs">${nHCl.toFixed(4)}</td>
+            <td class="px-3 py-2 text-center font-mono text-xs">${nCO2.toFixed(4)}</td>
+            <td class="px-3 py-2 text-center font-mono text-xs font-bold">${intens.toFixed(3)}</td>
+        </tr>`;
+    });
+
+    const avgInt = totalInt / 3;
+
+    document.getElementById('summary-content').innerHTML = `
+        <table class="w-full text-xs border-collapse">
+            <thead>
+                <tr style="background:#f8fafc;">
+                    <th class="px-3 py-2 text-center text-slate-400 font-bold uppercase text-[10px]">№</th>
+                    <th class="px-3 py-2 text-center text-slate-400 font-bold uppercase text-[10px]">V(HCl), мл</th>
+                    <th class="px-3 py-2 text-center text-slate-400 font-bold uppercase text-[10px]">n(HCl), ммоль</th>
+                    <th class="px-3 py-2 text-center text-slate-400 font-bold uppercase text-[10px]">n(CO₂), ммоль</th>
+                    <th class="px-3 py-2 text-center text-slate-400 font-bold uppercase text-[10px]">Интенсивность</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+            <tfoot>
+                <tr style="background:#f0fdf4;border-top:2px solid #dcfce7;">
+                    <td colspan="4" class="px-3 py-2 text-xs font-bold text-green-700 text-right">Среднее:</td>
+                    <td class="px-3 py-2 text-center font-mono text-sm font-black text-green-700">${avgInt.toFixed(3)} мг/(г·ч)</td>
+                </tr>
+            </tfoot>
+        </table>
+        <p class="text-xs text-slate-400 mt-2">Интенсивность дыхания = мг CO₂ / (г семян · ч)</p>
+    `;
+}
+
+function flash(msg) {
+    const el = document.createElement('div');
+    el.textContent = msg;
+    el.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+        background:#1e293b;color:white;padding:10px 20px;border-radius:12px;
+        font-size:13px;font-weight:600;z-index:9999;pointer-events:none;
+        opacity:1;transition:opacity 0.5s;`;
+    document.body.appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 500); }, 2000);
+}
+
+fillBuret();
+</script>
+<script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-repl-id="464ce4d7-0a9a-435e-a3ee-9ac261e5d443"></script></body>
+</html>

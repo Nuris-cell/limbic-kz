@@ -705,7 +705,7 @@ const SUBTOPICS = {
             hints:[
               {label:'Подсказка 1', body:'<p>p_t = p₀(1−u)^t.</p>'},
               {label:'✅ Полное решение', solution:true, body:'<p>p₁=0.39, q₁=0.61 | p₁₀₀≈0.032, q₁₀₀≈0.968</p><div class="answer-box">Поколение 1: 0.39/0.61 | Поколение 100: 0.032/0.968</div>'}]},
-          { num:'№29', diff:'national', answer:['2.96e-4','2.96×10⁻⁴'], roundHint:'Введите в форме X.XX×10⁻ⁿ (например: 1.23×10⁻⁵).',
+          { num:'№29', diff:'national', answer:['2.96e-4','2.96×10⁻⁴','2.96x^10-4','2.96х^10-4'], roundHint:'Введите в форме X.XX×10⁻ⁿ (например: 1.23×10⁻⁵).',
             condition:'Лягушки Synapse. Равновесие: S⁺=0.6, S⁻=0.4. Обратная (S⁻→S⁺): <strong>v=4.44×10⁻⁴</strong>. Частота прямой мутации?',
             hints:[
               {label:'Подсказка 1', body:'<p>u·p = v·q → u × 0.6 = 4.44×10⁻⁴ × 0.4</p>'},
@@ -730,7 +730,7 @@ const SUBTOPICS = {
             hints:[
               {label:'Подсказка 1', body:'<p>s=0.7. При слабом p: p_eq ≈ u/s.</p>'},
               {label:'✅ Полное решение', solution:true, body:'<p>p_eq ≈ 0.005/0.7 ≈ 0.0071, q_eq ≈ 0.993</p><div class="answer-box">p(R)≈0.0071, q(r)≈0.993</div>'}]},
-          { num:'№34', diff:'ibo', answer:['3.5e-4','3.5×10⁻⁴','0.00035'], roundHint:'Введите в форме X.X×10⁻ⁿ (например: 1.5×10⁻⁵).',
+          { num:'№34', diff:'ibo', answer:['3.5e-4','3.5×10⁻⁴','0.00035','3.5x10^-4','3.5х10^-4'], roundHint:'Введите в форме X.X×10⁻ⁿ (например: 1.5×10⁻⁵).',
             condition:'Мотыльки: чёрный — 500 потомков, белый — 325. Частота белых (bb) = <strong>0.001 и не меняется</strong>. Мутации только B→b. Частота мутаций?',
             hints:[
               {label:'Подсказка 1', body:'<p>w(b)=325/500=0.65 → s=0.35. Равновесие: u ≈ s×q².</p>'},
@@ -1153,7 +1153,7 @@ C₂ = 5.25 × 20 / 7.0 = 15.00 мкмоль/мл</div>
           num: '1',
           diff: 'practical',
           roundHint: 'До сотых (пример: 5.75).',
-          answer: ['2.34','2.33','2.35','2.3','2.4'],
+          answer: ['2.34','2.33','2.35','2.30','2.40'],
           condition: `<div style="background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:1px solid #bfdbfe;border-radius:10px;padding:12px 14px;margin-bottom:10px;color:#1e2433;">
 <p style="font-weight:700;color:#1d4ed8;margin-bottom:6px;">🔬 Идентификация неизвестных аминокислот (Практический тур)</p>
 <p style="font-size:0.82rem;margin-bottom:8px;color:#334155;">Три бесцветных раствора аминокислот (X, Y, Z), концентрация 0.10 М каждый. Постройте кривые титрования NaOH и определите pKₐ в точках полунейтрализации (½·V до каждой точки эквивалентности).</p>
@@ -1174,7 +1174,7 @@ C₂ = 5.25 × 20 / 7.0 = 15.00 мкмоль/мл</div>
 </tbody></table></details>
 </div>
 <iframe src="aminoacid_lab.html" style="width:700px;height:490px;border:none;border-radius:10px;margin-top:4px;display:block;" frameborder="0"></iframe>
-<p style="margin-top:10px;font-size:0.82rem;">Выберите <strong>Образец X</strong> и добавляйте NaOH шагами через кран (титровать по определенным объемом не советуется для лучшего опыта). Найдите объём V при котором pH ≈ const (буферная зона). Первый центр буферного плато — это <strong>pKₐ₁</strong>.</p>`,
+<p style="margin-top:10px;font-size:0.82rem;">Выберите <strong>Образец X</strong> и добавляйте NaOH через кран (титровать по определенным объемом не советуется для лучшего опыта). Найдите объём V при котором pH ≈ const (буферная зона). Затем определите первый центр буферного плато — это <strong>pKₐ₁</strong>, запишите его в ответ.</p>`,
           hints: [
             {
               label: 'Как читать pKₐ из кривой',

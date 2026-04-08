@@ -1022,13 +1022,13 @@ I₁ = 11.883 / (10.00 × 2) = 0.594 мг/(г·ч)</div>
         {
           num: '1',
           diff: 'practical',
-          roundHint: 'До сотых долей мл (пример: 2.10).',
+          roundHint: 'До сотых долей мл (пример: 24.10).',
           answer: ['2.10','2.06','2.08','2.09','2.11','2.12','2.14','2.16','2.18'],
-          condition: `<div style="background:linear-gradient(135deg,#fdf4ff,#f0fdf4);border:1px solid #e8d5f5;border-radius:10px;padding:12px 14px;margin-bottom:12px;">
+          condition: `<div style="background:linear-gradient(135deg,#fdf4ff,#f0fdf4);border:1px solid #e8d5f5;border-radius:10px;padding:12px 14px;margin-bottom:12px;color:#1e1208;">
 <p style="font-weight:700;color:#6d28d9;margin-bottom:6px;">🧫 Кинетика ферментативного гидролиза ТАГ (КФ 3.1.1.3)</p>
-<p style="font-size:0.82rem;margin-bottom:8px;">Липаза катализирует гидролиз эфирных связей триацилглицеридов: <strong>ТАГ + H₂O → СЖК + глицерин</strong>. Скорость реакции оценивают по накоплению свободных жирных кислот (СЖК), которые титруют щёлочью.</p>
-<p style="font-size:0.82rem;font-weight:600;margin-bottom:4px;">Протокол:</p>
-<ol style="font-size:0.79rem;line-height:1.7;padding-left:18px;">
+<p style="font-size:0.82rem;margin-bottom:8px;color:#2d2010;">Липаза катализирует гидролиз эфирных связей триацилглицеридов: <strong>ТАГ + H₂O → СЖК + глицерин</strong>. Скорость реакции оценивают по накоплению свободных жирных кислот (СЖК), которые титруют щёлочью.</p>
+<p style="font-size:0.82rem;font-weight:600;margin-bottom:4px;color:#2d2010;">Протокол:</p>
+<ol style="font-size:0.79rem;line-height:1.7;padding-left:18px;color:#2d2010;">
 <li>В колбу №1 вносят 5.0 мл эмульсии субстрата + 1.0 мл фосфатного буфера (pH 8.0) + 1.0 мл липазы. Инкубируют <strong>5 мин</strong> при 37 °C, затем добавляют 10 мл стоп-реагента (EtOH : Et₂O = 1:1).</li>
 <li>Аналогично для колбы №2, инкубация <strong>20 мин</strong>.</li>
 <li>В каждую колбу добавляют 3 капли 1% спиртового фенолфталеина.</li>
@@ -1051,7 +1051,7 @@ I₁ = 11.883 / (10.00 × 2) = 0.594 мг/(г·ч)</div>
         {
           num: '2',
           diff: 'practical',
-          roundHint: 'До сотых долей мл (пример: 5.25).',
+          roundHint: 'До сотых долей мл (пример: 8.95).',
           answer: ['5.25','5.21','5.22','5.23','5.24','5.26','5.27','5.28','5.29','5.30','5.33'],
           condition: `<p style="font-size:0.82rem;background:#fdf4ff;border-left:3px solid #a855f7;padding:8px 10px;border-radius:0 6px 6px 0;">Используйте виртуальную лабораторию из <strong>задания 1</strong>.</p>
 <p style="margin-top:10px;font-size:0.82rem;">Запишите <strong>V₂</strong> — объём NaOH (мл) на титрование пробы <strong>20 мин</strong> (с точностью до 0.05 мл).</p>`,
@@ -1065,11 +1065,10 @@ I₁ = 11.883 / (10.00 × 2) = 0.594 мг/(г·ч)</div>
         {
           num: '3',
           diff: 'regional',
-          roundHint: 'До сотых мкмоль/мл (пример: 6.00).',
+          roundHint: 'До сотых мкмоль/мл (пример: 15.00).',
           answer: ['6.00','5.89','5.94','5.97','6.03','6.06','6.11','6.17','6.23','6.0'],
           condition: `<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Задание 2а.</strong> Рассчитайте концентрацию СЖК в пробе <strong>5 мин</strong>.</p>
-<div class="formula" style="font-size:0.85rem;">C<sub>СЖК</sub> = V(NaOH) × C(NaOH) × 1000 / V<sub>реакц</sub></div>
-<p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Где: 1 мл 0.020 М NaOH ≡ 20 мкмоль СЖК. Объём реакционной смеси <strong>V<sub>реакц</sub> = 7.0 мл</strong> (5.0 + 1.0 + 1.0 мл). Введите C<sub>СЖК(1)</sub> в мкмоль/мл.</p>`,
+<p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Введите C<sub>СЖК(1)</sub> в мкмоль/мл.</p>`,
           hints: [
             {
               label: 'Формула расчёта',
@@ -1087,7 +1086,6 @@ I₁ = 11.883 / (10.00 × 2) = 0.594 мг/(г·ч)</div>
           roundHint: 'До сотых мкмоль/мл (пример: 15.00).',
           answer: ['15.00','14.89','14.91','14.94','14.97','15.03','15.06','15.09','15.11','15.23','15.0','14.9','15.1'],
           condition: `<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Задание 2б.</strong> Рассчитайте концентрацию СЖК в пробе <strong>20 мин</strong>.</p>
-<div class="formula" style="font-size:0.85rem;">C<sub>СЖК(2)</sub> = V₂ × 20 / 7.0</div>
 <p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Введите C<sub>СЖК(2)</sub> в мкмоль/мл.</p>`,
           hints: [
             {
@@ -1099,10 +1097,9 @@ I₁ = 11.883 / (10.00 × 2) = 0.594 мг/(г·ч)</div>
         {
           num: '5',
           diff: 'regional',
-          roundHint: 'До сотых мкмоль/(мл·мин) (пример: 0.60).',
+          roundHint: 'До сотых мкмоль/(мл·мин) (пример: 0.90).',
           answer: ['0.60','0.61','0.59','0.62','0.58','0.6'],
           condition: `<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Задание 3.</strong> Рассчитайте среднюю скорость прироста концентрации СЖК на интервале между 5-й и 20-й минутами.</p>
-<div class="formula">v = ΔC / Δt = (C<sub>СЖК(2)</sub> − C<sub>СЖК(1)</sub>) / (t₂ − t₁)</div>
 <p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Введите скорость в мкмоль/(мл · мин).</p>`,
           hints: [
             {
@@ -1155,7 +1152,7 @@ C₂ = 5.25 × 20 / 7.0 = 15.00 мкмоль/мл</div>
         {
           num: '1',
           diff: 'practical',
-          roundHint: 'До сотых (пример: 2.34). Читайте pH при V = 5.00 мл для образца X.',
+          roundHint: 'До сотых (пример: 5.75).',
           answer: ['2.34','2.33','2.35','2.3','2.4'],
           condition: `<div style="background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:1px solid #bfdbfe;border-radius:10px;padding:12px 14px;margin-bottom:10px;color:#1e2433;">
 <p style="font-weight:700;color:#1d4ed8;margin-bottom:6px;">🔬 Идентификация неизвестных аминокислот (Практический тур)</p>
@@ -1177,7 +1174,7 @@ C₂ = 5.25 × 20 / 7.0 = 15.00 мкмоль/мл</div>
 </tbody></table></details>
 </div>
 <iframe src="aminoacid_lab.html" style="width:700px;height:490px;border:none;border-radius:10px;margin-top:4px;display:block;" frameborder="0"></iframe>
-<p style="margin-top:10px;font-size:0.82rem;">Выберите <strong>Образец X</strong> и добавляйте NaOH шагами по 0.10–0.50 мл. Найдите объём V при котором pH ≈ const (буферная зона). Первый центр буферного плато — это <strong>pKₐ₁</strong>. Для образца X первая точка эквивалентности при V = 10.00 мл, значит pKₐ₁ читается при V = 5.00 мл.</p>`,
+<p style="margin-top:10px;font-size:0.82rem;">Выберите <strong>Образец X</strong> и добавляйте NaOH шагами через кран (по определенным объемом не советуется для лучшего опыта). Найдите объём V при котором pH ≈ const (буферная зона). Первый центр буферного плато — это <strong>pKₐ₁</strong>.</p>`,
           hints: [
             {
               label: 'Как читать pKₐ из кривой',
@@ -1193,24 +1190,24 @@ pKa₁ → 2.5 мл; pKaR → 7.5 мл; pKa₂ → 12.5 мл</p>`
         {
           num: '2',
           diff: 'practical',
-          roundHint: 'До сотых (пример: 4.25). Читайте pH при V = 7.50 мл для образца Y.',
+          roundHint: 'До сотых (пример: 7.56).',
           answer: ['4.25','4.24','4.26','4.2','4.3'],
           condition: `<p style="background:#eff6ff;border-left:3px solid #3b82f6;padding:8px 10px;border-radius:0 6px 6px 0;font-size:0.82rem;">Используйте виртуальный pH-тренажёр из задания 1. Выберите <strong>Образец Y</strong>.</p>
-<p style="margin-top:10px;font-size:0.82rem;">Образец Y имеет три ионизируемые группы. Второй центр буферного плато (<strong>pKₐR</strong>) читается при V = 7.50 мл. Запишите это значение pH.</p>`,
+<p style="margin-top:10px;font-size:0.82rem;">Определите и запишите второй рКа.</p>`,
           hints: [
             {
               label: 'Почему три pKₐ?',
-              body: `<p>Образец Y — <strong>дикарбоновая аминокислота</strong>. Имеет две карбоксильные группы (α-COOH и R-COOH) и одну аминогруппу (NH₃⁺). Три протона → три ступени титрования → три pKₐ.</p>`
+              body: `<p>Образец Y — <strong>дикарбоновая аминокислота</strong>. Имеет две основные и одну заряженную группу в радикале. Три группы  → три ступени титрования → три pKₐ.</p>`
             }
           ]
         },
         {
           num: '3',
           diff: 'practical',
-          roundHint: 'До сотых (пример: 6.00). Читайте pH при V = 7.50 мл для образца Z.',
+          roundHint: 'До сотых (пример: 4.00).',
           answer: ['6.00','5.99','6.01','6.0'],
           condition: `<p style="background:#eff6ff;border-left:3px solid #3b82f6;padding:8px 10px;border-radius:0 6px 6px 0;font-size:0.82rem;">Используйте pH-тренажёр из задания 1. Выберите <strong>Образец Z</strong>.</p>
-<p style="margin-top:10px;font-size:0.82rem;">Образец Z тоже имеет три ионизируемые группы, но R-группа — <strong>основная</strong> (имидазольный радикал). Запишите pH при V = 7.50 мл (это pKₐR образца Z).</p>`,
+<p style="margin-top:10px;font-size:0.82rem;">Запишите pKₐR образца Z.</p>`,
           hints: [
             {
               label: 'Как отличить Y от Z?',
@@ -1221,11 +1218,11 @@ pKa₁ → 2.5 мл; pKaR → 7.5 мл; pKa₂ → 12.5 мл</p>`
         {
           num: '4',
           diff: 'regional',
-          roundHint: 'До сотых (пример: 5.97).',
+          roundHint: 'До сотых (пример: 7.00).',
           answer: ['5.97','5.96','5.98','5.9','6.0','6.00'],
           condition: `<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Задание 2.2а.</strong> Рассчитайте изоэлектрическую точку (pI) образца X.</p>
 <div class="formula">pI = (pKa₁ + pKa₂) / 2</div>
-<p style="font-size:0.8rem;margin-top:6px;color:var(--text-dim);">Образец X — моноаминомонокарбоновая аминокислота (нейтральная). Введите pI в единицах pH.</p>`,
+<p style="font-size:0.8rem;margin-top:6px;color:var(--text-dim);">Введите pI в единицах pH.</p>`,
           hints: [
             {
               label: 'Формула pI (нейтральные АК)',
@@ -1236,11 +1233,11 @@ pKa₁ → 2.5 мл; pKaR → 7.5 мл; pKa₂ → 12.5 мл</p>`
         {
           num: '5',
           diff: 'regional',
-          roundHint: 'До сотых (пример: 3.22 или 7.59).',
+          roundHint: 'До сотых (пример:7.59).',
           answer: ['3.22','3.21','3.23','3.2'],
           condition: `<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Задание 2.2б.</strong> Рассчитайте pI образца Y.</p>
 <div class="formula">pI(дикарбоновой АК) = (pKa₁ + pKaR) / 2</div>
-<p style="font-size:0.8rem;margin-top:6px;color:var(--text-dim);">Для кислых аминокислот pI находится между двумя карбоксильными pKₐ. Введите значение pI.</p>`,
+<p style="font-size:0.8rem;margin-top:6px;color:var(--text-dim);">Введите значение pI.</p>`,
           hints: [
             {
               label: 'Какие pKₐ используем?',
@@ -1254,7 +1251,7 @@ pKa₁ → 2.5 мл; pKaR → 7.5 мл; pKa₂ → 12.5 мл</p>`
           roundHint: 'Введите название аминокислоты в образце X.',
           answer: ['глицин','glycine','gly','глицина','glycin'],
           condition: `<p style="font-size:0.85rem;margin-bottom:10px;"><strong>Задание 3. Идентификация.</strong></p>
-<p style="font-size:0.85rem;">На основе экспериментальных данных (pKₐ₁ ≈ 2.34, pKₐ₂ ≈ 9.60, нет R-группы, pI ≈ 5.97) определите содержимое <strong>колбы X</strong>. Сравните с справочным листом (см. задание 1) и введите название аминокислоты.</p>`,
+<p style="font-size:0.85rem;">На основе экспериментальных данных определите содержимое <strong>колбы X</strong>. Сравните с справочным листом (см. задание 1) и введите название аминокислоты.</p>`,
           hints: [
             {
               label: 'Ключ к идентификации',
@@ -1269,7 +1266,7 @@ pKa₁ → 2.5 мл; pKaR → 7.5 мл; pKa₂ → 12.5 мл</p>`
           roundHint: 'Введите название аминокислоты в образце Y.',
           answer: ['глутаминовая кислота','глутаминовая','glutamic','glu','глутамат','глутаминовой кислоты','glutamic acid'],
           condition: `<p style="font-size:0.85rem;margin-bottom:10px;"><strong>Задание 3. Идентификация.</strong></p>
-<p style="font-size:0.85rem;">На основе данных (pKₐ₁ ≈ 2.19, pKₐR ≈ 4.25, pKₐ₂ ≈ 9.67, pI ≈ 3.22) определите содержимое <strong>колбы Y</strong>.</p>`,
+<p style="font-size:0.85rem;">На основе данных определите содержимое <strong>колбы Y</strong>.</p>`,
           hints: [
             {
               label: 'Ключ к идентификации',
@@ -1284,7 +1281,7 @@ pKa₁ → 2.5 мл; pKaR → 7.5 мл; pKa₂ → 12.5 мл</p>`
           roundHint: 'Введите название аминокислоты в образце Z.',
           answer: ['гистидин','histidine','his','гистидина','histidin'],
           condition: `<p style="font-size:0.85rem;margin-bottom:10px;"><strong>Задание 3. Идентификация.</strong></p>
-<p style="font-size:0.85rem;">На основе данных (pKₐ₁ ≈ 1.82, pKₐR ≈ 6.00, pKₐ₂ ≈ 9.17, pI = (pKₐR + pKₐ₂)/2 ≈ 7.59) определите содержимое <strong>колбы Z</strong>.</p>`,
+<p style="font-size:0.85rem;">На основе данных определите содержимое <strong>колбы Z</strong>.</p>`,
           hints: [
             {
               label: 'Ключ к идентификации',

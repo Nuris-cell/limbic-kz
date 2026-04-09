@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Виртуальная лаборатория — Пероксидаза</title>
+<style>
+:root{--bg:#000;--bg2:#0a0a0f;--surf:#111118;--surf2:#18181f;--brd:#1f1f2e;--brd2:#2a2a3d;--blue:#0a84ff;--blue2:#409cff;--bdim:rgba(10,132,255,0.12);--text:#c7c7cc;--dim:#636374;--bright:#f5f5f7;--green:#30d158;--gdim:rgba(48,209,88,0.12);--red:#ff453a;--rdim:rgba(255,69,58,0.12);--orange:#ff9f0a;--purple:#bf5af2;--fn:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:14px;}
+body{background:var(--bg);color:var(--text);font-family:var(--fn);min-height:100vh;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px;}
+
+/* Header */
+#hdr{position:sticky;top:0;z-index:100;background:rgba(0,0,0,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--brd);padding:0 20px;height:48px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.hdr-title{font-size:0.85rem;font-weight:600;color:var(--bright);display:flex;align-items:center;gap:8px;}
+.hdr-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);box-shadow:0 0 6px var(--blue);}
+.stages{display:flex;gap:4px;}
+.stg{font-size:0.65rem;font-weight:600;letter-spacing:0.06em;padding:3px 10px;border-radius:10px;border:1px solid var(--brd2);color:var(--dim);transition:all 0.2s;white-space:nowrap;}
+.stg.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.stg.done{background:var(--gdim);border-color:rgba(48,209,88,0.3);color:var(--green);}
+#lang-btn{font-size:0.68rem;font-weight:700;padding:4px 10px;border-radius:16px;border:1px solid var(--brd2);background:var(--surf);color:var(--dim);cursor:pointer;}
+#lang-btn:hover{border-color:var(--blue);color:var(--blue2);}
+
+/* Layout */
+#lab{display:grid;grid-template-columns:280px 1fr 320px;gap:0;min-height:calc(100vh - 48px);}
+.panel{padding:16px;border-right:1px solid var(--brd);overflow-y:auto;}
+.panel:last-child{border-right:none;}
+.panel-title{font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
+
+/* Protocol steps */
+.step{border:1px solid var(--brd);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:all 0.2s;}
+.step.active{border-color:var(--blue);}
+.step.done{border-color:rgba(48,209,88,0.3);}
+.step-hdr{padding:10px 12px;display:flex;align-items:center;gap:8px;}
+.step-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:700;flex-shrink:0;}
+.step.pending .step-num{background:var(--surf2);color:var(--dim);}
+.step.active .step-num{background:var(--blue);color:#fff;}
+.step.done .step-num{background:var(--gdim);color:var(--green);}
+.step-label{font-size:0.78rem;font-weight:500;color:var(--text);}
+.step.active .step-label{color:var(--bright);}
+.step.done .step-label{color:var(--dim);text-decoration:line-through;}
+.step-body{padding:0 12px 12px;font-size:0.76rem;line-height:1.6;color:var(--text);display:none;}
+.step.active .step-body{display:block;}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;font-size:0.78rem;font-weight:600;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;transition:all 0.15s;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-primary:hover{background:var(--blue2);}
+.btn-primary:disabled{opacity:0.4;cursor:default;}
+.btn-ghost{background:rgba(255,255,255,0.06);color:var(--text);border:1px solid var(--brd2);}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue2);}
+.btn-danger{background:rgba(255,69,58,0.15);color:var(--red);border:1px solid rgba(255,69,58,0.3);}
+.btn-danger:hover{background:rgba(255,69,58,0.25);}
+.btn-sm{padding:5px 10px;font-size:0.72rem;}
+.btn-green{background:var(--gdim);color:var(--green);border:1px solid rgba(48,209,88,0.3);}
+
+/* Center — Spectrophotometer area */
+#center{padding:20px;display:flex;flex-direction:column;gap:16px;}
+
+/* Spectrophotometer */
+.spectro{background:#0a0a0f;border:2px solid #2a2a3d;border-radius:14px;padding:20px;position:relative;}
+.spectro-brand{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3a5a;margin-bottom:16px;}
+.spectro-screen{background:#001a00;border:2px solid #003300;border-radius:8px;padding:16px 20px;margin-bottom:14px;position:relative;overflow:hidden;}
+.spectro-screen::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,0,0.02) 3px,rgba(0,255,0,0.02) 4px);pointer-events:none;}
+.spectro-label{font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:#005500;margin-bottom:6px;}
+.spectro-val{font-family:'Courier New',monospace;font-size:2.8rem;font-weight:700;color:#00ff88;text-shadow:0 0 12px rgba(0,255,136,0.6);letter-spacing:0.1em;min-height:52px;display:flex;align-items:center;}
+.spectro-val.noise{animation:flicker 0.1s infinite;}
+@keyframes flicker{0%{opacity:1}50%{opacity:0.7}100%{opacity:1}}
+.spectro-val.flash-green{color:#00ff88;text-shadow:0 0 20px rgba(0,255,136,0.9);}
+.spectro-meta{display:flex;gap:16px;font-size:0.62rem;color:#005500;letter-spacing:0.08em;}
+.spectro-controls{display:flex;gap:8px;flex-wrap:wrap;}
+.spec-btn{background:#111;border:1px solid #333;color:#aaa;font-size:0.72rem;padding:6px 12px;border-radius:6px;cursor:pointer;transition:all 0.15s;}
+.spec-btn:hover{border-color:#0a84ff;color:#409cff;}
+.spec-btn.active{background:#003300;border-color:#00ff88;color:#00ff88;}
+.spec-btn:disabled{opacity:0.3;cursor:default;}
+.cuvette-slot{border:2px dashed #333;border-radius:8px;padding:12px;text-align:center;color:#555;font-size:0.72rem;margin-top:10px;transition:all 0.2s;cursor:pointer;}
+.cuvette-slot:hover{border-color:#0a84ff;color:#409cff;}
+.cuvette-slot.filled{border-color:#00ff88;border-style:solid;background:rgba(0,255,136,0.05);color:#00cc66;}
+
+/* Timer */
+.timer-box{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;}
+.timer-display{font-family:'Courier New',monospace;font-size:1.8rem;font-weight:700;color:var(--bright);letter-spacing:0.1em;}
+.timer-display.warn{color:var(--orange);}
+.timer-display.go{color:var(--green);}
+.timer-progress{flex:1;height:6px;background:var(--brd2);border-radius:3px;overflow:hidden;}
+.timer-fill{height:100%;background:var(--blue);border-radius:3px;transition:width 0.1s linear;}
+.timer-fill.warn{background:var(--orange);}
+.timer-fill.go{background:var(--green);}
+
+/* Pipette & tips */
+.tip-rack{display:flex;gap:6px;flex-wrap:wrap;}
+.tip{width:28px;height:28px;border-radius:50%;border:2px solid;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;}
+.tip.available{border-color:#4a4a6a;background:#1a1a2e;color:#555;}
+.tip.available:hover{border-color:var(--blue2);background:var(--bdim);color:var(--blue2);}
+.tip.selected{border-color:var(--blue2);background:var(--bdim);color:var(--blue2);}
+.tip.used{border-color:#333;background:#0a0a0f;color:#333;cursor:default;}
+.tip.contaminated{border-color:var(--red);background:rgba(255,69,58,0.1);color:var(--red);}
+
+.reagent-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border:1px solid var(--brd2);border-radius:8px;background:var(--surf2);cursor:pointer;transition:all 0.15s;margin-bottom:5px;font-size:0.76rem;color:var(--text);}
+.reagent-btn:hover:not(:disabled){border-color:var(--blue);color:var(--bright);}
+.reagent-btn:disabled{opacity:0.35;cursor:default;}
+.reagent-btn.added{border-color:var(--green);color:var(--green);background:var(--gdim);}
+.reagent-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* Contamination warning */
+.warn-box{background:rgba(255,69,58,0.1);border:1px solid rgba(255,69,58,0.35);border-radius:8px;padding:10px 12px;font-size:0.75rem;color:var(--red);display:none;}
+.warn-box.show{display:block;}
+
+/* Data table */
+.data-tbl{width:100%;border-collapse:collapse;font-size:0.74rem;}
+.data-tbl th{padding:6px 8px;text-align:center;color:var(--dim);font-weight:500;border-bottom:1px solid var(--brd);font-size:0.65rem;letter-spacing:0.05em;}
+.data-tbl td{padding:5px 8px;text-align:center;border-bottom:1px solid rgba(31,31,46,0.5);transition:all 0.2s;}
+.data-tbl tr.recorded td{color:var(--bright);}
+.data-tbl tr.current td{background:rgba(10,132,255,0.08);color:var(--blue2);}
+.accuracy-badge{font-size:0.6rem;padding:1px 5px;border-radius:3px;margin-left:4px;}
+.acc-perfect{background:var(--gdim);color:var(--green);}
+.acc-ok{background:rgba(255,159,10,0.15);color:var(--orange);}
+.acc-bad{background:var(--rdim);color:var(--red);}
+
+/* Graph */
+#graph-container{position:relative;width:100%;}
+canvas#graph{width:100%;height:220px;display:block;border-radius:8px;background:#0a0a0f;border:1px solid var(--brd);}
+.graph-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--dim);}
+.legend-dot{width:8px;height:8px;border-radius:50%;}
+
+/* Setup screen */
+#setup-screen{max-width:640px;margin:60px auto;padding:24px;}
+.setup-card{background:var(--surf);border:1px solid var(--brd);border-radius:14px;padding:24px;margin-bottom:16px;cursor:pointer;transition:all 0.18s;}
+.setup-card:hover{border-color:var(--blue);transform:translateY(-2px);}
+.setup-card.selected{border-color:var(--blue);background:var(--bdim);}
+.setup-card h3{font-size:0.9rem;font-weight:600;color:var(--bright);margin-bottom:4px;}
+.setup-card p{font-size:0.77rem;color:var(--dim);line-height:1.5;}
+.conc-grid{display:flex;gap:8px;margin-top:12px;}
+.conc-btn{flex:1;padding:10px;border:1px solid var(--brd2);border-radius:8px;background:var(--surf2);color:var(--text);cursor:pointer;font-size:0.8rem;font-weight:600;text-align:center;transition:all 0.15s;}
+.conc-btn:hover{border-color:var(--blue);color:var(--blue2);}
+.conc-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+.ph-grid{display:flex;gap:8px;margin-top:12px;}
+
+/* Results */
+.result-card{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:14px;margin-bottom:10px;}
+.result-title{font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;}
+.result-val{font-size:1.4rem;font-weight:700;color:var(--blue2);font-family:'Courier New',monospace;}
+.formula-box{background:#0a0a0f;border:1px solid var(--brd);border-radius:6px;padding:10px;font-family:'Courier New',monospace;font-size:0.74rem;color:#7ec8e3;line-height:1.7;margin-top:8px;}
+.slope-selector{margin-top:8px;}
+.slope-selector label{font-size:0.73rem;color:var(--text);}
+select.slope-sel{background:var(--surf2);border:1px solid var(--brd2);color:var(--bright);padding:4px 8px;border-radius:6px;font-size:0.73rem;margin-top:4px;width:100%;}
+
+/* Info chips */
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:0.65rem;font-weight:600;padding:2px 8px;border-radius:10px;letter-spacing:0.04em;}
+.chip-blue{background:var(--bdim);color:var(--blue2);border:1px solid rgba(10,132,255,0.2);}
+.chip-green{background:var(--gdim);color:var(--green);border:1px solid rgba(48,209,88,0.2);}
+.chip-orange{background:rgba(255,159,10,0.12);color:var(--orange);border:1px solid rgba(255,159,10,0.2);}
+.chip-red{background:var(--rdim);color:var(--red);border:1px solid rgba(255,69,58,0.2);}
+
+.noise-indicator{font-size:0.62rem;color:var(--dim);margin-top:4px;}
+.noise-indicator.high{color:var(--red);}
+
+@media(max-width:900px){
+  #lab{grid-template-columns:1fr;grid-template-rows:auto;}
+  .panel{border-right:none;border-bottom:1px solid var(--brd);}
+}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <div class="hdr-title"><div class="hdr-dot"></div><span id="hdr-title-text">Пероксидаза редьки — Виртуальная лаборатория</span></div>
+  <div class="stages" id="stages">
+    <div class="stg active" id="stg0">Выбор</div>
+    <div class="stg" id="stg1">Подготовка</div>
+    <div class="stg" id="stg2">Обнуление</div>
+    <div class="stg" id="stg3">Реакция</div>
+    <div class="stg" id="stg4">Результаты</div>
+  </div>
+  <button id="lang-btn" onclick="toggleLang()">EN</button>
+</div>
+
+<!-- SETUP SCREEN -->
+<div id="setup-screen">
+  <div style="text-align:center;margin-bottom:32px;">
+    <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Республиканская олимпиада 2026</div>
+    <h1 style="font-size:1.6rem;font-weight:700;color:var(--bright);letter-spacing:-0.02em;margin-bottom:6px;">Виртуальная лаборатория</h1>
+    <p style="font-size:0.82rem;color:var(--dim);">Кинетика пероксидазы <em>Raphanus sativus</em> · Спектрофотометрия при 500 нм</p>
+  </div>
+
+  <div id="exp-select">
+    <div style="font-size:0.78rem;font-weight:600;color:var(--text);margin-bottom:10px;">Выберите эксперимент:</div>
+    <div class="setup-card" onclick="selectExp('B')">
+      <h3>📊 Часть B — Базовая активность</h3>
+      <p>Измерьте скорость окисления гваякола пероксидазой при 500 нм. Выберите концентрацию фермента (1X, 2X или 5X).</p>
+      <div class="conc-grid" onclick="event.stopPropagation()">
+        <div class="conc-btn selected" id="conc-1x" onclick="selectConc('1x')">1X</div>
+        <div class="conc-btn" id="conc-2x" onclick="selectConc('2x')">2X</div>
+        <div class="conc-btn" id="conc-5x" onclick="selectConc('5x')">5X</div>
+      </div>
+    </div>
+    <div class="setup-card" onclick="selectExp('C')">
+      <h3>🧪 Часть C — Влияние pH</h3>
+      <p>Сравните активность пероксидазы при pH 3, 7 и 14. Используйте соответствующие буферы.</p>
+      <div class="ph-grid" onclick="event.stopPropagation()">
+        <div class="conc-btn" id="ph-3" onclick="selectPH(3)">pH 3</div>
+        <div class="conc-btn selected" id="ph-7" onclick="selectPH(7)">pH 7</div>
+        <div class="conc-btn" id="ph-14" onclick="selectPH(14)">pH 14</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:24px;">
+    <button class="btn btn-primary" style="font-size:0.9rem;padding:12px 32px;border-radius:12px;" onclick="startLab()">
+      Начать эксперимент →
+    </button>
+  </div>
+
+  <div style="margin-top:24px;background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:14px;">
+    <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;">⚠ Правила безопасности</div>
+    <ul style="font-size:0.74rem;color:var(--text);line-height:1.9;padding-left:16px;">
+      <li>Всегда надевайте перчатки и защитные очки</li>
+      <li><strong style="color:var(--bright);">НЕ ПИПЕТИРУЙТЕ РЕАГЕНТЫ РТОМ</strong> — используйте микропипетку</li>
+      <li>Для каждого реагента используйте новый наконечник</li>
+      <li>Не двигайте спектрофотометр — он откалиброван</li>
+    </ul>
+  </div>
+</div>
+
+<!-- LAB SCREEN (hidden initially) -->
+<div id="lab" style="display:none;">
+
+  <!-- LEFT: Protocol -->
+  <div class="panel" id="left-panel">
+    <div class="panel-title" id="lp-title">Протокол</div>
+    <div id="steps-container"></div>
+    <div id="tip-section" style="margin-top:12px;display:none;">
+      <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;">Наконечники микропипетки</div>
+      <div class="tip-rack" id="tip-rack"></div>
+      <div style="margin-top:8px;font-size:0.73rem;color:var(--dim);">Текущий наконечник: <span id="current-tip-info" style="color:var(--text);">не выбран</span></div>
+      <div class="warn-box" id="contamination-warn">⚠ Загрязнение! Наконечник не сменён между субстратом и ферментом. Данные будут нестабильными!</div>
+    </div>
+  </div>
+
+  <!-- CENTER: Spectrophotometer -->
+  <div id="center">
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;flex-wrap:wrap;">
+      <span id="exp-badge" class="chip chip-blue">Часть B · 1X</span>
+      <span id="noise-badge" class="chip chip-green">Данные стабильны</span>
+    </div>
+
+    <div class="spectro">
+      <div class="spectro-brand">Limbic Photometry System LPS-500 · UV-VIS Spectrophotometer</div>
+      <div class="spectro-screen">
+        <div class="spectro-label">Absorbance (A)</div>
+        <div class="spectro-val" id="spectro-display">- - -</div>
+        <div class="spectro-meta">
+          <span id="wl-display">λ = — nm</span>
+          <span>Mode: ABS</span>
+          <span id="zero-status">Blank: NOT SET</span>
+        </div>
+      </div>
+      <div class="spectro-controls">
+        <button class="spec-btn active" id="wl-btn" onclick="setWavelength()" disabled>λ = 500 nm ✓</button>
+        <button class="spec-btn" id="zero-btn" onclick="zeroSpec()" disabled>⏺ Обнулить (Blank)</button>
+        <button class="spec-btn" id="insert-btn" onclick="toggleCuvette()" disabled>Вставить кювету</button>
+      </div>
+      <div class="cuvette-slot" id="cuvette-slot">
+        🧪 Место для кюветы (нажмите для установки)
+      </div>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer-box" id="timer-box" style="display:none;">
+      <div>
+        <div style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;">Виртуальное время (10× скорость)</div>
+        <div class="timer-display" id="timer-display">0:00</div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:0.64rem;color:var(--dim);margin-bottom:4px;">До следующей точки: <span id="next-point-label">0:30</span></div>
+        <div class="timer-progress"><div class="timer-fill" id="timer-fill" style="width:0%"></div></div>
+        <div style="font-size:0.62rem;color:var(--dim);margin-top:2px;" id="timing-feedback"></div>
+      </div>
+      <button class="btn btn-primary" id="record-btn" onclick="recordMeasurement()" disabled>
+        📊 Записать
+      </button>
+    </div>
+
+    <!-- Action area -->
+    <div id="action-area"></div>
+
+  </div>
+
+  <!-- RIGHT: Data + Graph -->
+  <div class="panel" id="right-panel">
+    <div class="panel-title">Данные и График</div>
+
+    <div id="graph-container" style="margin-bottom:12px;">
+      <canvas id="graph" width="600" height="220"></canvas>
+      <div class="graph-legend" id="graph-legend"></div>
+    </div>
+
+    <div style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);">Таблица данных</div>
+      <span id="points-count" class="chip chip-blue">0 / 11</span>
+    </div>
+    <table class="data-tbl">
+      <thead><tr><th>t (с)</th><th>A₅₀₀</th><th>Точность</th></tr></thead>
+      <tbody id="data-tbody"></tbody>
+    </table>
+
+    <div id="results-panel" style="display:none;margin-top:16px;">
+      <div class="panel-title">Расчёт активности</div>
+      <div class="slope-selector">
+        <label>Выбрать участок для наклона:</label>
+        <select class="slope-sel" id="slope-sel" onchange="calcSlope()"></select>
+      </div>
+      <div class="result-card" style="margin-top:10px;">
+        <div class="result-title">Наклон (активность) QB4</div>
+        <div class="result-val" id="slope-val">—</div>
+        <div class="formula-box" id="slope-formula">Выберите участок выше</div>
+      </div>
+      <div id="qc5-block" style="display:none;" class="result-card">
+        <div class="result-title">QC5 — Оптимальный pH</div>
+        <div style="font-size:0.8rem;color:var(--text);" id="qc5-answer"></div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="addSeries()">+ Добавить серию</button>
+        <button class="btn btn-primary btn-sm" onclick="showSetup()">↩ Новый опыт</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════ STATE ═══════
+let LANG = 'ru';
+let expType = 'B';   // 'B' or 'C'
+let selectedConc = '1x';
+let selectedPH = 7;
+let stage = 0;
+let tipUsed = null;      // index of current tip
+let tips = [];           // array of {state: 'available'|'selected'|'used'|'contaminated', lastUsedFor: null|'substrate'|'enzyme'}
+let reagentsAdded = {};
+let cuvetteIn = false;
+let zeroed = false;
+let contaminated = false;
+let reactionRunning = false;
+let timerInterval = null;
+let virtualTimeMs = 0;   // virtual milliseconds
+let SPEED = 10;          // 10x virtual speed
+let recordedData = [];   // [{t, A, accuracy}]
+let nextTargetMs = 30000; // next measurement target in virtual ms
+let noiseLevel = 0.008;  // base noise
+let allSeries = [];      // for multi-series graph
+
+// ═══════ DATA ═══════
+const BASE_DATA = {
+  '1x': [0.021,0.069,0.132,0.192,0.250,0.308,0.365,0.423,0.472,0.520,0.570],
+  '2x': [0.015,0.075,0.216,0.345,0.477,0.573,0.666,0.758,0.844,0.920,0.990],
+  '5x': [0.052,0.327,0.642,0.899,1.104,1.261,1.368,1.450,1.506,1.550,1.579],
+  'ph3': [0.000,0.001,0.009,0.025,0.040,0.056,0.072,0.086,0.100,0.114,0.127],
+  'ph7': [0.000,0.005,0.018,0.031,0.044,0.057,0.068,0.081,0.092,0.104,0.115],
+  'ph14': [0.011,0.013,0.014,0.016,0.017,0.018,0.020,0.022,0.023,0.025,0.028]
+};
+const COLORS = ['#0a84ff','#30d158','#ff9f0a','#bf5af2','#ff453a','#64d2ff'];
+
+function getDataKey() {
+  if (expType === 'B') return selectedConc;
+  return 'ph' + selectedPH;
+}
+
+function getBaseVal(tSec) {
+  const d = BASE_DATA[getDataKey()];
+  const idx = Math.round(tSec / 30);
+  if (idx <= 0) return d[0];
+  if (idx >= d.length) return d[d.length-1];
+  // interpolate
+  const lo = Math.floor(tSec / 30);
+  const hi = Math.ceil(tSec / 30);
+  if (lo === hi) return d[lo];
+  const frac = (tSec / 30) - lo;
+  return d[lo] + (d[Math.min(hi, d.length-1)] - d[lo]) * frac;
+}
+
+function addNoise(val) {
+  const n = contaminated ? noiseLevel * 6 : noiseLevel;
+  return Math.max(0, val + (Math.random() - 0.5) * 2 * n);
+}
+
+// ═══════ LANGUAGE ═══════
+const T = {
+  ru: {
+    title: 'Пероксидаза редьки — Виртуальная лаборатория',
+    protocol: 'Протокол',
+    steps_B: [
+      'Убедитесь: спектрофотометр включён, λ = 500 нм',
+      'Подпишите пробирки: «S» (субстрат) и «E» (фермент)',
+      'Приготовьте субстрат (пробирка S)',
+      'Приготовьте раствор фермента (пробирка E)',
+      'Обнулите спектрофотометр (холостая проба)',
+      'Залейте реакционную смесь в кювету',
+      'Вставьте кювету и запустите таймер',
+    ],
+    steps_C: [
+      'Подпишите пробирки: pH 3 «E», pH 7 «E», pH 14 «E»',
+      'Приготовьте пробирку фермента с буфером',
+      'Обнулите спектрофотометр (холостая проба)',
+      'Залейте реакционную смесь в кювету',
+      'Вставьте кювету и запустите таймер',
+    ],
+    record: 'Записать',
+    insert_cuvette: 'Вставить кювету',
+    remove_cuvette: 'Вынуть кювету',
+    zero: '⏺ Обнулить',
+    next_exp: 'Новый опыт',
+    results: 'Результаты',
+  },
+  en: {
+    title: 'Radish Peroxidase — Virtual Lab',
+    protocol: 'Protocol',
+    record: 'Record',
+    insert_cuvette: 'Insert cuvette',
+    remove_cuvette: 'Remove cuvette',
+    zero: '⏺ Zero (Blank)',
+    next_exp: 'New experiment',
+    results: 'Results',
+  }
+};
+
+function toggleLang() {
+  LANG = LANG === 'ru' ? 'en' : 'ru';
+  document.getElementById('lang-btn').textContent = LANG === 'ru' ? 'EN' : 'RU';
+  document.getElementById('hdr-title-text').textContent = T[LANG].title || T.ru.title;
+}
+
+// ═══════ SETUP ═══════
+let selectedExpCard = null;
+function selectExp(type) {
+  expType = type;
+  document.querySelectorAll('.setup-card').forEach((c,i) => {
+    c.classList.toggle('selected', (i===0 && type==='B') || (i===1 && type==='C'));
+  });
+  if (type === 'C') {
+    document.querySelectorAll('#exp-select .conc-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('ph-7').classList.add('selected');
+    selectedPH = 7;
+  }
+}
+
+function selectConc(c) {
+  expType = 'B';
+  selectedConc = c;
+  ['1x','2x','5x'].forEach(x => document.getElementById('conc-'+x).classList.toggle('selected', x===c));
+  document.querySelectorAll('.setup-card')[0].classList.add('selected');
+  document.querySelectorAll('.setup-card')[1].classList.remove('selected');
+}
+
+function selectPH(ph) {
+  expType = 'C';
+  selectedPH = ph;
+  [3,7,14].forEach(x => document.getElementById('ph-'+x).classList.toggle('selected', x===ph));
+  document.querySelectorAll('.setup-card')[1].classList.add('selected');
+  document.querySelectorAll('.setup-card')[0].classList.remove('selected');
+}
+
+function startLab() {
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('lab').style.display = 'grid';
+  initLab();
+}
+
+function showSetup() {
+  clearInterval(timerInterval);
+  reactionRunning = false;
+  document.getElementById('lab').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'block';
+}
+
+// ═══════ LAB INIT ═══════
+function initLab() {
+  contaminated = false;
+  tipUsed = null;
+  reagentsAdded = {};
+  cuvetteIn = false;
+  zeroed = false;
+  reactionRunning = false;
+  virtualTimeMs = 0;
+  recordedData = [];
+  nextTargetMs = 30000;
+  clearInterval(timerInterval);
+
+  // Badge
+  const badgeText = expType === 'B' ? `Часть B · ${selectedConc.toUpperCase()}` : `Часть C · pH ${selectedPH}`;
+  document.getElementById('exp-badge').textContent = badgeText;
+  document.getElementById('noise-badge').textContent = 'Данные стабильны';
+  document.getElementById('noise-badge').className = 'chip chip-green';
+
+  // Spectro
+  document.getElementById('spectro-display').textContent = '- - -';
+  document.getElementById('spectro-display').className = 'spectro-val';
+  document.getElementById('zero-status').textContent = 'Blank: NOT SET';
+  document.getElementById('wl-display').textContent = 'λ = — nm';
+  document.getElementById('zero-btn').disabled = true;
+  document.getElementById('insert-btn').disabled = true;
+  document.getElementById('insert-btn').textContent = 'Вставить кювету';
+  document.getElementById('cuvette-slot').className = 'cuvette-slot';
+  document.getElementById('cuvette-slot').innerHTML = '🧪 Место для кюветы (нажмите для установки)';
+  document.getElementById('timer-box').style.display = 'none';
+
+  // Tips
+  tips = Array.from({length:8}, () => ({state:'available', lastUsedFor:null}));
+  renderTips();
+  document.getElementById('tip-section').style.display = 'block';
+  document.getElementById('contamination-warn').classList.remove('show');
+
+  // Data table
+  document.getElementById('data-tbody').innerHTML = '';
+  document.getElementById('points-count').textContent = '0 / 11';
+  document.getElementById('results-panel').style.display = 'none';
+
+  // Graph
+  drawGraph();
+
+  // Build steps
+  buildSteps();
+  setStage(0);
+}
+
+// ═══════ TIPS ═══════
+function renderTips() {
+  const rack = document.getElementById('tip-rack');
+  rack.innerHTML = '';
+  tips.forEach((t, i) => {
+    const el = document.createElement('div');
+    el.className = 'tip ' + t.state;
+    el.title = t.state === 'available' ? `Наконечник ${i+1}` : t.state === 'used' ? 'Использован' : t.state === 'contaminated' ? 'Загрязнён!' : 'Выбран';
+    el.textContent = i+1;
+    if (t.state === 'available') el.onclick = () => selectTip(i);
+    rack.appendChild(el);
+  });
+}
+
+function selectTip(i) {
+  if (tips[i].state !== 'available') return;
+  // deselect previous if any
+  if (tipUsed !== null && tips[tipUsed].state === 'selected') {
+    tips[tipUsed].state = 'available';
+  }
+  tips[i].state = 'selected';
+  tipUsed = i;
+  document.getElementById('current-tip-info').textContent = `Наконечник ${i+1} (чистый)`;
+  renderTips();
+}
+
+function useTip(forWhat) {
+  if (tipUsed === null) return false; // no tip
+  const t = tips[tipUsed];
+  if (t.lastUsedFor === 'substrate' && forWhat === 'enzyme') {
+    // contamination!
+    contaminated = true;
+    t.state = 'contaminated';
+    t.lastUsedFor = 'enzyme';
+    document.getElementById('contamination-warn').classList.add('show');
+    document.getElementById('noise-badge').textContent = '⚠ Загрязнение! Шум данных';
+    document.getElementById('noise-badge').className = 'chip chip-red';
+    renderTips();
+    return true; // used but contaminated
+  }
+  t.lastUsedFor = forWhat;
+  t.state = 'used';
+  renderTips();
+  tipUsed = null;
+  document.getElementById('current-tip-info').textContent = 'не выбран (смените наконечник)';
+  return true;
+}
+
+// ═══════ STEPS ═══════
+function buildSteps() {
+  const container = document.getElementById('steps-container');
+  container.innerHTML = '';
+  const actionArea = document.getElementById('action-area');
+  actionArea.innerHTML = '';
+
+  if (expType === 'B') buildStepsB();
+  else buildStepsC();
+}
+
+function makeStep(num, label, body) {
+  const div = document.createElement('div');
+  div.className = 'step pending';
+  div.id = 'step-' + num;
+  div.innerHTML = `
+    <div class="step-hdr">
+      <div class="step-num">${num}</div>
+      <div class="step-label">${label}</div>
+    </div>
+    <div class="step-body">${body}</div>
+  `;
+  document.getElementById('steps-container').appendChild(div);
+}
+
+let currentStep = 0;
+let totalSteps = 0;
+
+function buildStepsB() {
+  const steps = [
+    {label:'Установите длину волны',body:`<p>Спектрофотометр уже настроен на <strong>λ = 500 нм</strong>. Нажмите кнопку ниже для подтверждения.</p><button class="btn btn-primary btn-sm" onclick="confirmWL()" style="margin-top:8px">✓ Подтвердить λ = 500 нм</button>`},
+    {label:'Выберите наконечник',body:`<p>Выберите наконечник (слева) для переноса <strong>дистиллированной воды</strong> в кювету для холостой пробы.</p><button class="btn btn-ghost btn-sm" onclick="confirmTipForBlank()" style="margin-top:8px">→ Налить 1 мл H₂O в кювету</button>`},
+    {label:'Обнулите прибор (холостая проба)',body:`<p>Кювета с 1 мл дистиллированной воды вставляется в прибор. Нажмите «Обнулить».</p>`},
+    {label:'Приготовьте субстрат S',body:buildSubstrateHTML()},
+    {label:'Приготовьте фермент E',body:buildEnzymeHTML()},
+    {label:'Смешайте и вставьте кювету',body:`<p>В кювету налейте <strong>0,5 мл субстрата S</strong> (смените наконечник!), затем добавьте <strong>0,5 мл фермента E</strong>. Немедленно перемешайте пипетированием и вставьте в прибор.</p>
+    <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="btn btn-ghost btn-sm" id="add-S-cuvette" onclick="addToCuvette('S')">💧 0,5 мл субстрата S</button>
+      <button class="btn btn-ghost btn-sm" id="add-E-cuvette" onclick="addToCuvette('E')" disabled>🧪 0,5 мл фермента E</button>
+    </div>`},
+    {label:'Запустите измерение',body:`<p>Вставьте кювету и немедленно запустите таймер. Записывайте A₅₀₀ каждые <strong>30 секунд</strong> в течение 5 минут.</p>`},
+  ];
+  totalSteps = steps.length;
+  steps.forEach((s, i) => makeStep(i+1, s.label, s.body));
+  activateStep(1);
+}
+
+function buildStepsC() {
+  const steps = [
+    {label:'Установите длину волны',body:`<p>λ = 500 нм. Нажмите для подтверждения.</p><button class="btn btn-primary btn-sm" onclick="confirmWL()" style="margin-top:8px">✓ Подтвердить λ = 500 нм</button>`},
+    {label:'Приготовьте пробирку E с буфером',body:`<p>Подпишите пробирку <strong>pH ${selectedPH} "E"</strong>. Добавьте компоненты (выберите наконечник для каждого):</p>
+    <div style="margin-top:8px;">
+      <button class="reagent-btn" id="r-perox" onclick="addReagentC('perox')"><div class="reagent-dot" style="background:#7ec8e3;"></div>0,25 мл пероксидазы редьки</button>
+      <button class="reagent-btn" id="r-buf" onclick="addReagentC('buf')"><div class="reagent-dot" style="background:${selectedPH===3?'#ff9f0a':selectedPH===7?'#30d158':'#bf5af2'};"></div>1 мл буфера pH ${selectedPH}</button>
+    </div>`},
+    {label:'Обнулите прибор',body:`<p>1 мл дистиллированной воды → кювета → прибор → обнулить.</p><button class="btn btn-ghost btn-sm" onclick="confirmTipForBlank()" style="margin-top:8px">→ Налить 1 мл H₂O и обнулить</button>`},
+    {label:'Смешайте и вставьте кювету',body:`<p>0,5 мл субстрата S + 0,5 мл pH${selectedPH} "E" → кювета → перемешать → вставить.</p>
+    <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="btn btn-ghost btn-sm" id="add-S-cuvette" onclick="addToCuvette('S')">💧 0,5 мл субстрата S</button>
+      <button class="btn btn-ghost btn-sm" id="add-E-cuvette" onclick="addToCuvette('E')" disabled>🧪 0,5 мл фермента E</button>
+    </div>`},
+    {label:'Запустите измерение',body:`<p>Вставьте кювету и записывайте A₅₀₀ каждые 30 с в течение 5 мин.</p>`},
+  ];
+  totalSteps = steps.length;
+  steps.forEach((s, i) => makeStep(i+1, s.label, s.body));
+  activateStep(1);
+}
+
+function buildSubstrateHTML() {
+  const concLabel = selectedConc.toUpperCase();
+  return `<p>Пробирка «S». Используйте <strong>отдельный наконечник для каждого реагента</strong>. Состав S (3,75 мл):</p>
+  <div style="margin-top:8px;">
+    <button class="reagent-btn" id="r-h2o" onclick="addReagent('h2o', 'substrate')"><div class="reagent-dot" style="background:#64d2ff;"></div>3,5 мл дист. воды</button>
+    <button class="reagent-btn" id="r-h2o2" onclick="addReagent('h2o2', 'substrate')"><div class="reagent-dot" style="background:#ff453a;"></div>0,15 мл H₂O₂</button>
+    <button class="reagent-btn" id="r-guaiacol" onclick="addReagent('guaiacol', 'substrate')"><div class="reagent-dot" style="background:#ff9f0a;"></div>0,1 мл гваякола (G, защита от света!)</button>
+  </div>
+  <div style="margin-top:6px;font-size:0.7rem;color:var(--dim);">⚠ Гваякол чувствителен к свету — держать пробирку в фольге</div>`;
+}
+
+function buildEnzymeHTML() {
+  const concLabel = selectedConc.toUpperCase();
+  const vol = selectedConc === '1x' ? '0,75' : selectedConc === '2x' ? '1,5' : '3,75';
+  const waterVol = selectedConc === '1x' ? '3,0' : selectedConc === '2x' ? '2,25' : '0';
+  return `<p>Пробирка «E» (${concLabel}). Смените наконечник перед ферментом!</p>
+  <div style="margin-top:8px;">
+    ${waterVol !== '0' ? `<button class="reagent-btn" id="r-water-e" onclick="addReagent('water_e', 'substrate')"><div class="reagent-dot" style="background:#64d2ff;"></div>${waterVol} мл дист. воды</button>` : ''}
+    <button class="reagent-btn" id="r-enzyme" onclick="addReagent('enzyme', 'enzyme')"><div class="reagent-dot" style="background:#30d158;"></div>${vol} мл экстракта пероксидазы ${concLabel}</button>
+  </div>`;
+}
+
+function activateStep(n) {
+  currentStep = n;
+  for (let i = 1; i <= totalSteps; i++) {
+    const el = document.getElementById('step-' + i);
+    if (!el) continue;
+    if (i < n) el.className = 'step done';
+    else if (i === n) el.className = 'step active';
+    else el.className = 'step pending';
+  }
+  // stage indicator
+  const stageMap = {1:0, 2:1, 3:1, 4:1, 5:1, 6:2, 7:3};
+  const s = stageMap[n] || 0;
+  setStage(s);
+}
+
+function setStage(s) {
+  for (let i = 0; i <= 4; i++) {
+    const el = document.getElementById('stg'+i);
+    if (i < s) el.className = 'stg done';
+    else if (i === s) el.className = 'stg active';
+    else el.className = 'stg';
+  }
+}
+
+// ═══════ STEP ACTIONS ═══════
+function confirmWL() {
+  document.getElementById('wl-display').textContent = 'λ = 500 nm';
+  document.getElementById('wl-btn').textContent = 'λ = 500 nm ✓';
+  activateStep(2);
+}
+
+function confirmTipForBlank() {
+  if (tipUsed === null) {
+    showActionMsg('Сначала выберите наконечник!', 'warn');
+    return;
+  }
+  useTip('blank');
+  // Enable zero btn
+  document.getElementById('zero-btn').disabled = false;
+  document.getElementById('insert-btn').disabled = false;
+  // Auto show blank message
+  showActionMsg('Холостая проба готова. Вставьте кювету с водой и нажмите «Обнулить».', 'info');
+  if (expType === 'B') activateStep(3);
+  else activateStep(3);
+}
+
+function zeroSpec() {
+  if (zeroed) return;
+  zeroed = true;
+  document.getElementById('spectro-display').textContent = '0.000';
+  document.getElementById('zero-status').textContent = 'Blank: SET ✓';
+  document.getElementById('zero-btn').textContent = '✓ Обнулено';
+  document.getElementById('zero-btn').classList.add('active');
+  showActionMsg('Прибор обнулён. Уберите холостую пробу, промойте кювету.', 'success');
+  if (expType === 'B') activateStep(4);
+  else activateStep(4);
+}
+
+let substrateReady = false;
+let enzymeReady = false;
+
+function addReagent(reagent, type) {
+  if (tipUsed === null) {
+    showActionMsg('⚠ Сначала выберите наконечник!', 'warn');
+    return;
+  }
+  reagentsAdded[reagent] = true;
+  useTip(type);
+  const btn = document.getElementById('r-' + (reagent === 'water_e' ? 'water-e' : reagent));
+  if (btn) { btn.classList.add('added'); btn.disabled = true; }
+
+  // Check substrate complete
+  if (expType === 'B') {
+    const subDone = reagentsAdded['h2o'] && reagentsAdded['h2o2'] && reagentsAdded['guaiacol'];
+    const enzDone = reagentsAdded['enzyme'];
+    if (subDone && !substrateReady) {
+      substrateReady = true;
+      showActionMsg('✓ Субстрат S готов! Теперь приготовьте фермент E.', 'success');
+      activateStep(5);
+    }
+    if (enzDone && !enzymeReady) {
+      enzymeReady = true;
+      showActionMsg('✓ Фермент E готов! Смешайте и вставьте кювету.', 'success');
+      activateStep(6);
+    }
+  }
+}
+
+function addReagentC(reagent) {
+  if (tipUsed === null) {
+    showActionMsg('⚠ Сначала выберите наконечник!', 'warn');
+    return;
+  }
+  reagentsAdded[reagent] = true;
+  useTip(reagent === 'enzyme' ? 'enzyme' : 'substrate');
+  const btn = document.getElementById('r-' + reagent);
+  if (btn) { btn.classList.add('added'); btn.disabled = true; }
+
+  if (reagentsAdded['perox'] && reagentsAdded['buf']) {
+    enzymeReady = true;
+    showActionMsg('✓ Пробирка E готова! Обнулите прибор.', 'success');
+    activateStep(3);
+    document.getElementById('zero-btn').disabled = false;
+    document.getElementById('insert-btn').disabled = false;
+  }
+}
+
+let cuvetteHasS = false;
+let cuvetteHasE = false;
+
+function addToCuvette(what) {
+  if (tipUsed === null) {
+    showActionMsg('⚠ Сначала выберите наконечник!', 'warn');
+    return;
+  }
+  if (what === 'S') {
+    cuvetteHasS = true;
+    useTip('substrate');
+    document.getElementById('add-S-cuvette').classList.add('added');
+    document.getElementById('add-S-cuvette').disabled = true;
+    document.getElementById('add-E-cuvette').disabled = false;
+    showActionMsg('Смените наконечник перед добавлением фермента!', 'warn');
+  } else {
+    if (!cuvetteHasS) { showActionMsg('Сначала добавьте субстрат S!', 'warn'); return; }
+    // Check contamination: if tip was used for substrate before without changing
+    const t = tips[tipUsed];
+    if (t && t.lastUsedFor === 'substrate') {
+      contaminated = true;
+      document.getElementById('contamination-warn').classList.add('show');
+      document.getElementById('noise-badge').textContent = '⚠ Загрязнение!';
+      document.getElementById('noise-badge').className = 'chip chip-red';
+    }
+    cuvetteHasE = true;
+    useTip('enzyme');
+    document.getElementById('add-E-cuvette').classList.add('added');
+    document.getElementById('add-E-cuvette').disabled = true;
+    showActionMsg('Перемешайте пипетированием и вставьте кювету в прибор!', 'info');
+    document.getElementById('insert-btn').disabled = false;
+    if (expType === 'B') activateStep(7);
+    else activateStep(5);
+  }
+}
+
+// ═══════ CUVETTE & SPECTRO ═══════
+function toggleCuvette() {
+  cuvetteIn = !cuvetteIn;
+  const slot = document.getElementById('cuvette-slot');
+  const btn = document.getElementById('insert-btn');
+  if (cuvetteIn) {
+    slot.className = 'cuvette-slot filled';
+    slot.innerHTML = '✅ Кювета установлена';
+    btn.textContent = 'Вынуть кювету';
+    if (zeroed && cuvetteHasE) {
+      startReaction();
+    } else if (!zeroed) {
+      // show blank reading
+      document.getElementById('spectro-display').textContent = '0.000';
+    }
+  } else {
+    slot.className = 'cuvette-slot';
+    slot.innerHTML = '🧪 Место для кюветы (нажмите для установки)';
+    btn.textContent = 'Вставить кювету';
+    document.getElementById('spectro-display').textContent = cuvetteHasE ? '- - -' : '0.000';
+  }
+}
+
+// ═══════ REACTION ═══════
+function startReaction() {
+  if (reactionRunning) return;
+  reactionRunning = true;
+  virtualTimeMs = 0;
+  nextTargetMs = 0; // first point at t=0
+  recordedData = [];
+  setStage(3);
+
+  document.getElementById('timer-box').style.display = 'flex';
+  document.getElementById('record-btn').disabled = false;
+  showActionMsg('Реакция началась! Записывайте показания каждые 30 секунд (нажмите «Записать» в нужный момент).', 'info');
+
+  const TICK = 100; // ms real time
+  const VIRTUAL_PER_TICK = TICK * SPEED; // virtual ms per tick
+
+  timerInterval = setInterval(() => {
+    virtualTimeMs += VIRTUAL_PER_TICK;
+    updateSpectroLive();
+    updateTimer();
+    if (virtualTimeMs >= 300000 + 5000) {
+      clearInterval(timerInterval);
+      reactionRunning = false;
+      showResults();
+    }
+  }, TICK);
+}
+
+function updateSpectroLive() {
+  if (!cuvetteIn || !zeroed) return;
+  const tSec = virtualTimeMs / 1000;
+  const baseVal = getBaseVal(tSec);
+  const noisy = addNoise(baseVal);
+  const display = document.getElementById('spectro-display');
+  display.textContent = noisy.toFixed(3);
+  display.className = 'spectro-val' + (contaminated ? ' noise' : '');
+}
+
+function updateTimer() {
+  const tSec = virtualTimeMs / 1000;
+  const mins = Math.floor(tSec / 60);
+  const secs = Math.floor(tSec % 60);
+  const display = document.getElementById('timer-display');
+  display.textContent = `${mins}:${secs.toString().padStart(2,'0')}`;
+
+  // progress to next 30s target
+  const targetSec = Math.ceil(tSec / 30) * 30;
+  const prevTarget = targetSec - 30;
+  const fill = document.getElementById('timer-fill');
+  const pct = Math.min(100, ((tSec - prevTarget) / 30) * 100);
+  fill.style.width = pct + '%';
+
+  const nextLabel = `${Math.floor(targetSec/60)}:${(targetSec%60).toString().padStart(2,'0')}`;
+  document.getElementById('next-point-label').textContent = nextLabel;
+
+  // Color
+  const diff = Math.abs(tSec - Math.round(tSec / 30) * 30);
+  if (diff < 2) {
+    display.className = 'timer-display go';
+    fill.className = 'timer-fill go';
+    document.getElementById('timing-feedback').textContent = '🟢 Сейчас!';
+  } else if (diff < 6) {
+    display.className = 'timer-display warn';
+    fill.className = 'timer-fill warn';
+    document.getElementById('timing-feedback').textContent = '🟡 Скоро...';
+  } else {
+    display.className = 'timer-display';
+    fill.className = 'timer-fill';
+    document.getElementById('timing-feedback').textContent = '';
+  }
+}
+
+function recordMeasurement() {
+  const tSec = virtualTimeMs / 1000;
+  const nearestTarget = Math.round(tSec / 30) * 30;
+  const timingError = tSec - nearestTarget; // seconds off target
+  const baseVal = getBaseVal(nearestTarget);
+  const errorFactor = Math.abs(timingError) / 30;
+  const recorded = addNoise(baseVal + (contaminated ? 0 : getBaseVal(tSec) - baseVal));
+
+  let accuracy = 'perfect';
+  let accText = '✓ Точно';
+  if (Math.abs(timingError) <= 2) { accuracy = 'perfect'; accText = '✓ Точно'; }
+  else if (Math.abs(timingError) <= 6) { accuracy = 'ok'; accText = `~${timingError>0?'+':''}${timingError.toFixed(0)}с`; }
+  else { accuracy = 'bad'; accText = `⚠${timingError>0?'+':''}${timingError.toFixed(0)}с`; }
+
+  recordedData.push({ t: nearestTarget, tActual: tSec, A: recorded, accuracy });
+  updateDataTable();
+  updateGraphData();
+
+  // Flash spectro green
+  const d = document.getElementById('spectro-display');
+  d.classList.add('flash-green');
+  setTimeout(() => d.classList.remove('flash-green'), 300);
+
+  // Advance next target
+  nextTargetMs = (nearestTarget + 30) * 1000;
+
+  // Disable button briefly
+  document.getElementById('record-btn').disabled = true;
+  setTimeout(() => {
+    if (reactionRunning) document.getElementById('record-btn').disabled = false;
+  }, 2000);
+}
+
+// ═══════ DATA TABLE ═══════
+function updateDataTable() {
+  const tbody = document.getElementById('data-tbody');
+  tbody.innerHTML = '';
+  const timePoints = [0,30,60,90,120,150,180,210,240,270,300];
+  timePoints.forEach(t => {
+    const rec = recordedData.find(r => r.t === t);
+    const tr = document.createElement('tr');
+    if (rec) {
+      tr.className = 'recorded';
+      const accClass = rec.accuracy === 'perfect' ? 'acc-perfect' : rec.accuracy === 'ok' ? 'acc-ok' : 'acc-bad';
+      const accText = rec.accuracy === 'perfect' ? '✓' : rec.accuracy === 'ok' ? '~' : '⚠';
+      tr.innerHTML = `<td>${t}</td><td>${rec.A.toFixed(3)}</td><td><span class="accuracy-badge ${accClass}">${accText}</span></td>`;
+    } else {
+      tr.innerHTML = `<td style="color:var(--dim)">${t}</td><td style="color:var(--dim)">—</td><td></td>`;
+    }
+    tbody.appendChild(tr);
+  });
+  document.getElementById('points-count').textContent = `${recordedData.length} / 11`;
+}
+
+// ═══════ GRAPH ═══════
+let extraSeries = [];
+
+function drawGraph() {
+  const canvas = document.getElementById('graph');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth * devicePixelRatio || 600;
+  const H = canvas.height = 220 * devicePixelRatio || 220;
+  ctx.scale(1,1);
+  ctx.clearRect(0,0,W,H);
+
+  const pad = {top:20,right:20,bottom:35,left:45};
+  const gW = W - pad.left - pad.right;
+  const gH = H - pad.top - pad.bottom;
+
+  // Background
+  ctx.fillStyle = '#0a0a0f';
+  ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle = '#1a1a2e';
+  ctx.lineWidth = 1;
+  for (let i=0;i<=5;i++) {
+    const y = pad.top + (gH/5)*i;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left+gW, y); ctx.stroke();
+  }
+  for (let i=0;i<=10;i++) {
+    const x = pad.left + (gW/10)*i;
+    ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top+gH); ctx.stroke();
+  }
+
+  // Collect all series to plot
+  const allToPlot = [];
+  if (recordedData.length > 0) {
+    allToPlot.push({data: recordedData, color: COLORS[0], label: expType==='B'?selectedConc.toUpperCase():`pH ${selectedPH}`});
+  }
+  extraSeries.forEach((s,i) => {
+    allToPlot.push({data: s.data, color: COLORS[i+1], label: s.label});
+  });
+
+  if (allToPlot.length === 0) {
+    ctx.fillStyle = '#333';
+    ctx.font = `${12*devicePixelRatio}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText('Запустите реакцию и записывайте данные', W/2, H/2);
+    return;
+  }
+
+  // Find max A
+  let maxA = 0.1;
+  allToPlot.forEach(s => s.data.forEach(p => { if (p.A > maxA) maxA = p.A; }));
+  maxA = Math.ceil(maxA * 10) / 10 + 0.05;
+
+  const toX = t => pad.left + (t/300)*gW;
+  const toY = a => pad.top + gH - (a/maxA)*gH;
+
+  // Axes
+  ctx.strokeStyle = '#3a3a5a';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, pad.top+gH); ctx.lineTo(pad.left+gW, pad.top+gH); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#555';
+  ctx.font = `${9*devicePixelRatio}px -apple-system,sans-serif`;
+  ctx.textAlign = 'center';
+  [0,60,120,180,240,300].forEach(t => {
+    ctx.fillText(t, toX(t), pad.top+gH+12*devicePixelRatio);
+  });
+  ctx.textAlign = 'right';
+  [0, maxA*0.25, maxA*0.5, maxA*0.75, maxA].forEach(a => {
+    ctx.fillText(a.toFixed(2), pad.left-4, toY(a)+4);
+  });
+  ctx.fillStyle = '#444';
+  ctx.font = `${10*devicePixelRatio}px -apple-system,sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('Время (с)', pad.left+gW/2, H-4);
+
+  // Data series
+  allToPlot.forEach(s => {
+    if (s.data.length === 0) return;
+    const sorted = [...s.data].sort((a,b)=>a.t-b.t);
+
+    // Line
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    sorted.forEach((p,i) => {
+      if (i===0) ctx.moveTo(toX(p.t), toY(p.A));
+      else ctx.lineTo(toX(p.t), toY(p.A));
+    });
+    ctx.stroke();
+
+    // Trend line (linear regression on linear part 0-180s)
+    const linearPts = sorted.filter(p => p.t <= 180);
+    if (linearPts.length >= 2) {
+      const n = linearPts.length;
+      let sx=0,sy=0,sxy=0,sx2=0;
+      linearPts.forEach(p=>{sx+=p.t;sy+=p.A;sxy+=p.t*p.A;sx2+=p.t*p.t;});
+      const slope = (n*sxy - sx*sy)/(n*sx2 - sx*sx);
+      const intercept = (sy - slope*sx)/n;
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4,3]);
+      ctx.beginPath();
+      ctx.moveTo(toX(0), toY(intercept));
+      ctx.lineTo(toX(300), toY(intercept+slope*300));
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Points
+    sorted.forEach(p => {
+      ctx.fillStyle = p.accuracy==='bad' ? '#ff453a' : p.accuracy==='ok' ? '#ff9f0a' : s.color;
+      ctx.beginPath();
+      ctx.arc(toX(p.t), toY(p.A), 3.5, 0, Math.PI*2);
+      ctx.fill();
+    });
+  });
+
+  // Legend
+  const legendDiv = document.getElementById('graph-legend');
+  legendDiv.innerHTML = allToPlot.map(s =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${s.color}"></div>${s.label}</div>`
+  ).join('');
+}
+
+function updateGraphData() {
+  drawGraph();
+}
+
+// ═══════ RESULTS ═══════
+function showResults() {
+  clearInterval(timerInterval);
+  reactionRunning = false;
+  setStage(4);
+  document.getElementById('results-panel').style.display = 'block';
+
+  // Build slope selector
+  const sel = document.getElementById('slope-sel');
+  sel.innerHTML = '';
+  const timePoints = [0,30,60,90,120,150,180,210,240,270,300];
+  for (let i=0; i<timePoints.length-1; i++) {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${timePoints[i]}–${timePoints[i+1]} с (линейный участок)`;
+    if (i===2) opt.selected = true; // recommend 60-90 as good linear segment
+    sel.appendChild(opt);
+  }
+  calcSlope();
+  drawGraph();
+
+  // QC5
+  if (expType === 'C') {
+    document.getElementById('qc5-block').style.display = 'block';
+    document.getElementById('qc5-answer').innerHTML = `При pH <strong>${selectedPH}</strong> активность = <span id="slope-for-qc5"></span> ОЕ/с.<br>
+    <span style="color:var(--dim);font-size:0.73rem;">Ответ QC5 принимается: pH 3 или pH 7 (оба значения близки; оптимум пероксидазы редьки ≈ 4–6 по литературе).</span>`;
+  }
+
+  showActionMsg('✅ Эксперимент завершён! Данные записаны. Вы можете добавить ещё серию для сравнения.', 'success');
+}
+
+function calcSlope() {
+  const sel = document.getElementById('slope-sel');
+  const i = parseInt(sel.value);
+  const timePoints = [0,30,60,90,120,150,180,210,240,270,300];
+  const t1 = timePoints[i], t2 = timePoints[i+1];
+  const p1 = recordedData.find(r=>r.t===t1);
+  const p2 = recordedData.find(r=>r.t===t2);
+  if (!p1 || !p2) {
+    document.getElementById('slope-val').textContent = '—';
+    document.getElementById('slope-formula').textContent = 'Нет данных для выбранного участка';
+    return;
+  }
+  const slope = (p2.A - p1.A) / (t2 - t1);
+  document.getElementById('slope-val').textContent = slope.toFixed(5) + ' ОЕ/с';
+  document.getElementById('slope-formula').innerHTML =
+    `m = (A₂ − A₁) / (t₂ − t₁)\n= (${p2.A.toFixed(3)} − ${p1.A.toFixed(3)}) / (${t2} − ${t1})\n= ${slope.toFixed(5)} ОЕ/с\n\n(диапазон принимаемых ответов QB4: 0.0010–0.0105 ОЕ/30с)`;
+
+  // Update QC5
+  const el = document.getElementById('slope-for-qc5');
+  if (el) el.textContent = slope.toFixed(5);
+}
+
+// ═══════ ADD SERIES ═══════
+function addSeries() {
+  if (recordedData.length === 0) return;
+  const label = expType==='B' ? selectedConc.toUpperCase() : `pH ${selectedPH}`;
+  extraSeries.push({data:[...recordedData], label});
+  allSeries.push({data:[...recordedData], label});
+  showSetup();
+}
+
+// ═══════ ACTION MESSAGES ═══════
+function showActionMsg(msg, type) {
+  const el = document.getElementById('action-area');
+  const colors = {info:'var(--bdim)', success:'var(--gdim)', warn:'rgba(255,159,10,0.1)'};
+  const bcolors = {info:'rgba(10,132,255,0.3)', success:'rgba(48,209,88,0.3)', warn:'rgba(255,159,10,0.3)'};
+  const tcolors = {info:'var(--blue2)', success:'var(--green)', warn:'var(--orange)'};
+  el.innerHTML = `<div style="background:${colors[type]};border:1px solid ${bcolors[type]};border-radius:8px;padding:10px 12px;font-size:0.76rem;color:${tcolors[type]};line-height:1.5;">${msg}</div>`;
+}
+
+// ═══════ INIT ═══════
+window.addEventListener('resize', () => { if (recordedData.length > 0 || extraSeries.length > 0) drawGraph(); });
+// Set default selections
+selectConc('1x');
+selectExp('B');
+drawGraph();
+</script>
+</body>
+</html>

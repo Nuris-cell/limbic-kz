@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Лаборатория: pH-метрия аминокислот</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:700px;height:490px;overflow:hidden;font-family:'Inter',sans-serif;background:#f5f6f9;color:#1e2433;display:flex;}
+
+/* === PANELS === */
+.panel-l{width:180px;min-width:180px;background:#fff;border-right:1px solid #e2e8f0;padding:10px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;}
+.panel-c{flex:1;background:#f5f6f9;display:flex;align-items:center;justify-content:center;gap:18px;padding:10px;position:relative;}
+.panel-r{width:180px;min-width:180px;background:#fff;border-left:1px solid #e2e8f0;padding:10px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;}
+
+.lbl{font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.12em;display:block;margin-bottom:4px;}
+.card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px;}
+
+/* === SAMPLE TABS === */
+.sample-tabs{display:flex;gap:4px;}
+.stab{flex:1;padding:5px 2px;font-size:9.5px;font-weight:700;border:1.5px solid #e2e8f0;background:#f8fafc;color:#64748b;border-radius:7px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.stab.active{background:#1e293b;color:#fff;border-color:#1e293b;}
+
+/* === STEP BUTTONS === */
+.step-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+.step-btn{padding:5px 2px;font-size:9px;font-weight:700;border:1.5px solid #e2e8f0;background:#f8fafc;color:#1e293b;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s;text-align:center;}
+.step-btn:hover:not(:disabled){background:#eff6ff;border-color:#93c5fd;}
+.step-btn:disabled{opacity:.3;cursor:not-allowed;}
+
+.drip-btn{display:flex;align-items:center;gap:6px;justify-content:center;width:100%;padding:5px;font-size:9.5px;font-weight:700;border:1.5px solid #10b981;background:#f0fdf4;color:#10b981;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s;}
+.drip-btn.active{background:#10b981;color:#fff;}
+
+.reset-btn{margin-top:auto;display:block;width:100%;padding:5px;font-size:9px;font-weight:700;border:1px solid #fca5a5;background:#fff;color:#dc2626;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;}
+.reset-btn:hover{background:#fee2e2;}
+
+/* === BURET === */
+.buret-body{width:30px;height:300px;background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:0 0 8px 8px;position:relative;overflow:hidden;}
+.buret-fill{position:absolute;bottom:0;width:100%;background:linear-gradient(180deg,#7dd3fc,#38bdf8);transition:height .1s;}
+.meniscus{position:absolute;top:-4px;left:0;width:100%;height:9px;background:#f5f6f9;border-bottom:2px solid #38bdf8;border-radius:0 0 50% 50%;}
+.bscale{position:absolute;inset:0;pointer-events:none;}
+
+.valve{width:44px;height:24px;background:#cbd5e1;border:1px solid #94a3b8;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-top:5px;position:relative;}
+.vhandle{width:7px;height:120%;background:#334155;border-radius:3px;transition:transform .3s;}
+.vopen{transform:rotate(90deg);}
+.drop{position:absolute;width:4px;height:7px;background:#38bdf8;border-radius:40%;animation:drip .55s linear infinite;}
+@keyframes drip{from{transform:translateY(0);opacity:1}to{transform:translateY(90px);opacity:0}}
+
+/* === pH METER === */
+.ph-meter{background:#0b1120;border-radius:14px;padding:10px 14px;border:2px solid #1e3a5f;text-align:center;width:100%;}
+.ph-meter-brand{font-size:7px;font-weight:700;color:#1e3a5f;letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px;}
+.ph-big{font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:900;line-height:1;letter-spacing:-.03em;transition:color .4s;}
+.ph-unit{font-family:'JetBrains Mono',monospace;font-size:9px;color:#334155;margin-top:3px;}
+
+/* === FLASK === */
+.flask svg path.liq{transition:fill .9s;}
+
+/* === READINGS === */
+.rtbl{width:100%;border-collapse:collapse;}
+.rtbl th{font-size:7px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;padding:2px 4px;border-bottom:1px solid #e2e8f0;text-align:center;}
+.rtbl td{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2.5px 4px;border-bottom:1px solid #f1f5f9;text-align:center;}
+.rtbl tr:last-child td{border-bottom:none;}
+
+/* === MISC === */
+.hint-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:7px;font-size:7.5px;color:#475569;line-height:1.6;}
+.vol-chip{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#1e293b;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:5px;padding:3px 8px;display:inline-block;}
+</style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<aside class="panel-l">
+  <div>
+    <span class="lbl">Образец</span>
+    <div class="sample-tabs">
+      <button class="stab active" id="tab-X" onclick="selectSample('X')">X</button>
+      <button class="stab" id="tab-Y" onclick="selectSample('Y')">Y</button>
+      <button class="stab" id="tab-Z" onclick="selectSample('Z')">Z</button>
+    </div>
+    <div id="sample-info" style="margin-top:5px;font-size:8px;color:#64748b;line-height:1.5;">
+      0.10 М раствор, V = 20.0 мл<br>Титрант: 0.10 М NaOH
+    </div>
+  </div>
+
+  <div>
+    <span class="lbl">Добавить NaOH</span>
+    <div class="step-grid">
+      <button class="step-btn" onclick="addVol(1.0)">+1.00 мл</button>
+      <button class="step-btn" onclick="addVol(0.5)">+0.50 мл</button>
+      <button class="step-btn" onclick="addVol(0.1)">+0.10 мл</button>
+      <button class="step-btn" onclick="addVol(0.02)">+0.02 мл</button>
+    </div>
+  </div>
+
+  <div>
+    <span class="lbl">Непрерывно</span>
+    <button class="drip-btn" id="drip-btn" onclick="toggleDrip()">▶ Открыть кран</button>
+  </div>
+
+  <div class="hint-box">
+    <strong style="color:#1e293b;">Метод:</strong> pKₐ ≈ pH при объёме = ½·V(экв) в каждой буферной зоне.
+  </div>
+
+  <button class="reset-btn" onclick="resetSample()">↺ Сброс образца</button>
+</aside>
+
+<!-- CENTER -->
+<main class="panel-c">
+
+  <!-- Buret column -->
+  <div style="display:flex;flex-direction:column;align-items:center;">
+    <div style="font-size:8px;font-weight:700;color:#38bdf8;letter-spacing:.08em;margin-bottom:3px;">NaOH</div>
+    <div class="buret-body">
+      <div id="bfill" class="buret-fill" style="height:100%;"><div class="meniscus"></div></div>
+      <div class="bscale" id="bscale"></div>
+    </div>
+    <div style="width:4px;height:14px;background:#bae6fd;"></div>
+    <div class="valve" onclick="toggleDrip()" title="Кран">
+      <div id="vhandle" class="vhandle"></div>
+      <div id="drop-pt" style="position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:6px;"></div>
+    </div>
+    <div style="width:4px;height:28px;background:#bae6fd;border-radius:0 0 3px 3px;"></div>
+    <div style="font-size:7px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-top:2px;">Кран</div>
+    <div class="vol-chip" id="vol-chip" style="margin-top:4px;">0.00 мл</div>
+  </div>
+
+  <!-- Flask + pH -->
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+    <div class="ph-meter" style="min-width:130px;">
+      <div class="ph-meter-brand">Digital pH-meter</div>
+      <div class="ph-big" id="ph-big" style="color:#10b981;">--.--</div>
+      <div class="ph-unit">ед. pH</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+      <svg viewBox="0 0 100 120" width="100" height="116">
+        <defs><clipPath id="fc"><path d="M30 0 L70 0 L115 120 L-15 120 Z"/></clipPath></defs>
+        <path d="M30 0 L70 0 L115 120 L-15 120 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+        <path id="flask-fill" d="M12 8 L88 8 L115 120 L-15 120 Z" fill="#dbeafe" clip-path="url(#fc)" style="transition:fill .9s;"/>
+        <path d="M30 0 L70 0 L115 120 L-15 120 Z" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+      </svg>
+      <div style="font-size:8px;color:#64748b;font-family:'JetBrains Mono',monospace;"><span id="flask-vol">0.00</span> мл NaOH добавлено</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- RIGHT PANEL -->
+<aside class="panel-r">
+
+  <div>
+    <span class="lbl">Журнал показаний</span>
+    <table class="rtbl">
+      <thead><tr><th>V(NaOH)</th><th>pH</th></tr></thead>
+      <tbody id="readings-body">
+        <tr><td colspan="2" style="color:#94a3b8;font-size:8px;padding:5px 0;font-family:'Inter',sans-serif;">Начните добавлять NaOH</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:auto;">
+    <span class="lbl">Справка: pKₐ аминокислот</span>
+    <div class="hint-box" style="font-size:7.5px;line-height:1.7;">
+      Точка полунейтрализации:<br>
+      — монокислоты (2 pKₐ): V½ = ½·V(экв)<br>
+      — поликислоты (3 pKₐ): V½ₙ = ½(Vₙ₋₁ + Vₙ)<br><br>
+      <strong style="color:#1e293b;">pI</strong> (изоэл. точка) = pH в точке эквивалентности
+    </div>
+  </div>
+
+</aside>
+
+<script>
+// ─── Amino acid data (hidden from student) ───────────────────────────────────
+const AAs = {
+  X: { pK: [2.34, 9.60],          eq: [10.0, 20.0],       nBuf: 2 }, // Glycine
+  Y: { pK: [2.19, 4.25, 9.67],    eq: [5.0, 10.0, 15.0],  nBuf: 3 }, // Glutamic acid
+  Z: { pK: [1.82, 6.00, 9.17],    eq: [5.0, 10.0, 15.0],  nBuf: 3 }, // Histidine
+};
+
+const MAX_VOL = 25.0;
+const SLOPE = 0.85;
+
+let cur = 'X', vol = 0, dripOn = false, dripInt = null;
+let log = []; // {v, ph}
+let lastLoggedV = -1; // for drip logging every 0.5 mL
+
+// ─── pH calculation ───────────────────────────────────────────────────────────
+function getPH(v, key) {
+  const aa = AAs[key];
+  if (v <= 0) return aa.pK[0];
+
+  function hh(x, pK) {
+    const eps = 1e-4;
+    return clamp(pK + SLOPE * Math.log10((x + eps) / (1 - x + eps)));
+  }
+
+  if (key === 'X') {
+    const [e1, e2] = aa.eq;
+    if (v < e1) return hh(v / e1, aa.pK[0]);
+    if (Math.abs(v - e1) < 0.25) return (aa.pK[0] + aa.pK[1]) / 2; // pI at eq1
+    if (v < e2)  return hh((v - e1) / (e2 - e1), aa.pK[1]);
+    return clamp(12.0 + 0.6 * Math.log10(v - e2 + 0.05));
+  } else {
+    const [e1, e2, e3] = aa.eq;
+    if (v < e1) return hh(v / e1, aa.pK[0]);
+    if (Math.abs(v - e1) < 0.25) return (aa.pK[0] + aa.pK[1]) / 2;
+    if (v < e2) return hh((v - e1) / (e2 - e1), aa.pK[1]);
+    if (Math.abs(v - e2) < 0.25) return (aa.pK[1] + aa.pK[2]) / 2;
+    if (v < e3) return hh((v - e2) / (e3 - e2), aa.pK[2]);
+    return clamp(12.2 + 0.6 * Math.log10(v - e3 + 0.05));
+  }
+}
+
+function clamp(ph) { return Math.min(13.5, Math.max(1.0, ph)); }
+
+// ─── Flask universal-indicator color ─────────────────────────────────────────
+function phColor(ph) {
+  if (ph < 2.5)  return '#fca5a5'; // red
+  if (ph < 3.5)  return '#fdba74'; // orange
+  if (ph < 5.0)  return '#fde047'; // yellow
+  if (ph < 6.5)  return '#a7f3d0'; // green
+  if (ph < 7.5)  return '#6ee7b7'; // teal
+  if (ph < 9.0)  return '#a5f3fc'; // light blue
+  if (ph < 11.0) return '#93c5fd'; // blue
+  return '#c4b5fd';                 // purple
+}
+
+// ─── pH display color ─────────────────────────────────────────────────────────
+function phDispColor(ph) {
+  if (ph < 4)   return '#f87171';
+  if (ph < 6)   return '#fb923c';
+  if (ph < 7.5) return '#4ade80';
+  if (ph < 9)   return '#22d3ee';
+  return '#a78bfa';
+}
+
+// ─── Main UI update ───────────────────────────────────────────────────────────
+function updateUI() {
+  const ph = getPH(vol, cur);
+
+  // pH big display
+  const phEl = document.getElementById('ph-big');
+  phEl.textContent = ph.toFixed(2);
+  const dc = phDispColor(ph);
+  phEl.style.color = dc;
+  phEl.style.textShadow = `0 0 18px ${dc}99`;
+
+  // Buret fill
+  document.getElementById('bfill').style.height = ((MAX_VOL - vol) / MAX_VOL * 100) + '%';
+
+  // Flask color
+  document.getElementById('flask-fill').setAttribute('fill', phColor(ph));
+
+  // Volume chips
+  document.getElementById('vol-chip').textContent = vol.toFixed(2) + ' мл';
+  document.getElementById('flask-vol').textContent = vol.toFixed(2);
+}
+
+// ─── Volume addition ──────────────────────────────────────────────────────────
+function addVol(delta) {
+  if (vol >= MAX_VOL) { flash('Бюретка пуста!'); return; }
+  vol = Math.min(vol + delta, MAX_VOL);
+  logPoint();
+  updateUI();
+}
+
+// ─── Drip toggle ─────────────────────────────────────────────────────────────
+function toggleDrip() {
+  dripOn ? stopDrip() : startDrip();
+}
+
+function startDrip() {
+  if (vol >= MAX_VOL) { flash('Бюретка пуста!'); return; }
+  dripOn = true;
+  document.getElementById('vhandle').classList.add('vopen');
+  document.getElementById('drip-btn').textContent = '⏹ Закрыть кран';
+  document.getElementById('drip-btn').classList.add('active');
+  document.getElementById('drop-pt').innerHTML = '<div class="drop"></div>';
+
+  dripInt = setInterval(() => {
+    if (vol >= MAX_VOL) { stopDrip(); return; }
+    vol = Math.min(vol + 0.04, MAX_VOL);
+    // Log every 0.5 mL during drip
+    if (Math.floor(vol * 2) > Math.floor(lastLoggedV * 2)) {
+      logPoint();
+      lastLoggedV = vol;
+    }
+    updateUI();
+  }, 80);
+}
+
+function stopDrip() {
+  clearInterval(dripInt); dripInt = null; dripOn = false;
+  document.getElementById('vhandle').classList.remove('vopen');
+  document.getElementById('drip-btn').textContent = '▶ Открыть кран';
+  document.getElementById('drip-btn').classList.remove('active');
+  document.getElementById('drop-pt').innerHTML = '';
+  logPoint(); updateUI();
+}
+
+// ─── Logging ──────────────────────────────────────────────────────────────────
+function logPoint() {
+  const ph = getPH(vol, cur);
+  // Avoid duplicate-ish entries
+  if (log.length && Math.abs(log[log.length - 1].v - vol) < 0.009) return;
+  log.push({ v: vol, ph });
+  renderLog();
+}
+
+function renderLog() {
+  const tbody = document.getElementById('readings-body');
+  if (!log.length) {
+    tbody.innerHTML = '<tr><td colspan="2" style="color:#94a3b8;font-size:8px;padding:5px 0;font-family:Inter,sans-serif;">Начните добавлять NaOH</td></tr>';
+    return;
+  }
+  const last12 = log.slice(-12).reverse();
+  tbody.innerHTML = last12.map(r => {
+    const c = r.ph < 7 ? '#ef4444' : r.ph < 8 ? '#f97316' : '#818cf8';
+    return `<tr>
+      <td style="color:#475569;">${r.v.toFixed(2)}</td>
+      <td style="color:${c};font-weight:700;">${r.ph.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ─── Sample selection ─────────────────────────────────────────────────────────
+function selectSample(key) {
+  if (dripOn) stopDrip();
+  cur = key;
+  ['X', 'Y', 'Z'].forEach(k => {
+    document.getElementById('tab-' + k).classList.toggle('active', k === key);
+  });
+  resetSample();
+}
+
+function resetSample() {
+  if (dripOn) stopDrip();
+  vol = 0; log = []; lastLoggedV = -1;
+  renderLog(); updateUI();
+}
+
+// ─── Flash toast ──────────────────────────────────────────────────────────────
+function flash(msg) {
+  const el = document.createElement('div');
+  el.textContent = msg;
+  el.style.cssText = 'position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:#1e2433;color:#fff;padding:7px 16px;border-radius:9px;font-size:10px;font-weight:600;z-index:999;pointer-events:none;transition:opacity .4s;';
+  document.body.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 400); }, 2000);
+}
+
+// ─── Buret scale ──────────────────────────────────────────────────────────────
+(function buildScale() {
+  const sc = document.getElementById('bscale');
+  for (let i = 0; i <= 250; i++) {
+    const pct = (i / 250) * 100;
+    const at1  = i % 10 === 0;
+    const at5  = i % 50 === 0;
+    if (i % 5 !== 0) continue; // 0.5 mL intervals
+    const t = document.createElement('div');
+    t.style.cssText = `position:absolute;top:${pct}%;right:0;width:${at5?12:at1?7:4}px;height:1px;background:${at5?'#1e3a5f':at1?'#64748b':'#cbd5e1'};`;
+    sc.appendChild(t);
+    if (at5) {
+      const l = document.createElement('div');
+      l.style.cssText = `position:absolute;top:${pct}%;left:2px;font-size:7px;font-weight:700;color:#1e3a5f;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;`;
+      l.textContent = i / 10;
+      sc.appendChild(l);
+    }
+  }
+})();
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+updateUI();
+</script>
+</body>
+</html>

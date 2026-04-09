@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Виртуальная лаборатория — Пероксидаза</title>
+<style>
+:root{--bg:#000;--bg2:#0a0a0f;--surf:#111118;--surf2:#18181f;--brd:#1f1f2e;--brd2:#2a2a3d;--blue:#0a84ff;--blue2:#409cff;--bdim:rgba(10,132,255,0.12);--text:#c7c7cc;--dim:#636374;--bright:#f5f5f7;--green:#30d158;--gdim:rgba(48,209,88,0.12);--red:#ff453a;--rdim:rgba(255,69,58,0.12);--orange:#ff9f0a;--purple:#bf5af2;--fn:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}html{font-size:14px;}
+body{background:var(--bg);color:var(--text);font-family:var(--fn);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px;}
+
+#hdr{position:sticky;top:0;z-index:100;background:rgba(0,0,0,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--brd);padding:0 12px;height:48px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.hdr-title{font-size:0.78rem;font-weight:600;color:var(--bright);display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.hdr-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);box-shadow:0 0 6px var(--blue);}
+.stages{display:flex;gap:3px;}
+.stg{font-size:0.58rem;font-weight:600;letter-spacing:0.05em;padding:3px 7px;border-radius:10px;border:1px solid var(--brd2);color:var(--dim);transition:all 0.2s;white-space:nowrap;}
+.stg.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.stg.done{background:var(--gdim);border-color:rgba(48,209,88,0.3);color:var(--green);}
+.lang-btn{background:var(--surf);border:1px solid var(--brd2);color:var(--text);font-size:0.68rem;font-weight:700;padding:4px 10px;border-radius:8px;cursor:pointer;transition:all 0.2s;flex-shrink:0;}
+.lang-btn:hover{border-color:var(--blue);color:var(--blue);}
+
+/* 2-column layout */
+#lab{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 48px);}
+.left-col{border-right:1px solid var(--brd);overflow-y:auto;padding:12px;}
+.right-col{overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
+
+.panel-title{font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;}
+
+/* Steps */
+.step{border:1px solid var(--brd);border-radius:10px;margin-bottom:7px;overflow:hidden;transition:all 0.2s;}
+.step.active{border-color:var(--blue);}
+.step.done{border-color:rgba(48,209,88,0.25);}
+.step-hdr{padding:9px 11px;display:flex;align-items:center;gap:7px;}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--surf2);color:var(--dim);font-size:0.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step.active .step-num{background:var(--blue);color:#fff;}
+.step.done .step-num{background:var(--gdim);color:var(--green);}
+.step-label{font-size:0.72rem;font-weight:600;color:var(--text);}
+.step.active .step-label{color:var(--bright);}
+.step.pending .step-label{color:var(--dim);}
+.step-body{padding:0 11px 10px;font-size:0.7rem;color:var(--text);line-height:1.55;display:none;}
+.step.active .step-body,.step.done .step-body{display:block;}
+
+/* Pipette */
+.pipette-box{background:var(--surf);border:1px solid var(--brd2);border-radius:10px;padding:10px;margin-top:8px;}
+.pipette-title{font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--orange);margin-bottom:7px;}
+.pipette-vol-display{font-size:1.2rem;font-weight:700;font-family:'Courier New',monospace;text-align:center;padding:8px;border-radius:8px;background:var(--surf2);border:1px solid var(--brd2);margin-bottom:7px;transition:all 0.2s;}
+.pipette-vol-display.ok{border-color:var(--green);color:var(--green);}
+.pipette-vol-display.wrong{border-color:var(--red);color:var(--red);}
+.pipette-vol-display.neutral{color:var(--dim);}
+.vol-btns{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3px;margin-bottom:6px;}
+.vol-btn{background:var(--surf2);border:1px solid var(--brd2);color:var(--text);font-size:0.62rem;font-weight:600;padding:4px 2px;border-radius:5px;cursor:pointer;transition:all 0.15s;}
+.vol-btn:hover{border-color:var(--blue);color:var(--blue);}
+.vol-hint{font-size:0.65rem;color:var(--dim);margin-bottom:7px;line-height:1.4;}
+.pipette-actions{display:flex;flex-direction:column;gap:4px;}
+.pact-btn{display:flex;align-items:center;gap:7px;background:var(--surf2);border:1px solid var(--brd2);color:var(--text);font-size:0.68rem;font-weight:600;padding:7px 9px;border-radius:7px;cursor:pointer;transition:all 0.15s;text-align:left;width:100%;}
+.pact-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.pact-btn:not(:disabled):hover{border-color:var(--blue);background:var(--bdim);}
+.pact-btn.done-act{border-color:rgba(48,209,88,0.4);color:var(--green);}
+.pact-icon{font-size:0.9rem;flex-shrink:0;}
+
+/* Tips */
+.tip-section-title{font-size:0.6rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);margin:8px 0 5px;}
+.tip-rack{display:flex;flex-wrap:wrap;gap:4px;}
+.tip{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;cursor:default;border:1px solid transparent;transition:all 0.2s;}
+.tip.available{background:var(--surf2);border-color:var(--brd2);color:var(--dim);}
+.tip.on-pipette{background:var(--blue);border-color:var(--blue2);color:#fff;box-shadow:0 0 8px var(--bdim);}
+.tip.used{background:var(--surf);border-color:var(--brd);color:var(--brd2);text-decoration:line-through;}
+.tip.dirty{background:var(--rdim);border-color:var(--red);color:var(--red);}
+.warn-box{background:var(--rdim);border:1px solid rgba(255,69,58,0.3);border-radius:7px;padding:7px 9px;font-size:0.65rem;color:var(--red);margin-top:6px;display:none;}
+.warn-box.show{display:block;}
+
+/* Spectrophotometer */
+.spectro{background:var(--surf2);border:1px solid var(--brd2);border-radius:12px;padding:10px;width:100%;}
+.spectro-brand{font-size:0.55rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;}
+.spectro-screen{background:#000;border:1px solid var(--brd2);border-radius:8px;padding:8px 10px;margin-bottom:8px;display:flex;flex-direction:column;gap:3px;}
+.spectro-label{font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:#3a3a5a;}
+.spectro-val{font-size:2.2rem;font-weight:700;font-family:'Courier New',monospace;color:#00e5a0;letter-spacing:-0.02em;line-height:1;}
+.spectro-val.noise{animation:flicker 0.08s infinite;}
+@keyframes flicker{0%,100%{opacity:1;}50%{opacity:0.7;color:#ff9f0a;}}
+.spectro-meta{display:flex;gap:10px;font-size:0.58rem;font-family:'Courier New',monospace;color:#2a2a4a;margin-top:2px;}
+.spectro-controls{display:flex;gap:6px;flex-wrap:wrap;}
+.spec-btn{background:var(--surf);border:1px solid var(--brd2);color:var(--dim);font-size:0.65rem;font-weight:600;padding:5px 8px;border-radius:6px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.spec-btn:not(:disabled):hover{border-color:var(--blue);color:var(--blue);}
+.spec-btn.active{background:var(--bdim);border-color:var(--blue);color:var(--blue);}
+.spec-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.cuvette-slot{margin-top:7px;border:1.5px dashed var(--brd2);border-radius:8px;padding:7px;text-align:center;font-size:0.68rem;color:var(--dim);cursor:default;transition:all 0.3s;}
+.cuvette-slot.disabled-slot{opacity:0.4;}
+.cuvette-slot.filled{border-color:var(--green);background:var(--gdim);color:var(--green);}
+
+/* Timer */
+.timer-box{background:var(--surf);border:1px solid var(--brd2);border-radius:10px;padding:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;width:100%;}
+.timer-display{font-size:1.8rem;font-weight:700;font-family:'Courier New',monospace;color:var(--bright);letter-spacing:0.03em;transition:color 0.3s;}
+.timer-display.go{color:var(--green);}
+.timer-display.warn{color:var(--orange);}
+.timer-progress{flex:1;min-width:120px;}
+.tp-bar{height:4px;background:var(--brd2);border-radius:2px;margin-bottom:4px;overflow:hidden;}
+.tp-fill{height:100%;background:var(--blue);border-radius:2px;transition:width 0.1s linear;}
+.tp-fill.go{background:var(--green);}
+.tp-fill.warn{background:var(--orange);}
+.speed-btns{display:flex;gap:3px;align-items:center;margin-top:4px;flex-wrap:wrap;}
+.spd-btn{background:var(--surf2);border:1px solid var(--brd2);color:var(--dim);font-size:0.6rem;font-weight:700;padding:3px 6px;border-radius:5px;cursor:pointer;}
+.spd-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+/* Chips */
+.chip{font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:0.05em;}
+.chip-blue{background:var(--bdim);color:var(--blue);border:1px solid rgba(10,132,255,0.25);}
+.chip-green{background:var(--gdim);color:var(--green);border:1px solid rgba(48,209,88,0.25);}
+.chip-red{background:var(--rdim);color:var(--red);border:1px solid rgba(255,69,58,0.25);}
+
+/* Graph */
+.graph-controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+#graph-wrap{width:100%;border-radius:8px;overflow:hidden;background:#070710;}
+#graph{display:block;width:100%;cursor:default;}
+#graph.draw-cursor{cursor:crosshair;}
+.graph-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:5px;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:0.62rem;color:var(--dim);}
+.legend-dot{width:8px;height:8px;border-radius:50%;}
+
+/* Draw info */
+.draw-info{background:var(--surf);border:1px solid rgba(255,159,10,0.3);border-radius:8px;padding:9px 11px;display:none;}
+.draw-info.show{display:block;}
+.draw-coords{font-family:'Courier New',monospace;font-size:0.72rem;color:var(--orange);line-height:1.6;}
+
+/* Data table */
+.data-tbl{width:100%;border-collapse:collapse;font-size:0.7rem;}
+.data-tbl th{font-size:0.58rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);padding:5px 8px;border-bottom:1px solid var(--brd2);text-align:left;}
+.data-tbl td{padding:4px 8px;border-bottom:1px solid var(--brd);font-family:'Courier New',monospace;vertical-align:middle;}
+.data-tbl tr.recorded td{color:var(--bright);}
+.acc-badge{font-size:0.6rem;font-weight:700;padding:1px 5px;border-radius:4px;}
+.acc-p{background:var(--gdim);color:var(--green);}
+.acc-o{background:rgba(255,159,10,0.12);color:var(--orange);}
+.acc-b{background:var(--rdim);color:var(--red);}
+
+/* Slope check */
+.slope-check-box{background:var(--surf);border:1px solid var(--brd2);border-radius:10px;padding:12px;}
+.slope-input-row{display:flex;gap:7px;align-items:center;margin-top:9px;flex-wrap:wrap;}
+.slope-input{background:var(--bg);border:1px solid var(--brd2);color:var(--bright);font-family:'Courier New',monospace;font-size:0.88rem;padding:6px 10px;border-radius:7px;width:130px;outline:none;}
+.slope-input:focus{border-color:var(--blue);}
+.slope-feedback{font-size:0.72rem;line-height:1.5;padding:8px 10px;border-radius:7px;margin-top:7px;display:none;}
+.slope-feedback.show{display:block;}
+.slope-feedback.ok{background:var(--gdim);border:1px solid rgba(48,209,88,0.3);color:var(--green);}
+.slope-feedback.wrong{background:var(--rdim);border:1px solid rgba(255,69,58,0.3);color:var(--red);}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:7px 14px;border-radius:8px;font-size:0.75rem;font-weight:600;border:none;cursor:pointer;transition:all 0.2s;font-family:var(--fn);}
+.btn-sm{padding:5px 10px;font-size:0.68rem;border-radius:6px;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-primary:hover{background:var(--blue2);}
+.btn-ghost{background:transparent;border:1px solid var(--brd2);color:var(--text);}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+.btn-orange{background:rgba(255,159,10,0.15);border:1px solid rgba(255,159,10,0.4);color:var(--orange);}
+
+/* Action messages */
+.action-msg{font-size:0.72rem;line-height:1.55;padding:8px 10px;border-radius:8px;}
+.am-info{background:var(--bdim);border:1px solid rgba(10,132,255,0.2);color:var(--blue2);}
+.am-success{background:var(--gdim);border:1px solid rgba(48,209,88,0.2);color:var(--green);}
+.am-warn{background:rgba(255,159,10,0.1);border:1px solid rgba(255,159,10,0.25);color:var(--orange);}
+.am-error{background:var(--rdim);border:1px solid rgba(255,69,58,0.25);color:var(--red);}
+
+/* Setup screen */
+#setup-screen{max-width:520px;margin:0 auto;padding:28px 16px;}
+.setup-card{background:var(--surf);border:1px solid var(--brd2);border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;}
+.setup-card.selected{border-color:var(--blue);background:var(--bdim);}
+.setup-card h3{font-size:0.85rem;font-weight:600;color:var(--bright);margin-bottom:5px;}
+.setup-card p{font-size:0.75rem;color:var(--text);line-height:1.5;}
+.variant-grid{display:flex;gap:6px;margin-top:9px;}
+.var-btn{padding:4px 12px;border-radius:7px;border:1px solid var(--brd2);background:var(--surf2);color:var(--dim);font-size:0.72rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.var-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="hdr">
+  <div class="hdr-title">
+    <div class="hdr-dot"></div>
+    <span data-i18n="hdr_title">Пероксидаза — Виртуальная лаборатория</span>
+  </div>
+  <div class="stages">
+    <div class="stg" id="stg0" data-i18n="stg_sel">Выбор</div>
+    <div class="stg" id="stg1" data-i18n="stg_prep">Подготовка</div>
+    <div class="stg" id="stg2" data-i18n="stg_zero">Обнуление</div>
+    <div class="stg" id="stg3" data-i18n="stg_rxn">Реакция</div>
+    <div class="stg" id="stg4" data-i18n="stg_res">Результаты</div>
+  </div>
+  <button class="lang-btn" onclick="toggleLang()">EN / РУ</button>
+</div>
+
+<!-- SETUP SCREEN -->
+<div id="setup-screen">
+  <div style="margin-bottom:18px;">
+    <div style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--blue);margin-bottom:7px;" data-i18n="setup_subtitle">Республиканская олимпиада 2026 · Биохимия</div>
+    <h1 style="font-size:1.5rem;font-weight:700;color:var(--bright);letter-spacing:-0.02em;margin-bottom:5px;" data-i18n="setup_h1">Виртуальная лаборатория</h1>
+    <p style="font-size:0.8rem;color:var(--dim);" data-i18n="setup_p">Кинетика пероксидазы <em>Raphanus sativus</em> · λ = 500 нм</p>
+  </div>
+
+  <div class="setup-card selected" id="card-B" onclick="selectExp('B')">
+    <h3 data-i18n="card_b_h">📊 Часть B — Базовая активность</h3>
+    <p data-i18n="card_b_p">Измерьте активность пероксидазы при разных концентрациях фермента.</p>
+    <div class="variant-grid" onclick="event.stopPropagation()">
+      <div class="var-btn selected" id="conc-1x" onclick="selectConc('1x')">1X</div>
+      <div class="var-btn" id="conc-2x" onclick="selectConc('2x')">2X</div>
+      <div class="var-btn" id="conc-5x" onclick="selectConc('5x')">5X</div>
+    </div>
+  </div>
+  <div class="setup-card" id="card-C" onclick="selectExp('C')">
+    <h3 data-i18n="card_c_h">🧪 Часть C — Влияние pH</h3>
+    <p data-i18n="card_c_p">Сравните активность пероксидазы при pH 3, 7 и 14.</p>
+    <div class="variant-grid" onclick="event.stopPropagation()">
+      <div class="var-btn" id="ph-3" onclick="selectPH(3)">pH 3</div>
+      <div class="var-btn selected" id="ph-7" onclick="selectPH(7)">pH 7</div>
+      <div class="var-btn" id="ph-14" onclick="selectPH(14)">pH 14</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin:20px 0;">
+    <button class="btn btn-primary" style="font-size:0.88rem;padding:11px 28px;border-radius:10px;" onclick="startLab()" data-i18n="btn_start">Начать эксперимент →</button>
+  </div>
+  <div style="background:var(--surf);border:1px solid var(--brd);border-radius:9px;padding:13px;">
+    <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;" data-i18n="safety_title">⚠ Правила безопасности</div>
+    <ul style="font-size:0.72rem;color:var(--text);line-height:1.9;padding-left:14px;" data-i18n="safety_list">
+      <li>Надевайте перчатки и защитные очки при работе с реагентами</li>
+      <li><strong style="color:var(--red);">НЕ пипетируйте ртом</strong> — только механическая микропипетка</li>
+      <li><strong>Меняйте наконечник</strong> между каждым реагентом во избежание загрязнения</li>
+      <li>Гваякол чувствителен к свету — работайте быстро, пробирку в фольгу</li>
+    </ul>
+  </div>
+</div>
+
+<!-- LAB (2-column) -->
+<div id="lab" style="display:none;">
+
+  <!-- LEFT: Protocol + Pipette + Tips -->
+  <div class="left-col">
+    <div class="panel-title" id="lp-title" data-i18n="protocol_title">Протокол</div>
+    <div id="steps-container"></div>
+
+    <!-- Pipette -->
+    <div id="pipette-panel" class="pipette-box" style="display:none;">
+      <div class="pipette-title" data-i18n="pip_title">🔬 Микропипетка</div>
+      <div id="pip-current-task" style="font-size:0.68rem;color:var(--orange);margin-bottom:8px;min-height:28px;line-height:1.4;"></div>
+      <div class="pipette-vol-display neutral" id="pip-vol-display">— µL</div>
+      <div class="vol-btns">
+        <button class="vol-btn" onclick="adjVol(-100)">−100</button>
+        <button class="vol-btn" onclick="adjVol(-10)">−10</button>
+        <button class="vol-btn" onclick="adjVol(+10)">+10</button>
+        <button class="vol-btn" onclick="adjVol(+100)">+100</button>
+      </div>
+      <div class="vol-hint" id="vol-hint" data-i18n="set_vol">Установите объём на пипетке</div>
+      <div class="pipette-actions">
+        <button class="pact-btn" id="pact-pick-tip" onclick="pickTip()" disabled>
+          <span class="pact-icon">🔵</span><span data-i18n="pick_tip">Надеть наконечник</span>
+        </button>
+        <button class="pact-btn" id="pact-aspirate" onclick="aspirate()" disabled>
+          <span class="pact-icon">⬇</span><span id="pact-asp-label" data-i18n="aspirate">Набрать реагент</span>
+        </button>
+        <button class="pact-btn" id="pact-dispense" onclick="dispense()" disabled>
+          <span class="pact-icon">⬆</span><span id="pact-disp-label" data-i18n="dispense">Внести в пробирку</span>
+        </button>
+        <button class="pact-btn" id="pact-eject" onclick="ejectTip()" disabled>
+          <span class="pact-icon">⏏</span><span data-i18n="eject_tip">Снять наконечник</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div id="tip-section" style="display:none;">
+      <div class="tip-section-title" data-i18n="tips_title">Наконечники</div>
+      <div class="tip-rack" id="tip-rack"></div>
+      <div style="margin-top:6px;font-size:0.7rem;color:var(--dim);"><span data-i18n="on_pipette">На пипетке:</span> <span id="tip-status-text" style="color:var(--text);" data-i18n="none">нет</span></div>
+      <div class="warn-box" id="contamination-warn" data-i18n="contam_warn">⚠ Загрязнение! Наконечник не сменён между субстратом и ферментом — данные будут шумными!</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: All instruments stacked -->
+  <div class="right-col">
+
+    <!-- Badges -->
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+      <span id="exp-badge" class="chip chip-blue">Часть B · 1X</span>
+      <span id="noise-badge" class="chip chip-green" data-i18n="stable">Данные стабильны</span>
+    </div>
+
+    <!-- Spectrophotometer -->
+    <div class="spectro">
+      <div class="spectro-brand">Limbic LPS-500 · UV-VIS Spectrophotometer</div>
+      <div class="spectro-screen">
+        <div class="spectro-label">Absorbance (A)</div>
+        <div class="spectro-val" id="spectro-display">- - -</div>
+        <div class="spectro-meta">
+          <span id="wl-display">λ = — nm</span>
+          <span>Mode: ABS</span>
+          <span id="zero-status" data-i18n="blank_not_set">Blank: NOT SET</span>
+        </div>
+      </div>
+      <div class="spectro-controls">
+        <button class="spec-btn" id="wl-btn" onclick="setWavelength()">λ = 500 nm</button>
+        <button class="spec-btn" id="zero-btn" onclick="zeroSpec()" disabled data-i18n="zero_btn">⏺ Обнулить</button>
+        <button class="spec-btn" id="insert-btn" onclick="toggleCuvette()" disabled data-i18n="insert_btn">Вставить кювету</button>
+      </div>
+      <div class="cuvette-slot disabled-slot" id="cuvette-slot" data-i18n="cuvette_slot">🧪 Установите кювету здесь</div>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer-box" id="timer-box" style="display:none;">
+      <div>
+        <div style="font-size:0.58rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--dim);margin-bottom:3px;" data-i18n="time_lbl">Время</div>
+        <div class="timer-display" id="timer-display">0:00</div>
+      </div>
+      <div class="timer-progress">
+        <div class="tp-bar"><div class="tp-fill" id="tp-fill" style="width:0%"></div></div>
+        <div style="font-size:0.62rem;color:var(--dim);">→ <span id="next-pt-lbl">0:30</span> <span id="timing-feedback" style="margin-left:4px;"></span></div>
+        <div class="speed-btns">
+          <span style="font-size:0.58rem;color:var(--dim);align-self:center;" data-i18n="speed_lbl">Скорость:</span>
+          <button class="spd-btn active" id="spd-1" onclick="setSpeed(1)">1×</button>
+          <button class="spd-btn" id="spd-2" onclick="setSpeed(2)">2×</button>
+          <button class="spd-btn" id="spd-5" onclick="setSpeed(5)">5×</button>
+          <button class="spd-btn" id="spd-10" onclick="setSpeed(10)">10×</button>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="record-btn" onclick="recordMeasurement()" disabled style="flex-shrink:0;" data-i18n="record_btn">📊 Записать</button>
+    </div>
+
+    <!-- Action area -->
+    <div id="action-area"></div>
+
+    <!-- Graph controls -->
+    <div class="graph-controls">
+      <button class="btn btn-ghost btn-sm" id="draw-btn" onclick="toggleDrawMode()" data-i18n="draw_btn">✏ Нарисовать линию тренда</button>
+      <button class="btn btn-sm btn-orange" id="clear-line-btn" onclick="clearDrawnLine()" style="display:none;" data-i18n="clear_line">✕ Очистить линию</button>
+      <span id="pts-count" class="chip chip-blue" style="margin-left:auto;">0/11 <span data-i18n="pts_lbl">точек</span></span>
+    </div>
+    <div id="graph-wrap">
+      <canvas id="graph" height="230" class="view-mode"></canvas>
+    </div>
+    <div class="graph-legend" id="graph-legend"></div>
+
+    <!-- Draw info -->
+    <div class="draw-info" id="draw-info">
+      <div style="font-size:0.64rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;" data-i18n="trend_title">Ваша линия тренда</div>
+      <div class="draw-coords" id="draw-coords" data-i18n="click_2pts">Кликните 2 точки на графике</div>
+      <div style="font-size:0.7rem;color:var(--text);margin-top:6px;" data-i18n="slope_hint">Рассчитайте наклон по этим координатам и введите ответ ниже.</div>
+    </div>
+
+    <!-- Data table -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px;">
+      <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);" data-i18n="table_title">Таблица данных A₅₀₀</div>
+    </div>
+    <table class="data-tbl">
+      <thead><tr><th>t (с)</th><th>A₅₀₀</th><th>±</th></tr></thead>
+      <tbody id="data-tbody"></tbody>
+    </table>
+
+    <!-- Slope check -->
+    <div class="slope-check-box" id="slope-check-box" style="display:none;">
+      <div style="font-size:0.64rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;" data-i18n="slope_box_title">QB4 / QC3 — Активность фермента</div>
+      <div style="font-size:0.76rem;color:var(--text);line-height:1.6;" data-i18n="slope_box_desc">Выберите линейный участок на графике, нарисуйте линию тренда и рассчитайте наклон:<br>
+        <span style="font-family:'Courier New',monospace;color:var(--dim);font-size:0.72rem;">m = (A₂ − A₁) / (t₂ − t₁)  [ОЕ/с]</span>
+      </div>
+      <div class="slope-input-row">
+        <input class="slope-input" id="slope-input" type="number" step="0.00001" placeholder="0.00000" />
+        <button class="btn btn-primary btn-sm" onclick="checkSlope()" data-i18n="check_btn">✓ Проверить</button>
+        <button class="btn btn-ghost btn-sm" onclick="addSeries()" data-i18n="add_series">+ Серия</button>
+      </div>
+      <div class="slope-feedback" id="slope-feedback"></div>
+      <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="showSetup()" data-i18n="new_exp">↩ Новый опыт</button>
+      </div>
+    </div>
+
+  </div><!-- end right-col -->
+</div><!-- end lab -->
+
+<script>
+// ═══════════════════════════════════════════════
+// LANGUAGE
+// ═══════════════════════════════════════════════
+let LANG = (function(){try{return localStorage.getItem('limbic_lang')||localStorage.getItem('LIMBIC_LANG')||'ru';}catch(e){return 'ru';}}());
+const T = {
+  ru:{
+    hdr_title:'Пероксидаза — Виртуальная лаборатория',
+    stg_sel:'Выбор',stg_prep:'Подготовка',stg_zero:'Обнуление',stg_rxn:'Реакция',stg_res:'Результаты',
+    setup_subtitle:'Республиканская олимпиада 2026 · Биохимия',
+    setup_h1:'Виртуальная лаборатория',
+    setup_p:'Кинетика пероксидазы <em>Raphanus sativus</em> · λ = 500 нм',
+    card_b_h:'📊 Часть B — Базовая активность',
+    card_b_p:'Измерьте активность пероксидазы при разных концентрациях фермента.',
+    card_c_h:'🧪 Часть C — Влияние pH',
+    card_c_p:'Сравните активность пероксидазы при pH 3, 7 и 14.',
+    btn_start:'Начать эксперимент →',
+    safety_title:'⚠ Правила безопасности',
+    protocol_title:'Протокол',
+    pip_title:'🔬 Микропипетка',
+    set_vol:'Установите объём на пипетке',
+    pick_tip:'Надеть наконечник',
+    aspirate:'Набрать реагент',
+    dispense:'Внести в пробирку',
+    eject_tip:'Снять наконечник',
+    tips_title:'Наконечники',
+    on_pipette:'На пипетке:',
+    none:'нет',
+    contam_warn:'⚠ Загрязнение! Наконечник не сменён между субстратом и ферментом — данные будут шумными!',
+    stable:'Данные стабильны',
+    blank_not_set:'Blank: NOT SET',
+    blank_set:'Blank: SET ✓',
+    zero_btn:'⏺ Обнулить',
+    zeroed_btn:'✓ Обнулено',
+    insert_btn:'Вставить кювету',
+    remove_btn:'Вынуть кювету',
+    cuvette_slot:'🧪 Установите кювету здесь',
+    cuvette_place:'🧪 Место для кюветы',
+    cuvette_ok:'✅ Кювета установлена',
+    time_lbl:'Время',
+    speed_lbl:'Скорость:',
+    record_btn:'📊 Записать',
+    draw_btn:'✏ Нарисовать линию тренда',
+    draw_cancel:'🔴 Отмена рисования',
+    clear_line:'✕ Очистить линию',
+    pts_lbl:'точек',
+    trend_title:'Ваша линия тренда',
+    click_2pts:'Кликните 2 точки на графике',
+    click_pt1:'Кликните 1-ю точку на графике',
+    click_pt2:'Кликните на 2-ю точку',
+    slope_hint:'Рассчитайте наклон по этим координатам и введите ответ ниже.',
+    table_title:'Таблица данных A₅₀₀',
+    slope_box_title:'QB4 / QC3 — Активность фермента',
+    slope_box_desc:'Выберите линейный участок на графике, нарисуйте линию тренда и рассчитайте наклон:<br><span style="font-family:\'Courier New\',monospace;color:var(--dim);font-size:0.72rem;">m = (A₂ − A₁) / (t₂ − t₁)  [ОЕ/с]</span>',
+    check_btn:'✓ Проверить',
+    add_series:'+ Серия',
+    new_exp:'↩ Новый опыт',
+    tip_on:'Наконечник',
+    tip_mounted:'(надет)',
+    // dynamic
+    wl_confirm:'✓ Подтвердить λ = 500 нм',
+    all_pip_done:'✓ Все этапы пипетирования завершены',
+    badge_part_b:'Часть B',
+    badge_part_c:'Часть C · pH',
+    req_vol:'Требуется:',
+    tol:'допуск',
+    tip_donned:'Наконечник надет. Теперь наберите реагент.',
+    src_lbl:'Src:',
+    dest_lbl:'Dest:',
+    // step labels B
+    s1b:'Установите λ = 500 нм',
+    s1b_body:'<p>Спектрофотометр уже откалиброван. Подтвердите длину волны.</p>',
+    s2b:'Приготовьте холостую пробу',
+    s2b_body:'<p>С помощью микропипетки перенесите <strong>1000 µL дист. воды</strong> в кювету. Вставьте кювету и обнулите прибор.</p>',
+    s3b:'Приготовьте субстрат S',
+    s3b_body:'<p>В пробирку «S»: вода (3500 µL), H₂O₂ (150 µL), гваякол (100 µL). <br><strong>Новый наконечник для каждого реагента!</strong></p>',
+    s4b:'Приготовьте фермент E',
+    s4b_body:'<p>Пробирка «E»: вода + экстракт. <strong>⚡ Обязательно смените наконечник перед ферментом!</strong></p>',
+    s5b:'Наполните кювету',
+    s5b_body:'<p>0,5 мл субстрата S + 0,5 мл фермента E → кювету → перемешать → вставить.</p>',
+    s6b:'Измерение (5 мин)',
+    s6b_body:'<p>Записывайте A₅₀₀ каждые <strong>30 секунд</strong>. Нажимайте «Записать» точно в нужный момент!</p>',
+    s1c:'Установите λ = 500 нм',
+    s1c_body:'<p>Подтвердите длину волны.</p>',
+    s2c:'Подготовьте пробирку E с буфером',
+    s3c:'Холостая проба + обнуление',
+    s3c_body:'<p>1000 µL воды → кювету → вставить → обнулить прибор.</p>',
+    s4c:'Наполните кювету',
+    s5c:'Измерение (5 мин)',
+    s5c_body:'<p>Записывайте A₅₀₀ каждые <strong>30 секунд</strong>. Будьте точны по времени!</p>',
+    // messages
+    msg_wl:'Установлена λ = 500 нм. Теперь подготовьте холостую пробу.',
+    msg_zeroed:'✓ Прибор обнулён. Уберите холостую пробу, промойте кювету дистиллятом.',
+    msg_blank_ready:'✓ Холостая проба готова! Вставьте кювету и нажмите «Обнулить».',
+    msg_subst_s:'✓ Субстрат S в кювете. ⚡ Смените наконечник перед ферментом!',
+    msg_cuv_ready:'✓ Кювета готова! Немедленно вставьте в спектрофотометр.',
+    msg_reaction:'🚀 Реакция началась! Записывайте A₅₀₀ каждые 30 секунд.',
+    msg_done:'✅ Измерение завершено! Нарисуйте линию тренда и рассчитайте наклон.',
+    msg_vol_req:'⚠ Сначала установите правильный объём на пипетке!',
+    msg_tip_req:'⚠ Снимите текущий наконечник перед надеванием нового!',
+    msg_all_used:'⚠ Все наконечники использованы! Замените или автоклавируйте.',
+    msg_contam:'🚨 ЗАГРЯЗНЕНИЕ! Наконечник использовался для субстрата! Данные будут нестабильными.',
+    msg_aspirated:'✓ Набрано %v µL из: %s',
+    msg_dispensed:'✓ Внесено в: %d',
+    msg_no_tip:'⚠ Нет наконечника!',
+    msg_already_asp:'⚠ Уже набрано — сначала внесите реагент.',
+    msg_dispense_first:'⚠ Сначала наберите реагент!',
+    msg_no_eject:'⚠ Нельзя снять наконечник с набранным реагентом.',
+    msg_zero_first:'⚠ Сначала обнулите прибор (холостая проба)!',
+    msg_pt_already:'⚠ Точка %ts уже записана!',
+    msg_enter_num:'⚠ Введите числовое значение',
+    slope_ok:'✅ Верно! Ваш ответ %v ОЕ/с — в допустимом диапазоне (%lo–%hi ОЕ/с).',
+    slope_wrong:'❌ Проверьте расчёт. Диапазон: %lo–%hi ОЕ/с. Используйте линейный участок (30–180 с) и формулу m = ΔA / Δt.',
+    pip_done_label:'✓ Все этапы пипетирования завершены',
+    tip_donned_msg:'Наконечник %n надет. Теперь наберите реагент.',
+    asp_from:'Набрать из:',
+    asp_done:'✓ Набрано из:',
+    disp_into:'Внести в:',
+    tip_worn:'✓ Наконечник надет',
+    line_deleted:'Линия удалена. Кликните 2 новые точки.',
+    now_lbl:'🟢 СЕЙЧАС!',
+    soon_lbl:'🟡 скоро...',
+    trend_line:'Линия тренда',
+    pt_chip:'точек',
+    // pip labels (B)
+    pip_blank_water:'Набрать дист. воду',
+    pip_h2o_s:'Вода → S',
+    pip_h2o2_s:'H₂O₂ → S',
+    pip_guaiacol_s:'Гваякол → S',
+    pip_water_e:'Вода → E',
+    pip_s_cuv:'S → кювету',
+    pip_e_cuv:'E → кювету (перемешать!)',
+    pip_perox_e:'Экстракт → E',
+    pip_buf_e:'Буфер pH→ E',
+  },
+  en:{
+    hdr_title:'Peroxidase — Virtual Laboratory',
+    stg_sel:'Selection',stg_prep:'Preparation',stg_zero:'Zeroing',stg_rxn:'Reaction',stg_res:'Results',
+    setup_subtitle:'National Olympiad 2026 · Biochemistry',
+    setup_h1:'Virtual Laboratory',
+    setup_p:'Peroxidase kinetics <em>Raphanus sativus</em> · λ = 500 nm',
+    card_b_h:'📊 Part B — Baseline Activity',
+    card_b_p:'Measure peroxidase activity at different enzyme concentrations.',
+    card_c_h:'🧪 Part C — pH Effect',
+    card_c_p:'Compare peroxidase activity at pH 3, 7, and 14.',
+    btn_start:'Start Experiment →',
+    safety_title:'⚠ Safety Rules',
+    protocol_title:'Protocol',
+    pip_title:'🔬 Micropipette',
+    set_vol:'Set the pipette volume',
+    pick_tip:'Attach tip',
+    aspirate:'Aspirate reagent',
+    dispense:'Dispense into tube',
+    eject_tip:'Eject tip',
+    tips_title:'Tips',
+    on_pipette:'On pipette:',
+    none:'none',
+    contam_warn:'⚠ Contamination! Tip not changed between substrate and enzyme — data will be noisy!',
+    stable:'Data stable',
+    blank_not_set:'Blank: NOT SET',
+    blank_set:'Blank: SET ✓',
+    zero_btn:'⏺ Zero',
+    zeroed_btn:'✓ Zeroed',
+    insert_btn:'Insert cuvette',
+    remove_btn:'Remove cuvette',
+    cuvette_slot:'🧪 Place cuvette here',
+    cuvette_place:'🧪 Cuvette slot',
+    cuvette_ok:'✅ Cuvette inserted',
+    time_lbl:'Time',
+    speed_lbl:'Speed:',
+    record_btn:'📊 Record',
+    draw_btn:'✏ Draw trend line',
+    draw_cancel:'🔴 Cancel drawing',
+    clear_line:'✕ Clear line',
+    pts_lbl:'points',
+    trend_title:'Your trend line',
+    click_2pts:'Click 2 points on the graph',
+    click_pt1:'Click the 1st point on the graph',
+    click_pt2:'Click the 2nd point',
+    slope_hint:'Calculate the slope from these coordinates and enter your answer below.',
+    table_title:'Data Table A₅₀₀',
+    slope_box_title:'QB4 / QC3 — Enzyme Activity',
+    slope_box_desc:'Select a linear section, draw a trend line, and calculate the slope:<br><span style="font-family:\'Courier New\',monospace;color:var(--dim);font-size:0.72rem;">m = (A₂ − A₁) / (t₂ − t₁)  [AU/s]</span>',
+    check_btn:'✓ Check',
+    add_series:'+ Series',
+    new_exp:'↩ New experiment',
+    tip_on:'Tip',
+    tip_mounted:'(mounted)',
+    wl_confirm:'✓ Confirm λ = 500 nm',
+    all_pip_done:'✓ All pipetting steps complete',
+    badge_part_b:'Part B',
+    badge_part_c:'Part C · pH',
+    req_vol:'Required:',
+    tol:'tolerance',
+    tip_donned:'Tip attached. Now aspirate the reagent.',
+    src_lbl:'From:',
+    dest_lbl:'To:',
+    s1b:'Set λ = 500 nm',
+    s1b_body:'<p>Spectrophotometer is pre-calibrated. Confirm the wavelength.</p>',
+    s2b:'Prepare blank sample',
+    s2b_body:'<p>Use the micropipette to transfer <strong>1000 µL distilled water</strong> into the cuvette. Insert cuvette and zero the instrument.</p>',
+    s3b:'Prepare substrate S',
+    s3b_body:'<p>Into tube "S": water (3500 µL), H₂O₂ (150 µL), guaiacol (100 µL). <br><strong>Use a new tip for each reagent!</strong></p>',
+    s4b:'Prepare enzyme E',
+    s4b_body:'<p>Tube "E": water + extract. <strong>⚡ Change tip before adding enzyme!</strong></p>',
+    s5b:'Fill the cuvette',
+    s5b_body:'<p>0.5 mL substrate S + 0.5 mL enzyme E → cuvette → mix → insert immediately.</p>',
+    s6b:'Measurement (5 min)',
+    s6b_body:'<p>Record A₅₀₀ every <strong>30 seconds</strong>. Press "Record" precisely at the right moment!</p>',
+    s1c:'Set λ = 500 nm',
+    s1c_body:'<p>Confirm wavelength.</p>',
+    s2c:'Prepare tube E with buffer',
+    s3c:'Blank + zero',
+    s3c_body:'<p>1000 µL water → cuvette → insert → zero instrument.</p>',
+    s4c:'Fill the cuvette',
+    s5c:'Measurement (5 min)',
+    s5c_body:'<p>Record A₅₀₀ every <strong>30 seconds</strong>. Timing accuracy is critical!</p>',
+    msg_wl:'λ = 500 nm set. Now prepare the blank sample.',
+    msg_zeroed:'✓ Instrument zeroed. Remove blank, rinse cuvette with distilled water.',
+    msg_blank_ready:'✓ Blank ready! Insert cuvette and press "Zero".',
+    msg_subst_s:'✓ Substrate S in cuvette. ⚡ Change tip before enzyme!',
+    msg_cuv_ready:'✓ Cuvette ready! Insert into spectrophotometer immediately.',
+    msg_reaction:'🚀 Reaction started! Record A₅₀₀ every 30 seconds.',
+    msg_done:'✅ Measurement complete! Draw a trend line and calculate the slope.',
+    msg_vol_req:'⚠ Set the correct pipette volume first!',
+    msg_tip_req:'⚠ Eject current tip before attaching a new one!',
+    msg_all_used:'⚠ All tips used! Replace or autoclave.',
+    msg_contam:'🚨 CONTAMINATION! Tip was used for substrate! Data will be noisy.',
+    msg_aspirated:'✓ Aspirated %v µL from: %s',
+    msg_dispensed:'✓ Dispensed into: %d',
+    msg_no_tip:'⚠ No tip attached!',
+    msg_already_asp:'⚠ Already aspirated — dispense first.',
+    msg_dispense_first:'⚠ Aspirate reagent first!',
+    msg_no_eject:'⚠ Cannot eject tip while liquid is aspirated.',
+    msg_zero_first:'⚠ Zero the instrument with blank first!',
+    msg_pt_already:'⚠ Point %ts s already recorded!',
+    msg_enter_num:'⚠ Enter a numeric value',
+    slope_ok:'✅ Correct! Your answer %v AU/s is within the accepted range (%lo–%hi AU/s).',
+    slope_wrong:'❌ Check your calculation. Expected range: %lo–%hi AU/s. Use the linear section (30–180 s) and formula m = ΔA / Δt.',
+    pip_done_label:'✓ All pipetting steps complete',
+    tip_donned_msg:'Tip %n attached. Now aspirate the reagent.',
+    asp_from:'Aspirate from:',
+    asp_done:'✓ Aspirated from:',
+    disp_into:'Dispense into:',
+    tip_worn:'✓ Tip attached',
+    line_deleted:'Line deleted. Click 2 new points.',
+    now_lbl:'🟢 NOW!',
+    soon_lbl:'🟡 soon...',
+    trend_line:'Trend line',
+    pt_chip:'points',
+    pip_blank_water:'Aspirate dist. water',
+    pip_h2o_s:'Water → S',
+    pip_h2o2_s:'H₂O₂ → S',
+    pip_guaiacol_s:'Guaiacol → S',
+    pip_water_e:'Water → E',
+    pip_s_cuv:'S → cuvette',
+    pip_e_cuv:'E → cuvette (mix!)',
+    pip_perox_e:'Extract → E',
+    pip_buf_e:'Buffer pH → E',
+  }
+};
+
+function t(key){ return (T[LANG]||T.ru)[key] || (T.ru[key] || key); }
+
+function applyLang() {
+  try { localStorage.setItem('limbic_lang', LANG); localStorage.setItem('LIMBIC_LANG', LANG); } catch(e){}
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if (val !== key) {
+      if (key === 'setup_p' || key === 'safety_list' || key === 'slope_box_desc') el.innerHTML = val;
+      else el.textContent = val;
+    }
+  });
+  // Update dynamic elements if lab is open
+  if (document.getElementById('lab').style.display !== 'none') {
+    document.getElementById('noise-badge').textContent = contaminated ? '⚠ ' + (LANG==='en'?'Contamination!':'Загрязнение!') : t('stable');
+    document.getElementById('pts-count').innerHTML = recordedData.length + '/11 ' + t('pts_lbl');
+    if (!reactionRunning) {
+      const dbtn = document.getElementById('draw-btn');
+      if (drawMode) dbtn.textContent = t('draw_cancel'); else dbtn.textContent = t('draw_btn');
+    }
+    document.getElementById('zero-btn').textContent = zeroed ? t('zeroed_btn') : t('zero_btn');
+    const insBtn = document.getElementById('insert-btn');
+    if (insBtn.disabled === false) insBtn.textContent = cuvetteIn ? t('remove_btn') : t('insert_btn');
+    const cslot = document.getElementById('cuvette-slot');
+    if (!cuvetteIn) cslot.textContent = t('cuvette_place');
+    updatePipButtons();
+    renderTips();
+  }
+  // Safety list
+  const sl = document.querySelector('[data-i18n="safety_list"]');
+  if (sl) {
+    if (LANG === 'en') {
+      sl.innerHTML = '<li>Wear gloves and safety glasses when handling reagents</li><li><strong style="color:var(--red);">DO NOT mouth-pipette</strong> — mechanical micropipette only</li><li><strong>Change tip</strong> between each reagent to avoid contamination</li><li>Guaiacol is light-sensitive — work quickly, wrap tube in foil</li>';
+    } else {
+      sl.innerHTML = '<li>Надевайте перчатки и защитные очки при работе с реагентами</li><li><strong style="color:var(--red);">НЕ пипетируйте ртом</strong> — только механическая микропипетка</li><li><strong>Меняйте наконечник</strong> между каждым реагентом во избежание загрязнения</li><li>Гваякол чувствителен к свету — работайте быстро, пробирку в фольгу</li>';
+    }
+  }
+}
+
+function toggleLang() {
+  LANG = LANG === 'ru' ? 'en' : 'ru';
+  applyLang();
+  // Rebuild protocol if lab is open
+  if (document.getElementById('lab').style.display !== 'none') {
+    buildProtocol();
+    activateProtocolStep(activeStep);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let expType = 'B';
+let selectedConc = '1x';
+let selectedPH = 7;
+let SPEED = 1;
+
+const PIPETTE_STEPS = [];
+let pipStepIdx = 0;
+let pipVol = 200;
+let pipTipIdx = null;
+let pipAspiratedFrom = null;
+let tips = [];
+let contaminated = false;
+
+let cuvetteIn = false;
+let zeroed = false;
+let cuvetteReady = false;
+let reactionRunning = false;
+let timerInterval = null;
+let virtualMs = 0;
+let recordedData = [];
+let extraSeries = [];
+let noiseLevel = 0.008;
+
+let drawMode = false;
+let drawPts = [];
+let drawnLine = null;
+
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const BASE = {
+  '1x':  [0.021,0.069,0.132,0.192,0.250,0.308,0.365,0.423,0.472,0.520,0.570],
+  '2x':  [0.015,0.075,0.216,0.345,0.477,0.573,0.666,0.758,0.844,0.920,0.990],
+  '5x':  [0.052,0.327,0.642,0.899,1.104,1.261,1.368,1.450,1.506,1.550,1.579],
+  'ph3': [0.000,0.001,0.009,0.025,0.040,0.056,0.072,0.086,0.100,0.114,0.127],
+  'ph7': [0.000,0.005,0.018,0.031,0.044,0.057,0.068,0.081,0.092,0.104,0.115],
+  'ph14':[0.011,0.013,0.014,0.016,0.017,0.018,0.020,0.022,0.023,0.025,0.028]
+};
+const COLORS = ['#0a84ff','#30d158','#ff9f0a','#bf5af2','#ff453a','#64d2ff'];
+
+const SLOPE_RANGES = {
+  'B':  [0.0010/30, 0.0105/30],
+  'C3': [0.00003, 0.00103],
+  'C7': [0.00017, 0.00143],
+  'C14':[0.00003, 0.00010]
+};
+
+function getDataKey() { return expType === 'B' ? selectedConc : 'ph' + selectedPH; }
+function getBaseVal(tSec) {
+  const d = BASE[getDataKey()];
+  const exact = tSec / 30;
+  const lo = Math.floor(exact), hi = Math.ceil(exact);
+  if (lo >= d.length - 1) return d[d.length - 1];
+  if (lo < 0) return d[0];
+  return d[lo] + (d[Math.min(hi, d.length-1)] - d[lo]) * (exact - lo);
+}
+function withNoise(val) {
+  const n = contaminated ? noiseLevel * 7 : noiseLevel;
+  return Math.max(0, val + (Math.random() - 0.5) * 2 * n);
+}
+
+// ═══════════════════════════════════════════════
+// SETUP
+// ═══════════════════════════════════════════════
+function selectExp(tp) {
+  expType = tp;
+  document.getElementById('card-B').classList.toggle('selected', tp==='B');
+  document.getElementById('card-C').classList.toggle('selected', tp==='C');
+}
+function selectConc(c) {
+  expType='B'; selectedConc=c;
+  ['1x','2x','5x'].forEach(x=>document.getElementById('conc-'+x).classList.toggle('selected',x===c));
+  document.getElementById('card-B').classList.add('selected');
+  document.getElementById('card-C').classList.remove('selected');
+}
+function selectPH(ph) {
+  expType='C'; selectedPH=ph;
+  [3,7,14].forEach(x=>document.getElementById('ph-'+x).classList.toggle('selected',x===ph));
+  document.getElementById('card-C').classList.add('selected');
+  document.getElementById('card-B').classList.remove('selected');
+}
+
+function startLab() {
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('lab').style.display = 'grid';
+  initLab();
+}
+function showSetup() {
+  clearInterval(timerInterval);
+  reactionRunning = false;
+  document.getElementById('lab').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'block';
+  setStage(0);
+}
+
+// ═══════════════════════════════════════════════
+// LAB INIT
+// ═══════════════════════════════════════════════
+function initLab() {
+  contaminated = false; cuvetteIn = false; zeroed = false; cuvetteReady = false;
+  reactionRunning = false; virtualMs = 0; recordedData = [];
+  pipVol = 200; pipTipIdx = null; pipAspiratedFrom = null;
+  drawMode = false; drawPts = []; drawnLine = null;
+  clearInterval(timerInterval);
+  tips = Array.from({length:10}, () => ({state:'available', lastFor:null}));
+
+  const bLabel = LANG==='en' ? t('badge_part_b')+' · '+selectedConc.toUpperCase() : 'Часть B · '+selectedConc.toUpperCase();
+  const cLabel = LANG==='en' ? t('badge_part_c')+' '+selectedPH : 'Часть C · pH '+selectedPH;
+  document.getElementById('exp-badge').textContent = expType==='B' ? bLabel : cLabel;
+  document.getElementById('noise-badge').textContent = t('stable');
+  document.getElementById('noise-badge').className = 'chip chip-green';
+
+  document.getElementById('spectro-display').textContent = '- - -';
+  document.getElementById('spectro-display').className = 'spectro-val';
+  document.getElementById('zero-status').textContent = t('blank_not_set');
+  document.getElementById('wl-display').textContent = 'λ = — nm';
+  document.getElementById('wl-btn').className = 'spec-btn';
+  document.getElementById('zero-btn').disabled = true;
+  document.getElementById('zero-btn').textContent = t('zero_btn');
+  document.getElementById('insert-btn').disabled = true;
+  document.getElementById('insert-btn').textContent = t('insert_btn');
+  document.getElementById('cuvette-slot').className = 'cuvette-slot disabled-slot';
+  document.getElementById('cuvette-slot').textContent = t('cuvette_slot');
+  document.getElementById('timer-box').style.display = 'none';
+
+  document.getElementById('tip-section').style.display = 'block';
+  document.getElementById('contamination-warn').classList.remove('show');
+  document.getElementById('contamination-warn').textContent = t('contam_warn');
+  renderTips();
+
+  document.getElementById('data-tbody').innerHTML = '';
+  document.getElementById('pts-count').innerHTML = '0/11 '+t('pts_lbl');
+  document.getElementById('slope-check-box').style.display = 'none';
+  document.getElementById('draw-info').classList.remove('show');
+  document.getElementById('clear-line-btn').style.display = 'none';
+  document.getElementById('draw-btn').textContent = t('draw_btn');
+  document.getElementById('draw-btn').className = 'btn btn-ghost btn-sm';
+  document.getElementById('graph').className = 'view-mode';
+  document.getElementById('graph-legend').innerHTML = '';
+  drawGraph();
+
+  updatePipDisplay();
+  document.getElementById('pipette-panel').style.display = 'none';
+  document.getElementById('pip-current-task').textContent = '';
+
+  buildProtocol();
+  setStage(0);
+}
+
+// ═══════════════════════════════════════════════
+// TIPS
+// ═══════════════════════════════════════════════
+function renderTips() {
+  const rack = document.getElementById('tip-rack');
+  rack.innerHTML = '';
+  tips.forEach((tp, i) => {
+    const el = document.createElement('div');
+    const stateLabel = i===pipTipIdx ? t('tip_on')+' '+(i+1)+' '+t('tip_mounted') : tp.state==='available' ? t('tip_on')+' '+(i+1) : tp.state==='dirty' ? (LANG==='en'?'Dirty!':'Загрязнён!') : (LANG==='en'?'Used':'Использован');
+    el.className = 'tip ' + (i===pipTipIdx ? 'on-pipette' : tp.state);
+    el.title = stateLabel;
+    el.textContent = i + 1;
+    rack.appendChild(el);
+  });
+  const tipText = pipTipIdx !== null ? t('tip_on')+' '+(pipTipIdx+1)+' '+t('tip_mounted') : t('none');
+  document.getElementById('tip-status-text').textContent = tipText;
+}
+
+// ═══════════════════════════════════════════════
+// PIPETTE STEPS
+// ═══════════════════════════════════════════════
+function buildPipSteps() {
+  PIPETTE_STEPS.length = 0;
+  const L = LANG;
+  const srcDW = L==='en' ? 'Flask: Dist. water' : 'Флакон: Дист. вода';
+  const srcH2O2 = L==='en' ? 'Flask: H₂O₂ (0.3%)' : 'Флакон: H₂O₂ (0,3%)';
+  const srcGuaiac = L==='en' ? 'Flask: Guaiacol (light-protected)' : 'Флакон: Гваякол (защита от света)';
+  const destBlank = L==='en' ? 'Tube Blank (cuvette)' : 'Пробирка Blank (кювета)';
+  const destS = L==='en' ? 'Tube S' : 'Пробирка S';
+  const destE = L==='en' ? 'Tube E' : 'Пробирка E';
+  const destCuv = L==='en' ? 'Cuvette' : 'Кювета';
+
+  if (expType === 'B') {
+    const srcExtr = L==='en' ? 'Flask: Peroxidase extract '+selectedConc.toUpperCase() : 'Флакон: Экстракт пероксидазы '+selectedConc.toUpperCase();
+    PIPETTE_STEPS.push({id:'blank-water', label:t('pip_blank_water'), vol:1000, src:srcDW, dest:destBlank, type:'blank', phase:'blank'});
+    PIPETTE_STEPS.push({id:'h2o-s', label:t('pip_h2o_s'), vol:3500, src:srcDW, dest:destS, type:'substrate', phase:'subst', note:L==='en'?'Start preparing substrate':'Начинаем готовить субстрат'});
+    PIPETTE_STEPS.push({id:'h2o2-s', label:t('pip_h2o2_s'), vol:150, src:srcH2O2, dest:destS, type:'substrate', phase:'subst', note:L==='en'?'⚠ H₂O₂ is an oxidizer, handle carefully!':'⚠ H₂O₂ — окислитель, осторожно!'});
+    PIPETTE_STEPS.push({id:'guaiacol-s', label:t('pip_guaiacol_s'), vol:100, src:srcGuaiac, dest:destS, type:'substrate', phase:'subst', note:L==='en'?'⚠ Wrap tube in foil immediately!':'⚠ Пробирку сразу в фольгу!'});
+    const waterVolE = selectedConc==='1x'?3000:selectedConc==='2x'?2250:0;
+    const enzVol = selectedConc==='1x'?750:selectedConc==='2x'?1500:3750;
+    if (waterVolE > 0) PIPETTE_STEPS.push({id:'water-e', label:t('pip_water_e'), vol:waterVolE, src:srcDW, dest:destE, type:'substrate', phase:'enzyme', note:L==='en'?'Dilute to target concentration':'Разбавляем до нужной концентрации'});
+    PIPETTE_STEPS.push({id:'enzyme-e', label:(L==='en'?'Extract '+selectedConc.toUpperCase()+' → E':'Экстракт '+selectedConc.toUpperCase()+' → E'), vol:enzVol, src:srcExtr, dest:destE, type:'enzyme', phase:'enzyme', note:L==='en'?'⚡ Change tip before enzyme!':'⚡ Смените наконечник перед ферментом!'});
+    PIPETTE_STEPS.push({id:'s-cuv', label:t('pip_s_cuv'), vol:500, src:(L==='en'?'Tube S':'Пробирка S'), dest:destCuv, type:'substrate', phase:'cuvette'});
+    PIPETTE_STEPS.push({id:'e-cuv', label:t('pip_e_cuv'), vol:500, src:(L==='en'?'Tube E':'Пробирка E'), dest:destCuv, type:'enzyme', phase:'cuvette', note:L==='en'?'⚡ New tip! Insert cuvette immediately!':'⚡ Новый наконечник! Сразу вставить кювету!'});
+  } else {
+    const srcExtr = L==='en' ? 'Flask: Peroxidase extract' : 'Флакон: Экстракт пероксидазы';
+    const srcBuf = L==='en' ? 'Flask: Buffer pH '+selectedPH : 'Флакон: Буфер pH '+selectedPH;
+    const destEpH = L==='en' ? 'Tube E (pH '+selectedPH+')' : 'Пробирка E (pH '+selectedPH+')';
+    PIPETTE_STEPS.push({id:'blank-water', label:(L==='en'?'Water (blank)':t('pip_blank_water')), vol:1000, src:srcDW, dest:(L==='en'?'Tube Blank':'Пробирка Blank'), type:'blank', phase:'blank'});
+    PIPETTE_STEPS.push({id:'perox-e', label:t('pip_perox_e'), vol:250, src:srcExtr, dest:destEpH, type:'enzyme', phase:'enzyme', note:L==='en'?'Prepare enzyme + buffer mix pH '+selectedPH:'Готовим смесь фермент + буфер pH '+selectedPH});
+    PIPETTE_STEPS.push({id:'buf-e', label:(L==='en'?'Buffer pH'+selectedPH+' → E':t('pip_buf_e')), vol:1000, src:srcBuf, dest:destEpH, type:'substrate', phase:'enzyme', note:L==='en'?'Buffer sets the pH environment':'Буфер задаёт pH среды'});
+    PIPETTE_STEPS.push({id:'s-cuv', label:t('pip_s_cuv'), vol:500, src:(L==='en'?'Tube S (substrate)':'Пробирка S (субстрат)'), dest:destCuv, type:'substrate', phase:'cuvette', note:L==='en'?'Substrate = guaiacol + H₂O₂':'Субстрат — гваякол + H₂O₂'});
+    PIPETTE_STEPS.push({id:'e-cuv', label:(L==='en'?'E(pH'+selectedPH+') → cuvette':'E(pH'+selectedPH+') → кювету'), vol:500, src:destEpH, dest:destCuv, type:'enzyme', phase:'cuvette', note:L==='en'?'⚡ Change tip! Insert immediately!':'⚡ Смените наконечник! Сразу в прибор!'});
+  }
+}
+
+let currentPhase = '';
+let phasesDone = {};
+let totalSteps = 0;
+let activeStep = 0;
+
+function makeStep(num, label, body) {
+  const d = document.createElement('div');
+  d.className = 'step pending'; d.id = 'step-'+num;
+  d.innerHTML = `<div class="step-hdr"><div class="step-num">${num}</div><div class="step-label">${label}</div></div><div class="step-body">${body}</div>`;
+  document.getElementById('steps-container').appendChild(d);
+}
+
+function buildProtocol() {
+  document.getElementById('steps-container').innerHTML = '';
+  buildPipSteps();
+  pipStepIdx = 0;
+  phasesDone = {};
+  const L = LANG;
+  const wlBtn = `<button class="btn btn-primary btn-sm" style="margin-top:7px" onclick="confirmWL()">${L==='en'?'✓ Confirm λ = 500 nm':'✓ Подтвердить λ = 500 нм'}</button>`;
+
+  if (expType === 'B') {
+    makeStep(1, t('s1b'), t('s1b_body')+wlBtn);
+    makeStep(2, t('s2b'), t('s2b_body'));
+    makeStep(3, t('s3b'), t('s3b_body'));
+    makeStep(4, t('s4b'), t('s4b_body'));
+    makeStep(5, t('s5b'), t('s5b_body'));
+    makeStep(6, t('s6b'), t('s6b_body'));
+    totalSteps = 6;
+  } else {
+    makeStep(1, t('s1c'), t('s1c_body')+wlBtn);
+    const s2body = L==='en' ? `<p>Tube "E pH ${selectedPH}": 250 µL extract + 1000 µL buffer pH ${selectedPH}.</p>` : `<p>Пробирка «E pH ${selectedPH}»: 250 µL экстракта + 1000 µL буфера pH ${selectedPH}.</p>`;
+    makeStep(2, t('s2c'), s2body);
+    makeStep(3, t('s3c'), t('s3c_body'));
+    const s4body = L==='en' ? `<p>0.5 mL substrate S + 0.5 mL E pH${selectedPH} → cuvette → insert immediately.</p>` : `<p>0,5 мл субстрата S + 0,5 мл E pH${selectedPH} → кювету → немедленно вставить.</p>`;
+    makeStep(4, t('s4c'), s4body);
+    makeStep(5, t('s5c'), t('s5c_body'));
+    totalSteps = 5;
+  }
+  activateProtocolStep(1);
+}
+
+function activateProtocolStep(n) {
+  activeStep = n;
+  for (let i=1;i<=totalSteps;i++) {
+    const el = document.getElementById('step-'+i);
+    if (!el) continue;
+    el.className = i<n?'step done':i===n?'step active':'step pending';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// STEP 1: Wavelength
+// ═══════════════════════════════════════════════
+function confirmWL() {
+  document.getElementById('wl-display').textContent = 'λ = 500 nm';
+  document.getElementById('wl-btn').textContent = 'λ = 500 nm ✓';
+  document.getElementById('wl-btn').classList.add('active');
+  document.getElementById('zero-btn').disabled = false;
+  document.getElementById('zero-btn').textContent = t('zero_btn');
+  document.getElementById('pipette-panel').style.display = 'block';
+  startPipStep(0);
+  activateProtocolStep(2);
+  setStage(1);
+  showMsg(t('msg_wl'), 'info');
+}
+
+// ═══════════════════════════════════════════════
+// PIPETTE MECHANICS
+// ═══════════════════════════════════════════════
+function startPipStep(idx) {
+  if (idx >= PIPETTE_STEPS.length) { allPipDone(); return; }
+  pipStepIdx = idx;
+  const step = PIPETTE_STEPS[idx];
+  pipAspiratedFrom = null;
+
+  document.getElementById('pip-current-task').innerHTML =
+    `<strong style="color:var(--bright)">${step.label}</strong><br>` +
+    `${t('src_lbl')} ${step.src}<br>${t('dest_lbl')} ${step.dest}` +
+    (step.note ? `<br><span style="color:var(--orange)">${step.note}</span>` : '');
+
+  const reqVol = step.vol;
+  const tol = Math.max(20, Math.round(reqVol*0.1));
+  document.getElementById('vol-hint').innerHTML = `${t('req_vol')} <strong>${reqVol} µL</strong> (${t('tol')} ±${tol} µL)`;
+
+  updatePipDisplay();
+  updatePipButtons();
+}
+
+function adjVol(delta) {
+  pipVol = Math.max(10, Math.min(5000, pipVol + delta));
+  updatePipDisplay();
+  updatePipButtons();
+}
+
+function updatePipDisplay() {
+  const el = document.getElementById('pip-vol-display');
+  if (pipStepIdx >= PIPETTE_STEPS.length) { el.textContent = pipVol + ' µL'; el.className = 'pipette-vol-display neutral'; return; }
+  const step = PIPETTE_STEPS[pipStepIdx];
+  const reqVol = step ? step.vol : 0;
+  const tolerance = Math.max(20, Math.round(reqVol * 0.1));
+  const diff = Math.abs(pipVol - reqVol);
+  el.textContent = pipVol + ' µL';
+  if (!step) { el.className = 'pipette-vol-display neutral'; return; }
+  el.className = diff <= tolerance ? 'pipette-vol-display ok' : 'pipette-vol-display wrong';
+}
+
+function isVolOk() {
+  if (pipStepIdx >= PIPETTE_STEPS.length) return false;
+  const step = PIPETTE_STEPS[pipStepIdx];
+  const tol = Math.max(20, Math.round(step.vol * 0.1));
+  return Math.abs(pipVol - step.vol) <= tol;
+}
+
+function updatePipButtons() {
+  const hasTip = pipTipIdx !== null;
+  const aspirated = pipAspiratedFrom !== null;
+  const volOk = isVolOk();
+
+  const pickBtn = document.getElementById('pact-pick-tip');
+  pickBtn.disabled = hasTip || !volOk;
+  pickBtn.className = 'pact-btn' + (hasTip ? ' done-act' : '');
+  pickBtn.querySelector('span:last-child').textContent = hasTip ? t('tip_worn') : t('pick_tip');
+
+  const aspBtn = document.getElementById('pact-aspirate');
+  aspBtn.disabled = !hasTip || !volOk || aspirated;
+  aspBtn.className = 'pact-btn' + (aspirated ? ' done-act' : '');
+  const step = PIPETTE_STEPS[pipStepIdx] || {};
+  document.getElementById('pact-asp-label').textContent = aspirated ? t('asp_done')+' '+(step.src||'—') : t('asp_from')+' '+(step.src||'—');
+
+  const dispBtn = document.getElementById('pact-dispense');
+  dispBtn.disabled = !aspirated;
+  document.getElementById('pact-disp-label').textContent = t('disp_into')+' '+(step.dest||'—');
+
+  const ejectBtn = document.getElementById('pact-eject');
+  ejectBtn.disabled = !hasTip || aspirated;
+}
+
+function pickTip() {
+  if (!isVolOk()) { showMsg(t('msg_vol_req'), 'error'); return; }
+  if (pipTipIdx !== null) { showMsg(t('msg_tip_req'), 'error'); return; }
+  const avail = tips.findIndex(tp => tp.state === 'available');
+  if (avail === -1) { showMsg(t('msg_all_used'), 'error'); return; }
+
+  const step = PIPETTE_STEPS[pipStepIdx];
+  const prevIdx = pipStepIdx - 1;
+  if (step.type === 'enzyme' && prevIdx >= 0) {
+    const prevStep = PIPETTE_STEPS[prevIdx];
+    if (prevStep && prevStep.type === 'substrate' && tips[avail].lastFor === 'substrate') {
+      contaminated = true;
+      tips[avail].state = 'dirty';
+      document.getElementById('contamination-warn').textContent = t('contam_warn');
+      document.getElementById('contamination-warn').classList.add('show');
+      document.getElementById('noise-badge').textContent = '⚠ ' + (LANG==='en'?'Contamination!':'Загрязнение!');
+      document.getElementById('noise-badge').className = 'chip chip-red';
+      showMsg(t('msg_contam'), 'error');
+    }
+  }
+  pipTipIdx = avail;
+  tips[avail].state = 'on-pipette';
+  renderTips();
+  updatePipButtons();
+  showMsg(t('tip_donned_msg').replace('%n', avail+1), 'info');
+}
+
+function aspirate() {
+  if (!isVolOk()) { showMsg(t('msg_vol_req'), 'error'); return; }
+  if (pipTipIdx === null) { showMsg(t('msg_no_tip'), 'error'); return; }
+  if (pipAspiratedFrom !== null) { showMsg(t('msg_already_asp'), 'warn'); return; }
+  const step = PIPETTE_STEPS[pipStepIdx];
+  pipAspiratedFrom = step.id;
+  tips[pipTipIdx].lastFor = step.type;
+  showMsg(t('msg_aspirated').replace('%v', pipVol).replace('%s', step.src), 'success');
+  updatePipButtons();
+}
+
+function dispense() {
+  if (pipAspiratedFrom === null) { showMsg(t('msg_dispense_first'), 'warn'); return; }
+  const step = PIPETTE_STEPS[pipStepIdx];
+  pipAspiratedFrom = null;
+  showMsg(t('msg_dispensed').replace('%d', step.dest), 'success');
+
+  if (step.phase === 'blank') {
+    document.getElementById('insert-btn').disabled = false;
+    document.getElementById('cuvette-slot').className = 'cuvette-slot';
+    document.getElementById('cuvette-slot').textContent = t('cuvette_place');
+    showMsg(t('msg_blank_ready'), 'success');
+    ejectTipAuto();
+    return;
+  }
+  if (step.phase === 'subst') {
+    if (!phasesDone['subst_start']) { phasesDone['subst_start'] = true; activateProtocolStep(3); }
+  }
+  if (step.phase === 'enzyme') {
+    if (!phasesDone['enzyme_start']) { phasesDone['enzyme_start'] = true; if (expType==='B') activateProtocolStep(4); }
+  }
+  if (step.phase === 'cuvette') {
+    if (step.id === 's-cuv') {
+      showMsg(t('msg_subst_s'), 'warn');
+    } else if (step.id === 'e-cuv') {
+      cuvetteReady = true;
+      document.getElementById('insert-btn').disabled = false;
+      document.getElementById('cuvette-slot').className = 'cuvette-slot';
+      document.getElementById('cuvette-slot').textContent = t('cuvette_place');
+      showMsg(t('msg_cuv_ready'), 'success');
+      if (expType==='B') activateProtocolStep(5); else activateProtocolStep(4);
+    }
+  }
+  updatePipButtons();
+}
+
+function ejectTip() {
+  if (pipTipIdx === null) return;
+  if (pipAspiratedFrom !== null) { showMsg(t('msg_no_eject'), 'error'); return; }
+  doEjectTip();
+  startPipStep(pipStepIdx + 1);
+}
+function ejectTipAuto() { doEjectTip(); startPipStep(pipStepIdx + 1); }
+function doEjectTip() {
+  if (pipTipIdx === null) return;
+  tips[pipTipIdx].state = 'used';
+  pipTipIdx = null;
+  renderTips();
+  updatePipButtons();
+}
+function allPipDone() {
+  document.getElementById('pip-current-task').textContent = t('pip_done_label');
+  document.getElementById('pipette-panel').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════
+// SPECTROPHOTOMETER
+// ═══════════════════════════════════════════════
+function setWavelength() {}
+
+function zeroSpec() {
+  if (zeroed) return;
+  zeroed = true;
+  document.getElementById('spectro-display').textContent = '0.000';
+  document.getElementById('zero-status').textContent = t('blank_set');
+  document.getElementById('zero-btn').textContent = t('zeroed_btn');
+  document.getElementById('zero-btn').classList.add('active');
+  showMsg(t('msg_zeroed'), 'success');
+  setStage(2);
+  startPipStep(1);
+}
+
+function toggleCuvette() {
+  if (!zeroed) { showMsg(t('msg_zero_first'), 'warn'); return; }
+  cuvetteIn = !cuvetteIn;
+  const slot = document.getElementById('cuvette-slot');
+  const btn = document.getElementById('insert-btn');
+  if (cuvetteIn) {
+    slot.className = 'cuvette-slot filled';
+    slot.textContent = t('cuvette_ok');
+    btn.textContent = t('remove_btn');
+    if (cuvetteReady) startReaction();
+    else document.getElementById('spectro-display').textContent = '0.000';
+  } else {
+    slot.className = 'cuvette-slot';
+    slot.textContent = t('cuvette_place');
+    btn.textContent = t('insert_btn');
+    if (!cuvetteReady) document.getElementById('spectro-display').textContent = '0.000';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// REACTION & TIMER
+// ═══════════════════════════════════════════════
+function startReaction() {
+  if (reactionRunning) return;
+  reactionRunning = true; virtualMs = 0; recordedData = [];
+  setStage(3);
+  if (expType==='B') activateProtocolStep(6); else activateProtocolStep(5);
+  document.getElementById('timer-box').style.display = 'flex';
+  document.getElementById('record-btn').disabled = false;
+  showMsg(t('msg_reaction'), 'info');
+
+  const TICK_MS = 100;
+  timerInterval = setInterval(() => {
+    virtualMs += TICK_MS * SPEED;
+    updateSpectroLive();
+    updateTimerUI();
+    if (virtualMs >= 305000) { clearInterval(timerInterval); reactionRunning = false; showResults(); }
+  }, TICK_MS);
+}
+
+function setSpeed(s) {
+  SPEED = s;
+  [1,2,5,10].forEach(x => document.getElementById('spd-'+x).className = 'spd-btn'+(x===s?' active':''));
+}
+
+function updateSpectroLive() {
+  if (!cuvetteIn || !zeroed || !cuvetteReady) return;
+  const tSec = virtualMs / 1000;
+  const val = withNoise(getBaseVal(tSec));
+  const disp = document.getElementById('spectro-display');
+  disp.textContent = val.toFixed(3);
+  disp.className = 'spectro-val' + (contaminated ? ' noise' : '');
+}
+
+function updateTimerUI() {
+  const tSec = virtualMs / 1000;
+  const mins = Math.floor(tSec / 60);
+  const secs = Math.floor(tSec % 60);
+  document.getElementById('timer-display').textContent = `${mins}:${secs.toString().padStart(2,'0')}`;
+
+  const nearestTarget = Math.round(tSec / 30) * 30;
+  const prevTarget = nearestTarget - 30;
+  const pct = Math.min(100, ((tSec - Math.max(0,prevTarget)) / 30) * 100);
+  document.getElementById('tp-fill').style.width = pct + '%';
+  const nextSec = Math.ceil(tSec / 30) * 30;
+  document.getElementById('next-pt-lbl').textContent = `${Math.floor(nextSec/60)}:${(nextSec%60).toString().padStart(2,'0')}`;
+
+  const diff = Math.abs(tSec - nearestTarget);
+  const disp2 = document.getElementById('timer-display');
+  const fill = document.getElementById('tp-fill');
+  const fb = document.getElementById('timing-feedback');
+  if (diff <= 2.5) { disp2.className='timer-display go'; fill.className='tp-fill go'; fb.textContent=t('now_lbl'); fb.style.color='var(--green)'; }
+  else if (diff <= 7) { disp2.className='timer-display warn'; fill.className='tp-fill warn'; fb.textContent=t('soon_lbl'); fb.style.color='var(--orange)'; }
+  else { disp2.className='timer-display'; fill.className='tp-fill'; fb.textContent=''; }
+}
+
+function recordMeasurement() {
+  const tSec = virtualMs / 1000;
+  const nearest = Math.round(tSec / 30) * 30;
+  const err = tSec - nearest;
+  const A = withNoise(getBaseVal(tSec));
+
+  if (recordedData.find(r => r.t === nearest)) {
+    showMsg(t('msg_pt_already').replace('%ts', nearest), 'warn'); return;
+  }
+
+  let acc = Math.abs(err) <= 2 ? 'perfect' : Math.abs(err) <= 7 ? 'ok' : 'bad';
+  recordedData.push({t: nearest, tActual: tSec, A, acc});
+  updateDataTable();
+  drawGraph();
+
+  const d = document.getElementById('spectro-display');
+  const orig = d.style.color;
+  d.style.color = '#ffffff'; setTimeout(() => d.style.color = orig, 200);
+  document.getElementById('record-btn').disabled = true;
+  setTimeout(() => { if (reactionRunning) document.getElementById('record-btn').disabled = false; }, 1500);
+}
+
+// ═══════════════════════════════════════════════
+// DATA TABLE
+// ═══════════════════════════════════════════════
+function updateDataTable() {
+  const tbody = document.getElementById('data-tbody');
+  tbody.innerHTML = '';
+  const pts = [0,30,60,90,120,150,180,210,240,270,300];
+  pts.forEach(t_ => {
+    const rec = recordedData.find(r => r.t === t_);
+    const tr = document.createElement('tr');
+    if (rec) {
+      tr.className = 'recorded';
+      const cls = rec.acc==='perfect'?'acc-p':rec.acc==='ok'?'acc-o':'acc-b';
+      const sym = rec.acc==='perfect'?'✓':rec.acc==='ok'?'~':'⚠';
+      tr.innerHTML = `<td>${t_}</td><td>${rec.A.toFixed(3)}</td><td><span class="acc-badge ${cls}">${sym}</span></td>`;
+    } else {
+      tr.innerHTML = `<td style="color:var(--dim)">${t_}</td><td style="color:var(--dim)">—</td><td></td>`;
+    }
+    tbody.appendChild(tr);
+  });
+  document.getElementById('pts-count').innerHTML = `${recordedData.length}/11 ${t('pts_lbl')}`;
+}
+
+// ═══════════════════════════════════════════════
+// GRAPH + DRAWING
+// ═══════════════════════════════════════════════
+let graphPad = {top:18,right:18,bottom:32,left:42};
+
+function drawGraph() {
+  const canvas = document.getElementById('graph');
+  const wrap = document.getElementById('graph-wrap');
+  const dpr = window.devicePixelRatio || 1;
+  const W = (wrap.offsetWidth || 400) * dpr;
+  const H = 230 * dpr;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const cW = wrap.offsetWidth || 400, cH = 230;
+  const pad = graphPad;
+  const gW = cW - pad.left - pad.right;
+  const gH = cH - pad.top - pad.bottom;
+
+  ctx.clearRect(0,0,cW,cH);
+  ctx.fillStyle = '#070710'; ctx.fillRect(0,0,cW,cH);
+
+  ctx.strokeStyle = '#13132a'; ctx.lineWidth = 1;
+  for (let i=0;i<=5;i++) { const y=pad.top+(gH/5)*i; ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+gW,y);ctx.stroke(); }
+  for (let i=0;i<=10;i++) { const x=pad.left+(gW/10)*i; ctx.beginPath();ctx.moveTo(x,pad.top);ctx.lineTo(x,pad.top+gH);ctx.stroke(); }
+
+  const allSeries = [];
+  if (recordedData.length > 0) allSeries.push({data:recordedData, color:COLORS[0], label: expType==='B'?selectedConc.toUpperCase():`pH ${selectedPH}`});
+  extraSeries.forEach((s,i) => allSeries.push({data:s.data, color:COLORS[i+1], label:s.label}));
+
+  let maxA = 0.08;
+  allSeries.forEach(s => s.data.forEach(p => { if (p.A>maxA) maxA=p.A; }));
+  maxA = Math.ceil(maxA*10)/10 + 0.06;
+
+  const toX = tt => pad.left + (tt/300)*gW;
+  const toY = a => pad.top + gH - (a/maxA)*gH;
+  const toT = px => Math.max(0, Math.min(300, ((px - pad.left)/gW)*300));
+  const toA = py => Math.max(0, ((pad.top+gH - py)/gH)*maxA);
+
+  canvas._toT = toT; canvas._toA = toA; canvas._toX = toX; canvas._toY = toY;
+
+  ctx.strokeStyle = '#2a2a42'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad.left,pad.top); ctx.lineTo(pad.left,pad.top+gH); ctx.lineTo(pad.left+gW,pad.top+gH); ctx.stroke();
+
+  ctx.fillStyle = '#44445a'; ctx.font = `${9}px -apple-system,sans-serif`;
+  ctx.textAlign='center';
+  const xLbl = LANG==='en' ? 't (s)' : 't (с)';
+  [0,60,120,180,240,300].forEach(tv => ctx.fillText(tv, toX(tv), pad.top+gH+11));
+  ctx.fillText(xLbl, pad.left+gW/2, cH-2);
+  ctx.textAlign='right'; ctx.font = `${8}px monospace`;
+  [0,maxA*0.25,maxA*0.5,maxA*0.75,maxA].forEach(a => ctx.fillText(a.toFixed(2), pad.left-4, toY(a)+3));
+
+  allSeries.forEach(s => {
+    const sorted = [...s.data].sort((a,b)=>a.t-b.t);
+    if (sorted.length === 0) return;
+    ctx.strokeStyle = s.color; ctx.lineWidth = 2;
+    ctx.beginPath();
+    sorted.forEach((p,i) => { if(i===0)ctx.moveTo(toX(p.t),toY(p.A));else ctx.lineTo(toX(p.t),toY(p.A)); });
+    ctx.stroke();
+    sorted.forEach(p => {
+      ctx.fillStyle = p.acc==='bad'?'#ff453a':p.acc==='ok'?'#ff9f0a':s.color;
+      ctx.beginPath(); ctx.arc(toX(p.t),toY(p.A),3.5,0,Math.PI*2); ctx.fill();
+    });
+  });
+
+  if (drawnLine) {
+    const {p1, p2} = drawnLine;
+    ctx.strokeStyle = '#ff9f0a'; ctx.lineWidth = 2.5;
+    ctx.setLineDash([5,3]);
+    ctx.beginPath(); ctx.moveTo(toX(p1.t), toY(p1.A)); ctx.lineTo(toX(p2.t), toY(p2.A)); ctx.stroke();
+    ctx.setLineDash([]);
+    [p1,p2].forEach(p => {
+      ctx.fillStyle = '#ff9f0a';
+      ctx.beginPath(); ctx.arc(toX(p.t), toY(p.A), 5, 0, Math.PI*2); ctx.fill();
+    });
+    const sLbl = LANG==='en' ? 's' : 'с';
+    ctx.fillStyle = '#ff9f0a'; ctx.font = 'bold 9px monospace'; ctx.textAlign='left';
+    ctx.fillText(`P₁(${p1.t.toFixed(0)}${sLbl}, ${p1.A.toFixed(3)})`, toX(p1.t)+6, toY(p1.A)-6);
+    ctx.fillText(`P₂(${p2.t.toFixed(0)}${sLbl}, ${p2.A.toFixed(3)})`, toX(p2.t)+6, toY(p2.A)+14);
+  }
+
+  if (drawMode) {
+    drawPts.forEach(p => {
+      ctx.strokeStyle='#ff9f0a'; ctx.lineWidth=1;
+      ctx.setLineDash([2,2]);
+      ctx.beginPath();ctx.moveTo(toX(p.t),pad.top);ctx.lineTo(toX(p.t),pad.top+gH);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(pad.left,toY(p.A));ctx.lineTo(pad.left+gW,toY(p.A));ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#ff9f0a';ctx.beginPath();ctx.arc(toX(p.t),toY(p.A),4,0,Math.PI*2);ctx.fill();
+    });
+    ctx.fillStyle='rgba(255,159,10,0.2)';ctx.fillRect(pad.left+gW/2-70,pad.top+2,140,16);
+    ctx.fillStyle='#ff9f0a';ctx.font='bold 9px sans-serif';ctx.textAlign='center';
+    ctx.fillText(drawPts.length===0 ? t('click_pt1') : t('click_pt2'), pad.left+gW/2, pad.top+12);
+  }
+
+  const leg = document.getElementById('graph-legend');
+  leg.innerHTML = allSeries.map(s=>`<div class="legend-item"><div class="legend-dot" style="background:${s.color}"></div>${s.label}</div>`).join('') +
+    (drawnLine?`<div class="legend-item"><div class="legend-dot" style="background:#ff9f0a"></div>${t('trend_line')}</div>`:'');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('graph').addEventListener('click', function(e) {
+    if (!drawMode) return;
+    const rect = this.getBoundingClientRect();
+    const px = e.clientX - rect.left;
+    const py = e.clientY - rect.top;
+    const pad = graphPad;
+    if (px < pad.left || px > this.offsetWidth - pad.right || py < pad.top || py > 230 - pad.bottom) return;
+    const tVal = this._toT(px);
+    const A = this._toA(py);
+    drawPts.push({t:tVal, A});
+    if (drawPts.length === 2) {
+      drawnLine = {p1:drawPts[0], p2:drawPts[1]};
+      drawPts = [];
+      updateDrawInfo();
+      document.getElementById('clear-line-btn').style.display = 'inline-flex';
+    }
+    drawGraph();
+  });
+  applyLang();
+});
+
+function toggleDrawMode() {
+  drawMode = !drawMode;
+  drawPts = [];
+  const btn = document.getElementById('draw-btn');
+  const canvas = document.getElementById('graph');
+  if (drawMode) {
+    btn.textContent = t('draw_cancel');
+    btn.className = 'btn btn-orange btn-sm';
+    canvas.className = 'draw-cursor';
+    document.getElementById('draw-info').classList.add('show');
+    document.getElementById('draw-coords').textContent = t('click_pt1');
+  } else {
+    btn.textContent = t('draw_btn');
+    btn.className = 'btn btn-ghost btn-sm';
+    canvas.className = 'view-mode';
+  }
+  drawGraph();
+}
+
+function clearDrawnLine() {
+  drawnLine = null; drawPts = [];
+  document.getElementById('clear-line-btn').style.display = 'none';
+  document.getElementById('draw-coords').textContent = t('line_deleted');
+  document.getElementById('slope-feedback').classList.remove('show');
+  drawGraph();
+}
+
+function updateDrawInfo() {
+  if (!drawnLine) return;
+  const {p1, p2} = drawnLine;
+  const sLbl = LANG==='en' ? 's' : 'с';
+  document.getElementById('draw-coords').innerHTML =
+    `P₁ = (t₁ = <strong>${p1.t.toFixed(1)} ${sLbl}</strong>, A₁ = <strong>${p1.A.toFixed(3)}</strong>)<br>` +
+    `P₂ = (t₂ = <strong>${p2.t.toFixed(1)} ${sLbl}</strong>, A₂ = <strong>${p2.A.toFixed(3)}</strong>)`;
+  if (drawMode) {
+    drawMode = false;
+    document.getElementById('draw-btn').textContent = t('draw_btn');
+    document.getElementById('draw-btn').className = 'btn btn-ghost btn-sm';
+    document.getElementById('graph').className = 'view-mode';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// RESULTS & SLOPE CHECK
+// ═══════════════════════════════════════════════
+function showResults() {
+  clearInterval(timerInterval);
+  reactionRunning = false;
+  setStage(4);
+  document.getElementById('slope-check-box').style.display = 'block';
+  document.getElementById('slope-box-desc') && (document.getElementById('slope-box-desc').innerHTML = t('slope_box_desc'));
+  document.getElementById('draw-btn').style.display = 'inline-flex';
+  drawGraph();
+  showMsg(t('msg_done'), 'success');
+}
+
+function checkSlope() {
+  const val = parseFloat(document.getElementById('slope-input').value);
+  if (isNaN(val)) { showSlopeFeedback(t('msg_enter_num'), false); return; }
+
+  let rng;
+  if (expType === 'B') rng = SLOPE_RANGES['B'];
+  else rng = SLOPE_RANGES['C' + selectedPH];
+
+  const inRange = val >= rng[0] && val <= rng[1];
+  const mid = (rng[0]+rng[1])/2;
+  const generous = Math.abs(val-mid) <= mid*0.5;
+
+  if (inRange || generous) {
+    showSlopeFeedback(t('slope_ok').replace('%v', val.toFixed(5)).replace('%lo', rng[0].toFixed(5)).replace('%hi', rng[1].toFixed(5)), true);
+    setStage(4);
+  } else {
+    showSlopeFeedback(t('slope_wrong').replace('%lo', rng[0].toFixed(5)).replace('%hi', rng[1].toFixed(5)), false);
+  }
+}
+
+function showSlopeFeedback(msg, ok) {
+  const fb = document.getElementById('slope-feedback');
+  fb.textContent = msg;
+  fb.className = 'slope-feedback show ' + (ok?'ok':'wrong');
+}
+
+function addSeries() {
+  if (recordedData.length === 0) return;
+  const label = expType==='B'?selectedConc.toUpperCase():`pH ${selectedPH}`;
+  extraSeries.push({data:[...recordedData], label});
+  showSetup();
+}
+
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
+function showMsg(msg, type) {
+  const el = document.getElementById('action-area');
+  const cls = {info:'am-info', success:'am-success', warn:'am-warn', error:'am-error'}[type] || 'am-info';
+  el.innerHTML = `<div class="action-msg ${cls}">${msg}</div>`;
+}
+
+function setStage(s) {
+  for (let i=0;i<=4;i++) {
+    const el = document.getElementById('stg'+i);
+    if (el) el.className = i<s?'stg done':i===s?'stg active':'stg';
+  }
+}
+
+window.addEventListener('resize', () => { drawGraph(); });
+
+// Init
+selectConc('1x'); selectExp('B');
+applyLang();
+drawGraph();
+</script>
+</body>
+</html>

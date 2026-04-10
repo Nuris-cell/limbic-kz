@@ -179,7 +179,7 @@
     </div>
   </div>
   <div class="sidebar-section">
-    <div class="sidebar-section-title" onclick="toggleSec(this)">🏆 Олимпиада 2026 <span class="arr">▶</span></div>
+    <div class="sidebar-section-title" onclick="toggleSec(this)"><span data-i18n="sideOlympiad">🏆 Республиканская олимпиада 2026</span> <span class="arr">▶</span></div>
     <div class="sidebar-subtopics">
       <div class="sidebar-subtopic" onclick="openSubtopic('olympiad2026','peroxidase')">Пероксидаза редьки <span class="sidebar-count">2</span></div>
       <div class="sidebar-subtopic" onclick="openSubtopic('olympiad2026','myrosinase')">Мирозиназа репы <span class="sidebar-count">9</span></div>
@@ -255,7 +255,7 @@ const T = {
     subHW:'Харди-Вайнберг',subMut:'Мутации',subSel:'Естественный отбор',
     subMig:'Миграция',subHet:'Гетерозис',subInb:'Инбридинг',subDrift:'Дрейф генов',
     subChi:'Критерий χ²',subTtest:'t-тест',subBayes:'Байес',
-    subTitration:'Дыхание семян',subLipase:'Кинетика липазы',subAmino:'Идентификация аминокислот',
+    subTitration:'Дыхание семян',subLipase:'Кинетика липазы',subAmino:'Идентификация аминокислот',sideOlympiad:'🏆 Республиканская олимпиада 2026',subPeroxidase:'Пероксидаза редьки',subMyrosinase:'Мирозиназа репы',
     heroBadge:'🇰🇿 Казахстан · Биология · Олимпиады',
     heroSub:'Универсальная платформа подготовки к олимпиадам',
     heroDesc:'Интерактивный сборник расчётных задач и виртуальная лаборатория в одном месте. От популяционной генетики и статистики до симуляций практического тура по биохимии. Тренируй навыки, не выходя из браузера.',
@@ -296,7 +296,7 @@ const T = {
     subHW:'Hardy-Weinberg',subMut:'Mutations',subSel:'Natural Selection',
     subMig:'Migration',subHet:'Heterosis',subInb:'Inbreeding',subDrift:'Genetic Drift',
     subChi:'χ² Test',subTtest:'t-test',subBayes:'Bayes',
-    subTitration:'Seed Respiration',subLipase:'Lipase Kinetics',subAmino:'Amino Acid ID',
+    subTitration:'Seed Respiration',subLipase:'Lipase Kinetics',subAmino:'Amino Acid ID',sideOlympiad:'🏆 Republican Olympiad 2026',subPeroxidase:'Radish Peroxidase',subMyrosinase:'Turnip Myrosinase',
     heroBadge:'🇰🇿 Kazakhstan · Biology · Olympiads',
     heroSub:'Universal biology olympiad preparation platform',
     heroDesc:'Interactive problem set and virtual laboratory in one place. From population genetics and statistics to biochemistry practical tour simulations. Train your skills right in the browser.',
@@ -328,7 +328,9 @@ const T = {
       {ic:'P',oc:"openSubtopic('stats','bayes')",ti:"Bayes' Theorem",de:'Posterior probabilities, sensitivity, specificity, DNA paternity testing.',co:'1 problem · IBO',is:'font-size:1.2rem;font-weight:700;color:var(--blue2)'},
       {ic:'🫁',oc:"openSubtopic('biochemistry','titration')",ti:'Seed Respiration: Ba(OH)₂/HCl',de:'Virtual lab. Back-titration of CO₂ from wheat seed respiration. Three parallel experiments, calculate respiration intensity.',co:'1 problem · Practical tour'},
       {ic:'🧫',oc:"openSubtopic('biochemistry','lipase')",ti:'Lipase Kinetics (EC 3.1.1.3)',de:'Virtual lab. TAG hydrolysis, NaOH titration of FFA, calculate FFA concentration and reaction rate.',co:'6 problems · Practical tour'},
-      {ic:'🔬',oc:"openSubtopic('biochemistry','aminoacid')",ti:'Amino Acid Identification',de:'Virtual pH lab. Build titration curves for three unknown amino acids, find pKₐ, calculate pI and identify by reference.',co:'8 problems · Practical tour → IBO'}
+      {ic:'🔬',oc:"openSubtopic('biochemistry','aminoacid')",ti:'Amino Acid Identification',de:'Virtual pH lab. Build titration curves for three unknown amino acids, find pKₐ, calculate pI and identify by reference.',co:'8 problems · Practical tour → IBO'},
+      {ic:'🏆',oc:"openSubtopic('olympiad2026','peroxidase')",ti:'Peroxidase Kinetics (Raphanus sativus)',de:'Republican Olympiad 2026 — Practical biochemistry. Radish peroxidase kinetics by spectrophotometry at 500 nm. Effect of pH on enzyme activity.',co:'2 problems · Practical tour'},
+      {ic:'🌿',oc:"openSubtopic('olympiad2026','myrosinase')",ti:'Myrosinase (Brassica rapa) — Calculation Problems',de:'Republican Olympiad 2026 — Theory (Part D). Myrosinase kinetics: Beer–Lambert law, Hill equation, cooperativity, substrate inhibition, MWC model.',co:'9 problems · National → IBO'}
     ]
   }
 };
@@ -725,7 +727,8 @@ const SUBTOPICS = {
     }
   },
   olympiad2026: {
-    label: 'Олимпиада 2026',
+    label: 'Республиканская олимпиада 2026',
+    label_en: 'Republican Olympiad 2026',
     subtopics: {
       peroxidase: {
         title: 'Пероксидаза Raphanus sativus — кинетика',
@@ -1097,7 +1100,7 @@ const TRANS_EN = {
     title:'Peroxidase (Raphanus sativus) — Kinetics',
     desc:'Republican Olympiad 2026. Biochemistry practical section: radish peroxidase kinetics by spectrophotometry at 500 nm. Effect of pH on enzyme activity.',
     tasks:[
-      {c:`<p><strong>Part B. Baseline peroxidase activity.</strong></p><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:0.82rem;"><strong>Protocol:</strong> Reaction cuvette = 0.5 mL substrate S + 0.5 mL enzyme E (1X radish peroxidase extract).<br>Record A₅₀₀ every 30 s for 5 min. Wavelength: <strong>500 nm</strong>.</div><p style="margin-top:8px;">QB4: What does the <strong>slope of the linear region</strong> of the A₅₀₀ – Time curve physically represent?</p>`,rh:'Enter a keyword (e.g.: slope).',h:[
+      {c:`<p><strong>Part B. Baseline peroxidase activity.</strong></p><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:0.82rem;"><strong>Protocol:</strong> Reaction cuvette = 0.5 mL substrate S + 0.5 mL enzyme E (1X radish peroxidase extract).<br>Record A₅₀₀ every 30 s for 5 min. Wavelength: <strong>500 nm</strong>.<br>Substrate S: 0.15 mL H₂O₂ + 0.1 mL guaiacol + 3.5 mL H₂O (total 3.75 mL).<br>Enzyme E: 0.75 mL extract + 3.0 mL H₂O (total 3.75 mL).</div><div style="margin:10px 0;padding:10px 12px;background:rgba(10,132,255,0.07);border:1px solid rgba(10,132,255,0.22);border-radius:8px;font-size:0.8rem;">🔬 <strong>Virtual Laboratory</strong> — run the experiment yourself:<br><button onclick="document.getElementById('perox-lab-en-wrap').style.display=document.getElementById('perox-lab-en-wrap').style.display==='none'?'block':'none'" style="margin-top:6px;padding:5px 14px;background:#0a84ff;color:#fff;border:none;border-radius:7px;font-size:0.76rem;font-weight:600;cursor:pointer;">⚗ Open / Close laboratory</button><div id="perox-lab-en-wrap" style="display:none;margin-top:10px;"><iframe src="peroxidase_lab.html" style="width:100%;height:560px;border:none;border-radius:8px;overflow:hidden;" loading="lazy" title="Virtual Lab — Peroxidase"></iframe></div></div><p style="margin-top:8px;">QB4: What does the <strong>slope of the linear region</strong> of the A₅₀₀ – Time curve physically represent?</p>`,rh:'Enter a keyword (e.g.: slope).',h:[
         {l:'Physical meaning of slope',b:`<p>Increasing A₅₀₀ reflects accumulation of tetraguaiacol — the oxidised product of the peroxidase reaction with guaiacol and H₂O₂.</p><div class="formula">Guaiacol + H₂O₂ →(peroxidase) Tetraguaiacol (absorbs at 500 nm)</div><p>The linear slope ΔA₅₀₀/Δt is proportional to the rate of product formation, i.e. <strong>enzyme activity</strong>.</p>`},
         {l:'✅ Answer',sol:true,b:`<div class="answer-box">The slope = <strong>rate of absorbance increase</strong> ΔA/Δt, proportional to peroxidase activity (amount of product formed per unit time).</div>`}
       ]},
@@ -1111,7 +1114,7 @@ const TRANS_EN = {
     title:'Myrosinase (Brassica rapa) — Calculation Problems',
     desc:'Republican Olympiad 2026. Theoretical section (Part D, 6.5 pts). Myrosinase kinetics from giant turnip: Beer–Lambert law, Hill equation, cooperativity, substrate inhibition, MWC model.',
     tasks:[
-      {c:`<p><strong>Background.</strong> Myrosinase catalyses sinigrin hydrolysis to isothiocyanates (A₅₀₅).</p><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:0.82rem;"><strong>Setup:</strong> l = 1 cm · V<sub>total</sub> = 3.0 mL · V<sub>enz</sub> = 200 µL · C<sub>protein</sub> = 0.25 mg/mL · ε = 15 000 M⁻¹·cm⁻¹</div><p><strong>Leila's data:</strong> A₀ = 0.120 at t₀ = 0 min; A₁ = 0.720 at t₁ = 4 min.</p><p style="margin-top:8px;">QD1.1: Calculate the rate of product formation V in <strong>µmol/(L·min)</strong>. Round to whole number.</p>`,rh:'Round to whole number.',h:[
+    {c:`<p><strong>Part C. Effect of pH on peroxidase activity.</strong></p><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:0.82rem;"><strong>Three reactions:</strong><br>pH 3 "E": 0.25 mL extract + 1 mL pH 3 buffer<br>pH 7 "E": 0.25 mL extract + 1 mL pH 7 buffer<br>pH 14 "E": 0.25 mL extract + 1 mL pH 14 buffer<br>Cuvette: 0.5 mL substrate S + 0.5 mL corresponding enzyme mix.</div><div style="margin:10px 0;padding:10px 12px;background:rgba(10,132,255,0.07);border:1px solid rgba(10,132,255,0.22);border-radius:8px;font-size:0.8rem;">🔬 <strong>Virtual Laboratory</strong> — test pH 3, pH 7 and pH 14:<br><button onclick="document.getElementById('perox-ph-en-wrap').style.display=document.getElementById('perox-ph-en-wrap').style.display==='none'?'block':'none'" style="margin-top:6px;padding:5px 14px;background:#0a84ff;color:#fff;border:none;border-radius:7px;font-size:0.76rem;font-weight:600;cursor:pointer;">⚗ Open / Close laboratory</button><div id="perox-ph-en-wrap" style="display:none;margin-top:10px;"><iframe src="peroxidase_lab.html" style="width:100%;height:560px;border:none;border-radius:8px;overflow:hidden;" loading="lazy" title="Virtual Lab — Peroxidase pH"></iframe></div></div><p>QC5: At what pH does radish peroxidase (<em>Raphanus sativus</em>) show <strong>maximum activity</strong>?</p>`,rh:'Enter pH value (e.g.: 7).',h:[
         {l:'Beer–Lambert–Bouguer law',b:`<div class="formula">Δc = ΔA / (ε · l) = 0.600 / 15000 = 4.0×10⁻⁵ M = 40 µmol/L</div>`},
         {l:'✅ Full solution',sol:true,b:`<div class="formula">V = Δc / Δt = 40 / 4 = 10 µmol/(L·min)</div><div class="answer-box">V = 10 µmol/(L·min)</div>`}
       ]},
@@ -1384,7 +1387,7 @@ function openSubtopic(sectionKey, subKey) {
 
   // Better: use section label from T
   const secDisplayLabel = LANG === 'en' ? 
-    (sectionKey === 'genetics' ? 'Population Genetics' : sectionKey === 'stats' ? 'Statistics' : sectionKey === 'olympiad2026' ? 'Olympiad 2026' : 'Biochemistry') :
+    (sectionKey === 'genetics' ? 'Population Genetics' : sectionKey === 'stats' ? 'Statistics' : sectionKey === 'olympiad2026' ? 'Republican Olympiad 2026' : 'Biochemistry') :
     sec.label;
 
   document.getElementById('bc-section').textContent = secDisplayLabel;

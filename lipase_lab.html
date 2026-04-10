@@ -196,8 +196,22 @@ td{padding:3px 4px;font-family:'JetBrains Mono',monospace;font-size:8.5px;text-a
 <script>
 const C_NAOH = 0.020;   // M
 const V_NAOH_BURET = 25;
-// Fixed endpoint volumes for each flask (mL NaOH)
-const TARGETS = [2.10, 5.25]; // flask 0 (5 min), flask 1 (20 min)
+
+function parseLipaseHash() {
+  try {
+    const raw = (location.hash || '').replace(/^#/, '');
+    if (!raw) return null;
+    const json = JSON.parse(atob(decodeURIComponent(raw)));
+    if (json && Array.isArray(json.targets) && json.targets.length === 2) {
+      const a = Number(json.targets[0]);
+      const b = Number(json.targets[1]);
+      if (a > 0 && b > a) return [a, b];
+    }
+  } catch (e) {}
+  return null;
+}
+
+const TARGETS = parseLipaseHash() || [2.10, 5.25];
 
 let buretVol = 0, activeIdx = 0, isTapOpen = false, dripInt = null, startVol = 0;
 let buretFilled = false;

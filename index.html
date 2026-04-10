@@ -611,12 +611,12 @@ const SUBTOPICS = {
         tasks: [
           { num: '№1', diff: 'practical', roundHint: 'Округлите до сотых (например: 4.00).',
             answer: ['0.60', '0.59'],
-            condition: `<p><strong>Задача:</strong> Семена пшеницы (10.00 г) выдержали 2 ч в колбе с 20.00 мл Ba(OH)₂ (0.05000 моль/л). CO₂, выделившийся при дыхании, поглотила щёлочь. Остаток Ba(OH)₂ оттитровали HCl (0.1000 моль/л) до обесцвечивания фенолфталеина.</p><p style="margin-top:8px;font-size:0.78rem;color:var(--text-dim);">Проведите три параллельных опыта в виртуальной лаборатории. По итогам рассчитайте <strong>среднюю интенсивность дыхания</strong> в мг CO₂/(г·ч).</p><iframe src="titration_lab.html" style="width:700px;height:490px;border:none;border-radius:8px;margin-top:12px;display:block;" frameborder="0"></iframe><p style="margin-top:10px;font-size:0.78rem;">Введите ответ: <strong>средняя интенсивность дыхания</strong> в мг CO₂/(г·ч), округлите до сотых.</p>`,
+            condition: `<p><strong>Задача:</strong> Семена пшеницы (10.00 г) выдержали 2 ч в колбе с 20.00 мл Ba(OH)₂ (0.05000 моль/л). CO₂, выделившийся при дыхании, поглотила щёлочь. Остаток Ba(OH)₂ оттитровали HCl (0.1000 моль/л) до обесцвечивания фенолфталеина.</p><p style="margin-top:8px;font-size:0.78rem;color:var(--text-dim);"><strong>Новая сессия лаборатории</strong> при каждом заходе в этот раздел: три объёма титрования каждый раз другие — ответ нужно получить из <em>ваших</em> показаний бюретки и расчёта.</p><p style="margin-top:8px;font-size:0.78rem;color:var(--text-dim);">Проведите три параллельных опыта в виртуальной лаборатории. По итогам рассчитайте <strong>среднюю интенсивность дыхания</strong> в мг CO₂/(г·ч).</p><iframe src="titration_lab.html" style="width:700px;height:490px;border:none;border-radius:8px;margin-top:12px;display:block;" frameborder="0"></iframe><p style="margin-top:10px;font-size:0.78rem;">Введите ответ: <strong>средняя интенсивность дыхания</strong> в мг CO₂/(г·ч), округлите до сотых.</p>`,
             hints: [
               { label: 'Подсказка 1 — метод обратного титрования', body: `<p>Это <strong>обратное (заместительное) титрование</strong>. Ba(OH)₂ сначала поглощает CO₂ дыхания:</p><div class="formula">CO₂ + Ba(OH)₂ → BaCO₃↓ + H₂O</div><p>Затем <em>избыток</em> Ba(OH)₂ оттитровывают HCl до исчезновения малинового цвета фенолфталеина:</p><div class="formula">Ba(OH)₂ + 2 HCl → BaCl₂ + 2 H₂O</div><p>Из расхода HCl находят количество оставшегося Ba(OH)₂, а из разности — количество поглощённого CO₂.</p>` },
               { label: 'Подсказка 2 — схема расчёта', body: `<p>Пошаговая схема (для одного опыта):</p><div class="formula">n(Ba(OH)₂)начальный = 0.05000 × 20.00 = 1.0000 ммоль\nn(HCl) = V(HCl) × 0.1000 ммоль\nn(Ba(OH)₂)остаток = n(HCl) / 2\nn(CO₂) = 1.0000 − n(Ba(OH)₂)остаток\nm(CO₂), мг = n(CO₂) × 44.01\nИнтенсивность = m(CO₂) / (10.00 г × 2 ч)</div><p>Повторите для всех трёх опытов и найдите <strong>среднее</strong>.</p>` },
-              { label: 'Подсказка 3 — числа из лаборатории', body: `<p>Ожидаемые показания бюретки для трёх опытов:</p><div class="formula">Опыт 1: V(HCl) = 14.60 мл\nОпыт 2: V(HCl) = 14.50 мл\nОпыт 3: V(HCl) = 14.56 мл</div>` },
-              { label: '✅ Полное решение', solution: true, body: `<p><strong>Опыт 1</strong> (V = 14.60 мл): n(CO₂) = 0.2700 ммоль → I₁ = 0.594 мг/(г·ч)</p><p><strong>Опыт 2</strong> (V = 14.50 мл): n(CO₂) = 0.2750 ммоль → I₂ = 0.605 мг/(г·ч)</p><p><strong>Опыт 3</strong> (V = 14.56 мл): n(CO₂) = 0.2720 ммоль → I₃ = 0.599 мг/(г·ч)</p><div class="formula">Iср = (0.594 + 0.605 + 0.599) / 3 ≈ 0.599 мг/(г·ч)</div><div class="answer-box">Интенсивность дыхания ≈ 0.60 мг CO₂/(г·ч)</div>` }
+              { label: 'Подсказка 3 — что взять из лаборатории', body: `<p>Объёмы V(HCl) в каждом опыте <strong>свои в каждой сессии</strong>. Снимите их с панели «Показания бюретки» / таблицы итогов после титрования трёх колб.</p><p style="margin-top:6px;font-size:0.82rem;">Дальше подставляйте <em>ваши</em> три значения в схему из подсказки 2.</p>` },
+              { label: '✅ Методика проверки', solution: true, body: `<p>Универсально для любой сессии:</p><ol style="font-size:0.82rem;padding-left:18px;line-height:1.75;"><li>По каждому опыту: n(CO₂) = n(Ba(OH)₂)нач − V(HCl)·C(HCl) / 2 (в ммоль при данных из условия задачи).</li><li>I = n(CO₂)·M(CO₂) / (масса семян · время), мг/(г·ч).</li><li>Ответ — среднее арифметическое трёх I, округлить до сотых.</li></ol><div class="answer-box">Правильное число совпадает с расчётом по <strong>вашим</strong> трём объёмам из симулятора.</div>` }
             ]
           }
         ]
@@ -627,7 +627,7 @@ const SUBTOPICS = {
         tasks: [
           { num: '1', diff: 'practical', roundHint: 'До сотых долей мл (пример: 24.10).',
             answer: ['2.10','2.06','2.08','2.09','2.11','2.12','2.14','2.16','2.18'],
-            condition: `<div style="background:linear-gradient(135deg,#fdf4ff,#f0fdf4);border:1px solid #e8d5f5;border-radius:10px;padding:12px 14px;margin-bottom:12px;color:#1e1208;"><p style="font-weight:700;color:#6d28d9;margin-bottom:6px;">🧫 Кинетика ферментативного гидролиза ТАГ (КФ 3.1.1.3)</p><p style="font-size:0.82rem;color:#3d2b1f;margin-bottom:8px;"><strong>Протокол:</strong></p><ol style="font-size:0.81rem;color:#3d2b1f;padding-left:18px;line-height:1.8;"><li>Отмерьте <strong>5.0 мл</strong> субстрата (эмульсия оливкового масла 1%) в пробирку.</li><li>Добавьте <strong>1.0 мл фосфатного буфера</strong> (pH 7.0) и <strong>1.0 мл раствора липазы</strong>.</li><li>Инкубируйте при <strong>37°C</strong>. Отсчёт времени начинается <strong>с момента добавления фермента</strong>.</li><li>По истечении времени инкубации (5 или 20 мин) добавьте <strong>15.0 мл стоп-реагента</strong> (этанол:диэтиловый эфир 1:1).</li><li>Титруют <strong>0.020 М NaOH</strong> до появления устойчивого бледно-розового окрашивания (≥ 30 с).</li></ol></div><iframe src="lipase_lab.html" style="width:700px;height:490px;border:none;border-radius:10px;margin-top:4px;display:block;" frameborder="0"></iframe><p style="margin-top:10px;font-size:0.82rem;">Проведите титрование обеих проб в виртуальной лаборатории. Запишите <strong>V₁</strong> — объём NaOH (мл) на титрование пробы <strong>5 мин</strong> (с точностью до 0.05 мл).</p>`,
+            condition: `<div style="background:linear-gradient(135deg,#fdf4ff,#f0fdf4);border:1px solid #e8d5f5;border-radius:10px;padding:12px 14px;margin-bottom:12px;color:#1e1208;"><p style="font-weight:700;color:#6d28d9;margin-bottom:6px;">🧫 Кинетика ферментативного гидролиза ТАГ (КФ 3.1.1.3)</p><p style="font-size:0.82rem;color:#3d2b1f;margin-bottom:8px;"><strong>Протокол:</strong></p><ol style="font-size:0.81rem;color:#3d2b1f;padding-left:18px;line-height:1.8;"><li>Отмерьте <strong>5.0 мл</strong> субстрата (эмульсия оливкового масла 1%) в пробирку.</li><li>Добавьте <strong>1.0 мл фосфатного буфера</strong> (pH 7.0) и <strong>1.0 мл раствора липазы</strong>.</li><li>Инкубируйте при <strong>37°C</strong>. Отсчёт времени начинается <strong>с момента добавления фермента</strong>.</li><li>По истечении времени инкубации (5 или 20 мин) добавьте <strong>15.0 мл стоп-реагента</strong> (этанол:диэтиловый эфир 1:1).</li><li>Титруют <strong>0.020 М NaOH</strong> до появления устойчивого бледно-розового окрашивания (≥ 30 с).</li></ol></div><p style="margin-top:8px;font-size:0.78rem;color:var(--text-dim);"><strong>Новая сессия</strong> при каждом заходе в блок «Липаза»: в симуляторе каждый раз другие <strong>V₁</strong> и <strong>V₂</strong>; задания 2а–3 считайте по <em>вашим</em> объёмам из лаборатории.</p><iframe src="lipase_lab.html" style="width:700px;height:490px;border:none;border-radius:10px;margin-top:4px;display:block;" frameborder="0"></iframe><p style="margin-top:10px;font-size:0.82rem;">Проведите титрование обеих проб в виртуальной лаборатории. Запишите <strong>V₁</strong> — объём NaOH (мл) на титрование пробы <strong>5 мин</strong> (с точностью до 0.05 мл).</p>`,
             hints: [
               { label: 'Что такое стоп-реагент?', body: `<p>Смесь этанол : диэтиловый эфир (1:1) <strong>немедленно денатурирует липазу</strong> и останавливает реакцию. Одновременно спирт повышает растворимость образовавшихся СЖК в реакционной смеси, делая их доступными для титрования.</p>` },
               { label: 'Направление титрования', body: `<p>Это <strong>прямое титрование</strong> кислоты щёлочью. СЖК — слабые кислоты; их нейтрализует NaOH:</p><div class="formula">R–COOH + NaOH → R–COONa + H₂O</div><p>Фенолфталеин бесцветен в кислой среде → <strong>розовеет</strong> при лёгком избытке NaOH. Это конечная точка.</p>` }
@@ -642,21 +642,21 @@ const SUBTOPICS = {
             answer: ['6.00','5.89','5.94','5.97','6.03','6.06','6.11','6.17','6.23','6.0'],
             condition: `<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Задание 2а.</strong> Рассчитайте концентрацию СЖК в пробе <strong>5 мин</strong>.</p><p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Введите C<sub>СЖК(1)</sub> в мкмоль/мл.</p>`,
             hints: [
-              { label: 'Формула расчёта', body: `<div class="formula">C<sub>СЖК</sub> = V₁ × 20 / 7.0</div><p>Для V₁ = 2.10 мл: C = 2.10 × 20 / 7.0 = <strong>6.00 мкмоль/мл</strong></p>` },
+              { label: 'Формула расчёта', body: `<div class="formula">C<sub>СЖК</sub> = V₁ × 20 / 7.0</div><p>Подставьте <strong>V₁ из вашей</strong> сессии лаборатории (задание 1), округлите ответ до сотых мкмоль/мл.</p>` },
               { label: 'Откуда 20 и 7.0?', body: `<p><strong>20</strong> = C(NaOH) × 1000 = 0.020 × 1000. Переводим моль → мкмоль × объём = мкмоль СЖК на 1 мл NaOH.</p><p><strong>7.0 мл</strong> — объём реакционной смеси до добавления стоп-реагента: 5.0 (субстрат) + 1.0 (буфер) + 1.0 (фермент).</p>` }
             ]
           },
           { num: '4', diff: 'regional', roundHint: 'До сотых мкмоль/мл (пример: 15.00).',
             answer: ['15.00','14.89','14.91','14.94','14.97','15.03','15.06','15.09','15.11','15.23','15.0','14.9','15.1'],
             condition: `<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Задание 2б.</strong> Рассчитайте концентрацию СЖК в пробе <strong>20 мин</strong>.</p><p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Введите C<sub>СЖК(2)</sub> в мкмоль/мл.</p>`,
-            hints: [{ label: 'Расчёт', body: `<div class="formula">C<sub>СЖК(2)</sub> = V₂ × 20 / 7.0</div><p>Для V₂ = 5.25 мл: C = 5.25 × 20 / 7.0 = <strong>15.00 мкмоль/мл</strong></p>` }]
+            hints: [{ label: 'Расчёт', body: `<div class="formula">C<sub>СЖК(2)</sub> = V₂ × 20 / 7.0</div><p>Используйте <strong>V₂ из вашей</strong> сессии (задание 2), округлите до сотых.</p>` }]
           },
           { num: '5', diff: 'regional', roundHint: 'До сотых мкмоль/(мл·мин) (пример: 0.90).',
             answer: ['0.60','0.61','0.59','0.62','0.58','0.6'],
             condition: `<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Задание 3.</strong> Рассчитайте среднюю скорость прироста концентрации СЖК на интервале между 5-й и 20-й минутами.</p><p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Введите скорость в мкмоль/(мл · мин).</p>`,
             hints: [
-              { label: 'Подстановка', body: `<div class="formula">v = (15.00 − 6.00) / (20 − 5) = 9.00 / 15 = 0.60 мкмоль/(мл·мин)</div>` },
-              { label: '✅ Полное решение', solution: true, body: `<div class="formula">C₁ = 2.10 × 20 / 7.0 = 6.00 мкмоль/мл\nC₂ = 5.25 × 20 / 7.0 = 15.00 мкмоль/мл\nv = (15.00 − 6.00) / (20 − 5) = 0.60</div><div class="answer-box">v = 0.60 мкмоль/(мл · мин)</div>` }
+              { label: 'Формула', body: `<div class="formula">v = (C₂ − C₁) / (20 − 5) = (C₂ − C₁) / 15</div><p>C₁ и C₂ — из заданий 2а и 2б для <strong>ваших</strong> V₁ и V₂.</p>` },
+              { label: '✅ Методика проверки', solution: true, body: `<p>После подстановки <strong>ваших</strong> C₁, C₂ скорость однозначна; округлите до сотых мкмоль/(мл·мин).</p><div class="answer-box">Система сверяет ответ с расчётом по объёмам текущей сессии лаборатории.</div>` }
             ]
           },
           { num: '6', diff: 'national', roundHint: 'Введите букву варианта: а, б или в.',
@@ -1053,28 +1053,28 @@ const TRANS_EN = {
     title:'Seed Respiration: Ba(OH)₂/HCl Back-Titration',
     desc:'Determine respiration intensity of wheat seeds by back-titration. CO₂ absorbed by Ba(OH)₂; excess alkali is titrated with HCl.',
     tasks:[
-      {c:`<p><strong>Task:</strong> Wheat seeds (10.00 g) were incubated for 2 h in a flask with 20.00 mL Ba(OH)₂ (0.05000 mol/L). Respiratory CO₂ was absorbed by the alkali. Excess Ba(OH)₂ was titrated with HCl (0.1000 mol/L) to phenolphthalein decolourisation.</p><p style="margin-top:8px;font-size:0.78rem;color:var(--text-dim);">Perform three parallel virtual experiments. Calculate the <strong>average respiration intensity</strong> in mg CO₂/(g·h).</p><iframe src="titration_lab.html" style="width:700px;height:490px;border:none;border-radius:8px;margin-top:12px;display:block;" frameborder="0"></iframe><p style="margin-top:10px;font-size:0.78rem;">Enter: <strong>average respiration intensity</strong> in mg CO₂/(g·h), rounded to hundredths.</p>`,
+      {c:`<p><strong>Task:</strong> Wheat seeds (10.00 g) were incubated for 2 h in a flask with 20.00 mL Ba(OH)₂ (0.05000 mol/L). Respiratory CO₂ was absorbed by the alkali. Excess Ba(OH)₂ was titrated with HCl (0.1000 mol/L) to phenolphthalein decolourisation.</p><p style="margin-top:8px;font-size:0.78rem;color:var(--text-dim);"><strong>Each time you open this section</strong>, the virtual lab draws a new set of three titration volumes — use <em>your</em> burette readings and calculations.</p><p style="margin-top:8px;font-size:0.78rem;color:var(--text-dim);">Perform three parallel virtual experiments. Calculate the <strong>average respiration intensity</strong> in mg CO₂/(g·h).</p><iframe src="titration_lab.html" style="width:700px;height:490px;border:none;border-radius:8px;margin-top:12px;display:block;" frameborder="0"></iframe><p style="margin-top:10px;font-size:0.78rem;">Enter: <strong>average respiration intensity</strong> in mg CO₂/(g·h), rounded to hundredths.</p>`,
        rh:'Round to hundredths (e.g. 4.00).',
        h:[{l:'Hint 1 — back-titration method',b:`<p>This is a <strong>back (replacement) titration</strong>. Ba(OH)₂ first absorbs respiratory CO₂:</p><div class="formula">CO₂ + Ba(OH)₂ → BaCO₃↓ + H₂O</div><p>Then <em>excess</em> Ba(OH)₂ is titrated with HCl to phenolphthalein endpoint:</p><div class="formula">Ba(OH)₂ + 2 HCl → BaCl₂ + 2 H₂O</div>`},
-        {l:'Hint 2 — calculation scheme',b:`<div class="formula">n(Ba(OH)₂)initial = 0.05000 × 20.00 = 1.0000 mmol\nn(HCl) = V(HCl) × 0.1000 mmol\nn(Ba(OH)₂)remaining = n(HCl) / 2\nn(CO₂) = 1.0000 − n(Ba(OH)₂)remaining\nm(CO₂), mg = n(CO₂) × 44.01\nIntensity = m(CO₂) / (10.00 g × 2 h)</div>`},
-        {l:'Hint 3 — lab values',b:`<div class="formula">Trial 1: V(HCl) = 14.60 mL\nTrial 2: V(HCl) = 14.50 mL\nTrial 3: V(HCl) = 14.56 mL</div>`},
-        {l:'✅ Full solution',sol:true,b:`<p>Trial 1: I₁ = 0.594 mg/(g·h)</p><p>Trial 2: I₂ = 0.605 mg/(g·h)</p><p>Trial 3: I₃ = 0.599 mg/(g·h)</p><div class="answer-box">Average respiration intensity ≈ 0.60 mg CO₂/(g·h)</div>`}]}
+        {l:'Hint 2 — calculation scheme',b:`<div class="formula">n(Ba(OH)₂)initial = 0.05000 × 20.00 = 1.0000 mmol\nn(HCl) = V(HCl) × 0.1000 mmol\nn(Ba(OH)₂)remaining = n(HCl) / 2\nn(CO₂) = 1.0000 − n(Ba(OH)₂)remaining\nm(CO₂), mg = n(CO₂) × 44.01\nIntensity = m(CO₂) / (10.00 g × 2 h)</div><p>Repeat for all three trials and take the <strong>mean</strong>.</p>`},
+        {l:'Hint 3 — what to take from the lab',b:`<p>V(HCl) for each trial is <strong>different every session</strong>. Read them from the “Burette readings” panel / summary table after titrating all three flasks.</p><p style="margin-top:6px;font-size:0.82rem;">Substitute <em>your</em> three values into the scheme from hint 2.</p>`},
+        {l:'✅ How your answer is checked',sol:true,b:`<p>Works for any session:</p><ol style="font-size:0.82rem;padding-left:18px;line-height:1.75;"><li>For each trial: n(CO₂) = n(Ba(OH)₂)initial − V(HCl)·C(HCl) / 2 (mmol with the data given in the task).</li><li>I = n(CO₂)·M(CO₂) / (seed mass · time), mg/(g·h).</li><li>Answer = mean of the three I values, rounded to hundredths.</li></ol><div class="answer-box">The correct number matches the calculation from <strong>your</strong> three simulator volumes.</div>`}]}
     ]
   },
   'biochemistry.lipase':{
     title:'Lipase Kinetics (EC 3.1.1.3)',
     desc:'Hydrolysis of triacylglycerides by pancreatic lipase. FFA titrated with 0.020 M NaOH + phenolphthalein. Calculate FFA concentration and reaction rate.',
     tasks:[
-      {c:`<div style="background:linear-gradient(135deg,#fdf4ff,#f0fdf4);border:1px solid #e8d5f5;border-radius:10px;padding:12px 14px;margin-bottom:12px;color:#1e1208;"><p style="font-weight:700;color:#6d28d9;margin-bottom:6px;">🧫 Enzymatic hydrolysis kinetics of TAG (EC 3.1.1.3)</p><p style="font-size:0.82rem;color:#3d2b1f;margin-bottom:8px;"><strong>Protocol:</strong></p><ol style="font-size:0.81rem;color:#3d2b1f;padding-left:18px;line-height:1.8;"><li>Measure <strong>5.0 mL</strong> of substrate (1% olive oil emulsion) into a test tube.</li><li>Add <strong>1.0 mL phosphate buffer</strong> (pH 7.0) and <strong>1.0 mL lipase solution</strong>.</li><li>Incubate at <strong>37°C</strong>. Timer starts <strong>from enzyme addition</strong>.</li><li>After incubation (5 or 20 min) add <strong>15.0 mL stop reagent</strong> (ethanol:diethyl ether 1:1).</li><li>Titrate with <strong>0.020 M NaOH</strong> to a persistent pale pink colour (≥ 30 s).</li></ol></div><iframe src="lipase_lab.html" style="width:700px;height:490px;border:none;border-radius:10px;margin-top:4px;display:block;" frameborder="0"></iframe><p style="margin-top:10px;font-size:0.82rem;">Perform titrations of both samples in the virtual lab. Record <strong>V₁</strong> — volume NaOH (mL) for the <strong>5 min</strong> sample (to 0.05 mL precision).</p>`,
+      {c:`<div style="background:linear-gradient(135deg,#fdf4ff,#f0fdf4);border:1px solid #e8d5f5;border-radius:10px;padding:12px 14px;margin-bottom:12px;color:#1e1208;"><p style="font-weight:700;color:#6d28d9;margin-bottom:6px;">🧫 Enzymatic hydrolysis kinetics of TAG (EC 3.1.1.3)</p><p style="font-size:0.82rem;color:#3d2b1f;margin-bottom:8px;"><strong>Protocol:</strong></p><ol style="font-size:0.81rem;color:#3d2b1f;padding-left:18px;line-height:1.8;"><li>Measure <strong>5.0 mL</strong> of substrate (1% olive oil emulsion) into a test tube.</li><li>Add <strong>1.0 mL phosphate buffer</strong> (pH 7.0) and <strong>1.0 mL lipase solution</strong>.</li><li>Incubate at <strong>37°C</strong>. Timer starts <strong>from enzyme addition</strong>.</li><li>After incubation (5 or 20 min) add <strong>15.0 mL stop reagent</strong> (ethanol:diethyl ether 1:1).</li><li>Titrate with <strong>0.020 M NaOH</strong> to a persistent pale pink colour (≥ 30 s).</li></ol></div><p style="margin-top:8px;font-size:0.78rem;color:var(--text-dim);"><strong>New session</strong> each time you open the Lipase block: the simulator uses different <strong>V₁</strong> and <strong>V₂</strong>; for tasks 2a–3 use <em>your</em> lab volumes.</p><iframe src="lipase_lab.html" style="width:700px;height:490px;border:none;border-radius:10px;margin-top:4px;display:block;" frameborder="0"></iframe><p style="margin-top:10px;font-size:0.82rem;">Perform titrations of both samples in the virtual lab. Record <strong>V₁</strong> — volume NaOH (mL) for the <strong>5 min</strong> sample (to 0.05 mL precision).</p>`,
        rh:'To hundredths of mL (e.g. 24.10).',
        h:[{l:'What is the stop reagent?',b:'<p>The ethanol:diethyl ether (1:1) mixture <strong>immediately denatures lipase</strong> and stops the reaction. The alcohol also increases FFA solubility in the aqueous phase, making them available for titration.</p>'},
           {l:'Direction of titration',b:'<p>This is a <strong>direct acid-base titration</strong>. FFA are weak acids neutralised by NaOH:</p><div class="formula">R–COOH + NaOH → R–COONa + H₂O</div><p>Phenolphthalein is colourless in acid → turns <strong>pink</strong> with slight NaOH excess. This is the endpoint.</p>'}]},
       {c:`<p style="font-size:0.82rem;background:#fdf4ff;border-left:3px solid #a855f7;padding:8px 10px;border-radius:0 6px 6px 0;">Use the virtual laboratory from <strong>task 1</strong>.</p><p style="margin-top:10px;font-size:0.82rem;">Record <strong>V₂</strong> — volume NaOH (mL) for the <strong>20 min</strong> sample (to 0.05 mL precision).</p>`,rh:'To hundredths of mL (e.g. 8.95).',h:[{l:'Why V₂ > V₁?',b:'<p>After 20 min, lipase has accumulated more FFA than after 5 min. More FFA → more NaOH needed → V₂ > V₁.</p>'}]},
-      {c:`<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Task 2a.</strong> Calculate the FFA concentration in the <strong>5 min</strong> sample.</p><p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Enter C<sub>FFA(1)</sub> in μmol/mL.</p>`,rh:'To hundredths μmol/mL (e.g. 15.00).',h:[{l:'Calculation formula',b:'<div class="formula">C<sub>FFA</sub> = V₁ × 20 / 7.0</div><p>For V₁ = 2.10 mL: C = 2.10 × 20 / 7.0 = <strong>6.00 μmol/mL</strong></p>'},
+      {c:`<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Task 2a.</strong> Calculate the FFA concentration in the <strong>5 min</strong> sample.</p><p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Enter C<sub>FFA(1)</sub> in μmol/mL.</p>`,rh:'To hundredths μmol/mL (e.g. 15.00).',h:[{l:'Calculation formula',b:'<div class="formula">C<sub>FFA</sub> = V₁ × 20 / 7.0</div><p>Use <strong>your V₁</strong> from the current lab session (task 1); round to hundredths μmol/mL.</p>'},
         {l:'Where do 20 and 7.0 come from?',b:'<p><strong>20</strong> = C(NaOH) × 1000 = 0.020 × 1000. Converts mol to μmol per mL of NaOH.</p><p><strong>7.0 mL</strong> — reaction mixture volume before stop reagent: 5.0 (substrate) + 1.0 (buffer) + 1.0 (enzyme).</p>'}]},
-      {c:`<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Task 2b.</strong> Calculate the FFA concentration in the <strong>20 min</strong> sample.</p><p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Enter C<sub>FFA(2)</sub> in μmol/mL.</p>`,rh:'To hundredths μmol/mL (e.g. 15.00).',h:[{l:'Calculation',b:'<div class="formula">C<sub>FFA(2)</sub> = V₂ × 20 / 7.0</div><p>For V₂ = 5.25 mL: C = 5.25 × 20 / 7.0 = <strong>15.00 μmol/mL</strong></p>'}]},
-      {c:`<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Task 3.</strong> Calculate the average rate of FFA concentration increase between minutes 5 and 20.</p><p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Enter rate in μmol/(mL · min).</p>`,rh:'To hundredths μmol/(mL·min) (e.g. 0.90).',h:[{l:'Substitution',b:'<div class="formula">v = (15.00 − 6.00) / (20 − 5) = 9.00 / 15 = 0.60 μmol/(mL·min)</div>'},
-        {l:'✅ Full solution',sol:true,b:'<div class="formula">C₁ = 6.00 μmol/mL\nC₂ = 15.00 μmol/mL\nv = (15.00 − 6.00) / 15</div><div class="answer-box">v = 0.60 μmol/(mL · min)</div>'}]},
+      {c:`<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Task 2b.</strong> Calculate the FFA concentration in the <strong>20 min</strong> sample.</p><p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Enter C<sub>FFA(2)</sub> in μmol/mL.</p>`,rh:'To hundredths μmol/mL (e.g. 15.00).',h:[{l:'Calculation',b:'<div class="formula">C<sub>FFA(2)</sub> = V₂ × 20 / 7.0</div><p>Use <strong>your V₂</strong> from task 2; round to hundredths.</p>'}]},
+      {c:`<p style="font-size:0.85rem;margin-bottom:8px;"><strong>Task 3.</strong> Calculate the average rate of FFA concentration increase between minutes 5 and 20.</p><p style="font-size:0.8rem;margin-top:8px;color:var(--text-dim);">Enter rate in μmol/(mL · min).</p>`,rh:'To hundredths μmol/(mL·min) (e.g. 0.90).',h:[{l:'Formula',b:'<div class="formula">v = (C₂ − C₁) / (20 − 5) = (C₂ − C₁) / 15</div><p>C₁ and C₂ come from tasks 2a and 2b for <strong>your</strong> V₁ and V₂.</p>'},
+        {l:'✅ How your answer is checked',sol:true,b:'<p>After substituting <strong>your</strong> C₁ and C₂, the rate is fixed; round to hundredths μmol/(mL·min).</p><div class="answer-box">The site compares your entry to the value computed from the current session volumes.</div>'}]},
       {c:`<p style="font-size:0.85rem;margin-bottom:10px;"><strong>Task 4. Theory question.</strong></p><p style="font-size:0.85rem;">Why is an <strong>ethanol:diethyl ether (1:1)</strong> mixture used as the stop reagent rather than simple boiling?</p><div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;font-size:0.83rem;"><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:9px 12px;"><strong style="color:#6d28d9;">a)</strong> Alcohol increases FFA solubility in the aqueous phase, making them available for titration.</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:9px 12px;"><strong style="color:#6d28d9;">b)</strong> Alcohol prevents reverse esterification during cooling.</div><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:9px 12px;"><strong style="color:#6d28d9;">c)</strong> Alcohol suppresses soap hydrolysis during titration.</div></div><p style="margin-top:10px;font-size:0.79rem;color:var(--text-dim);">Enter the letter of the correct answer.</p>`,rh:'Enter letter: a, b or c.',h:[{l:'Hint — FFA properties',b:'<p>Fatty acids (C14–C18) are practically insoluble in water. The organic solvent (alcohol + ether) dissolves them homogeneously — only then can NaOH effectively neutralise all molecules.</p><p>Boiling denatures the enzyme but does <em>not solve</em> the insolubility problem.</p>'},
         {l:'✅ Answer',sol:true,b:'<div class="answer-box">Answer: <strong>a)</strong> Alcohol increases FFA solubility in the aqueous phase</div>'}]}
     ]
@@ -1187,17 +1187,113 @@ function applyEN(task, sectionKey, subKey, idx) {
 // ═══════ STATE ═══════
 const solvedTasks = new Set();
 
+// ═══════ TITRATION LAB — random triplicates per subtopic visit ═══════
+function rollTitrationInstance() {
+  const M_SEED = 10;
+  const TIME_H = 2;
+  const M_CO2 = 44.01;
+  const nBA_INIT = 0.05 * 20;
+  const round4 = (x) => Math.round(x * 10000) / 10000;
+  const center = 0.22 + Math.random() * 0.14;
+  const nCO2 = [0, 1, 2].map(() => {
+    let n = center + (Math.random() - 0.5) * 0.012;
+    n = Math.min(0.42, Math.max(0.18, n));
+    return round4(n);
+  });
+  const intensity = (n) => (n * M_CO2) / (M_SEED * TIME_H);
+  const avg = (intensity(nCO2[0]) + intensity(nCO2[1]) + intensity(nCO2[2])) / 3;
+  const expectedRounded = Math.round(avg * 100) / 100;
+  window.__limbicTitration = { nCO2, nBA_INIT, expectedRounded, avgExact: avg };
+}
+
+function titrationLabIframeSrc() {
+  if (!window.__limbicTitration) rollTitrationInstance();
+  try {
+    return 'titration_lab.html#' + encodeURIComponent(btoa(JSON.stringify({ v: 1, nCO2: window.__limbicTitration.nCO2 })));
+  } catch (e) {
+    return 'titration_lab.html';
+  }
+}
+
+// ═══════ LIPASE LAB — random V₁/V₂ per subtopic visit ═══════
+function rollLipaseInstance() {
+  const step = 0.04;
+  const rs = (x) => Math.round(x / step) * step;
+  const nLow = 41 + Math.floor(Math.random() * 18);
+  const v1 = rs(nLow * 0.04);
+  const ratio = 2.2 + Math.random() * 0.6;
+  let v2 = rs(v1 * ratio);
+  const v2min = rs(v1 + 1.2);
+  if (v2 < v2min) v2 = v2min;
+  if (v2 > 8.4) v2 = rs(Math.min(8.4, v1 * 2.6));
+  if (v2 <= v1) v2 = rs(v1 + 1.6);
+
+  const k = 20 / 7;
+  const c1 = v1 * k;
+  const c2 = v2 * k;
+  const expC1 = Math.round(c1 * 100) / 100;
+  const expC2 = Math.round(c2 * 100) / 100;
+  const expRate = Math.round(((expC2 - expC1) / 15) * 100) / 100;
+
+  window.__limbicLipase = {
+    targets: [v1, v2],
+    expV1: Math.round(v1 * 100) / 100,
+    expV2: Math.round(v2 * 100) / 100,
+    expC1,
+    expC2,
+    expRate
+  };
+}
+
+function lipaseLabIframeSrc() {
+  if (!window.__limbicLipase) rollLipaseInstance();
+  try {
+    return 'lipase_lab.html#' + encodeURIComponent(btoa(JSON.stringify({ v: 1, targets: window.__limbicLipase.targets })));
+  } catch (e) {
+    return 'lipase_lab.html';
+  }
+}
+
 // ═══════ ANSWER CHECKING ═══════
 function checkAnswer(taskId, hintsId, inputId, feedbackId) {
   const input = document.getElementById(inputId);
   const feedback = document.getElementById(feedbackId);
-  const val = input.value.trim().toLowerCase();
+  const rawVal = input.value.trim();
+  const val = rawVal.toLowerCase();
   if (!val) return;
 
   const [section, sub, idx] = taskId.split('_');
   const task = SUBTOPICS[section].subtopics[sub].tasks[parseInt(idx)];
   const answers = task.answer || [];
-  const isCorrect = answers.some(a => val === a.toString().toLowerCase());
+  let isCorrect = answers.some(a => val === a.toString().toLowerCase());
+  if (taskId === 'biochemistry_titration_0' && window.__limbicTitration) {
+    const num = parseFloat(rawVal.replace(',', '.'));
+    if (!Number.isNaN(num)) {
+      const exp = window.__limbicTitration.expectedRounded;
+      const roundedIn = Math.round(num * 100) / 100;
+      isCorrect = Math.abs(roundedIn - exp) < 0.005;
+    }
+  } else if (section === 'biochemistry' && sub === 'lipase' && window.__limbicLipase) {
+    const li = parseInt(idx, 10);
+    if (li >= 0 && li <= 4) {
+      const num = parseFloat(rawVal.replace(',', '.'));
+      if (!Number.isNaN(num)) {
+        const L = window.__limbicLipase;
+        let exp;
+        if (li === 0) exp = L.expV1;
+        else if (li === 1) exp = L.expV2;
+        else if (li === 2) exp = L.expC1;
+        else if (li === 3) exp = L.expC2;
+        else exp = L.expRate;
+        const rIn = Math.round(num * 100) / 100;
+        if (li <= 1) {
+          isCorrect = Math.abs(rIn - exp) < 0.02 || Math.abs(num - exp) < 0.06;
+        } else {
+          isCorrect = Math.abs(rIn - exp) < 0.02;
+        }
+      }
+    }
+  }
   const t = T[LANG];
 
   if (isCorrect) {
@@ -1267,12 +1363,22 @@ function renderTask(task, sectionKey, subKey, idx) {
     </div>`;
   }).join('');
 
+  let conditionHtml = applied.condition;
+  if (sectionKey === 'biochemistry' && subKey === 'titration' && idx === 0) {
+    if (!window.__limbicTitration) rollTitrationInstance();
+    conditionHtml = conditionHtml.replace('src="titration_lab.html"', 'src="' + titrationLabIframeSrc() + '"');
+  }
+  if (sectionKey === 'biochemistry' && subKey === 'lipase' && idx === 0) {
+    if (!window.__limbicLipase) rollLipaseInstance();
+    conditionHtml = conditionHtml.replace('src="lipase_lab.html"', 'src="' + lipaseLabIframeSrc() + '"');
+  }
+
   return `
     <div class="task-card${isSolved ? ' solved' : ''}" id="card_${taskId}">
       <div class="task-header" onclick="toggleTask(this)">
         <div class="task-num${isSolved ? ' solved-num' : ''}">${applied.num}</div>
         <div class="task-header-content">
-          <div class="task-condition">${applied.condition}</div>
+          <div class="task-condition">${conditionHtml}</div>
           <div class="task-meta">
             <span class="diff-badge ${diffClass}">${diffLabel}</span>
           </div>
@@ -1377,6 +1483,13 @@ function openSubtopic(sectionKey, subKey) {
 
   currentSection = sectionKey;
   currentSubtopic = subKey;
+
+  if (sectionKey === 'biochemistry' && subKey === 'titration') {
+    rollTitrationInstance();
+  }
+  if (sectionKey === 'biochemistry' && subKey === 'lipase') {
+    rollLipaseInstance();
+  }
 
   const sec = SUBTOPICS[sectionKey];
   const sub = sec.subtopics[subKey];

@@ -211,7 +211,18 @@ const TIME_H = 2;
 const M_CO2  = 44.01;
 const nBA_INIT = C_BA * V_BA;
 
-const FIXED_NCO2 = [0.2700, 0.2750, 0.2720];
+function parseTitrationHash() {
+  try {
+    const raw = (location.hash || '').replace(/^#/, '');
+    if (!raw) return null;
+    const json = JSON.parse(atob(decodeURIComponent(raw)));
+    if (json && Array.isArray(json.nCO2) && json.nCO2.length === 3)
+      return json.nCO2.map(function (n) { return Number(n); });
+  } catch (e) {}
+  return null;
+}
+
+const FIXED_NCO2 = parseTitrationHash() || [0.2700, 0.2750, 0.2720];
 
 let buretVol = 0, activeIdx = 0, isTapOpen = false, dripInt = null, startVol = 0;
 let buretFilled = false;

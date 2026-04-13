@@ -861,59 +861,6 @@ C<sub>белка</sub> = 0,25 мг/мл · ε = 15 000 M⁻¹·см⁻¹ · [S] 
               {label:'Вычисление y-значений',body:`<div class="formula">y₁(0,2 мМ) = log(0,25/0,75) = log(0,333) = −0,477<br>y₂(0,5 мМ) = log(0,55/0,45) = log(1,222) = 0,087</div>`},
               {label:'✅ Ответ',solution:true,body:`<div class="formula">n<sub>LC</sub> = (0,087−(−0,477)) / (log(0,5)−log(0,2))<br>= 0,564 / log(2,5) = 0,564 / 0,398 ≈ 1,42</div><div class="answer-box">n<sub>LC</sub> ≈ 1,42 (снижение кооперативности vs контроль 3,27)</div>`}
             ]
-          },
-          { num:'QD1.7', diff:'national', answer:['б','b','б)','b)','б.','Б','B'],
-            roundHint:'Введите букву варианта: а, б, в или г.',
-            condition:`<p>QD1.7: При добавлении аллостерического активатора LC к тетрамерному ферменту наблюдается рост скорости при низких [S], однако коэффициент Хилла <strong>снижается</strong>. Какое утверждение объясняет это?</p>
-<div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;font-size:0.83rem;">
-<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">А.</strong> Активатор вызывает диссоциацию тетрамера на мономеры, увеличивая общую активную поверхность.</div>
-<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">Б.</strong> Активатор стабилизирует высокоаффинное R-состояние фермента, из-за чего связывание субстрата перестаёт вызывать значимые кооперативные конформационные изменения.</div>
-<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">В.</strong> Активатор снижает энергию активации настолько, что субстрат начинает связываться необратимо.</div>
-<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">Г.</strong> Снижение n указывает на переход к отрицательной кооперативности как побочный эффект катализа.</div>
-</div>`,
-            hints:[
-              {label:'Модель MWC (Моно–Уаймен–Шанжё)',body:`<p>Тетрамерный фермент переключается между T (напряжённое, низкоаффинное) и R (расслабленное, высокоаффинное) состояниями. Аллостерический активатор сдвигает равновесие в сторону R — без дополнительных конформационных переходов при каждом связывании субстрата.</p>`},
-              {label:'✅ Ответ',solution:true,body:`<div class="answer-box"><strong>Б</strong> — LC «запирает» фермент в R-конформации. Субстрат связывается уже в состоянии высокого сродства, не вызывая кооперативных переходов → n снижается, хотя сродство высокое.</div>`}
-            ]
-          },
-          { num:'QD3-1', diff:'national', answer:['а','a','А','A','а)','а.','BMYR','bmyr'],
-            roundHint:'Введите букву варианта: А, Б или В.',
-            condition:`<p>QD3-1: На графиках A, B, C представлены зависимости V₀ от [синигрин] для трёх форм мирозиназы: <strong>BMYR, EMYR, SMYR</strong>.</p>
-<p style="margin-top:8px;">Какой из ферментов проявляет признаки <strong>субстратного ингибирования</strong>?</p>
-<div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;font-size:0.83rem;">
-<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">А.</strong> BMYR (График A)</div>
-<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">Б.</strong> EMYR (График B)</div>
-<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">В.</strong> SMYR (График C)</div>
-</div>`,
-            hints:[
-              {label:'Признак субстратного ингибирования',body:`<p>Классическая кривая Михаэлиса–Ментен выходит на плато (насыщение). При субстратном ингибировании кривая V₀ vs [S] проходит через <strong>максимум</strong>, затем <strong>снижается</strong> при избытке субстрата — субстрат связывается со вторым, неактивным сайтом и блокирует реакцию.</p>`},
-              {label:'✅ Ответ',solution:true,body:`<div class="answer-box"><strong>А — BMYR</strong>. График A имеет выраженный максимум с последующим спадом — характерный признак субстратного ингибирования.</div>`}
-            ]
-          },
-          { num:'QD3-3', diff:'ibo', answer:['190','189','190 мкм','~190','189.7','190 мкМ'],
-            roundHint:'Округлите до целого (мкМ).',
-            condition:`<p>QD3-3: Для субстратного ингибирования оптимальная концентрация субстрата:</p>
-<div class="formula">[S]<sub>opt</sub> = √(K<sub>m</sub> · K<sub>i</sub>)</div>
-<p style="margin-top:8px;">Рассчитайте [S]<sub>opt</sub> для дикого типа BMYR: <strong>K<sub>m</sub> = 40 мкМ, K<sub>i</sub> = 900 мкМ</strong>.</p>`,
-            hints:[
-              {label:'Подстановка',body:`<div class="formula">[S]<sub>opt</sub> = √(40 × 900) = √36 000</div>`},
-              {label:'✅ Ответ',solution:true,body:`<div class="formula">[S]<sub>opt</sub> = √36 000 ≈ 189,7 ≈ 190 мкМ</div><div class="answer-box">[S]<sub>opt</sub> ≈ 190 мкМ</div>`}
-            ]
-          },
-          { num:'QD4', diff:'national', answer:['в, н, н','в н н','внн','В Н Н','В,Н,Н','в,н,н'],
-            roundHint:'Введите три ответа через запятую: В или Н (например: В, Н, В).',
-            condition:`<p>QD4: MW(мирозиназы) = 62 кДа; в 3 мл реакционной смеси = <strong>5 мкг</strong> фермента SMYR. Укажите верные (В) и неверные (Н) утверждения:</p>
-<div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;font-size:0.83rem;">
-<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">QD4-1.</strong> Расчётное значение [S]<sub>opt</sub> для дикого типа BMYR совпадает со значением на графике A.</div>
-<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">QD4-2.</strong> Число оборотов фермента для SMYR составляет 1,2 мкмоль/мин.</div>
-<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">QD4-3.</strong> Наличие максимума на графике V₀ vs [S] у BMYR является доказательством того, что фермент подчиняется классическому уравнению Михаэлиса–Ментен.</div>
-</div>`,
-            hints:[
-              {label:'QD4-1: проверка расчёта',body:`<p>Мы рассчитали [S]<sub>opt</sub> = 190 мкМ. Если на графике A максимум находится примерно при этом значении — утверждение <strong>верно</strong>.</p>`},
-              {label:'QD4-2: единицы kcat',body:`<p>Число оборотов = k<sub>cat</sub> = V<sub>max</sub>/[E]<sub>total</sub>. Единицы: мин⁻¹ или с⁻¹ (безразмерное по времени, не мкмоль/мин). Формулировка с единицами «мкмоль/мин» некорректна — это единицы Vmax, а не kcat.</p>`},
-              {label:'QD4-3: MM vs субстратное ингибирование',body:`<p>Классическая кривая MM <strong>монотонно возрастает</strong> к Vmax и никогда не снижается. Максимум с последующим спадом — это субстратное ингибирование, что <strong>опровергает</strong> MM-кинетику, а не доказывает её.</p>`},
-              {label:'✅ Ответы',solution:true,body:`<div class="answer-box">QD4-1: <strong>В</strong> — расчёт совпадает с графиком<br>QD4-2: <strong>Н</strong> — единицы мкмоль/мин относятся к Vmax, а не kcat<br>QD4-3: <strong>Н</strong> — максимум опровергает MM-кинетику, это субстратное ингибирование</div>`}
-            ]
           }
         ]
       }
@@ -1140,18 +1087,6 @@ const TRANS_EN = {
       {c:`<p>QD1.6: Calculate Hill coefficient <strong>n<sub>LC</sub></strong> with LC added, over [S] = 0.2–0.5 mM.</p><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:0.82rem;"><strong>+LC data:</strong> [S]=0.2 mM → v/Vmax=0.25 · [S]=0.5 mM → v/Vmax=0.55</div>`,rh:'Round to hundredths.',h:[
         {l:'y-values',b:`<div class="formula">y₁ = log(0.25/0.75) = −0.477<br>y₂ = log(0.55/0.45) = 0.087</div>`},
         {l:'✅ Answer',sol:true,b:`<div class="formula">n<sub>LC</sub> = 0.564 / log(2.5) = 0.564 / 0.398 ≈ 1.42</div><div class="answer-box">n<sub>LC</sub> ≈ 1.42 (reduced cooperativity vs control 3.27)</div>`}
-      ]},
-      {c:`<p>QD1.7: Adding allosteric activator LC increases rate at low [S], yet Hill coefficient <strong>decreases</strong>. Which statement best explains this?</p><div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;font-size:0.83rem;"><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">A.</strong> Activator dissociates the tetramer into monomers, increasing total active surface.</div><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">B.</strong> Activator stabilises the high-affinity R-state, so substrate binding no longer triggers significant cooperative conformational changes.</div><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">C.</strong> Activator lowers activation energy so much that substrate binds irreversibly.</div><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">D.</strong> Reduced n indicates a shift to negative cooperativity as a side-effect of high catalytic rate.</div></div>`,rh:'Enter letter: A, B, C or D.',h:[
-        {l:'MWC model',b:`<p>Tetramer switches between T (tense, low-affinity) and R (relaxed, high-affinity) states. Allosteric activator shifts equilibrium toward R — no further conformational transitions needed per substrate binding event.</p>`},
-        {l:'✅ Answer',sol:true,b:`<div class="answer-box"><strong>B</strong> — LC locks the enzyme in R-conformation. Substrate binds with high affinity without triggering cooperative transitions → n decreases.</div>`}
-      ]},
-      {c:`<p>QD3-1: Graphs A, B, C show V₀ vs [sinigrin] for three myrosinase forms: <strong>BMYR, EMYR, SMYR</strong>.</p><p style="margin-top:8px;">Which enzyme shows <strong>substrate inhibition</strong>?</p><div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;font-size:0.83rem;"><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">A.</strong> BMYR (Graph A)</div><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">B.</strong> EMYR (Graph B)</div><div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;"><strong style="color:var(--blue2);">C.</strong> SMYR (Graph C)</div></div>`,rh:'Enter letter: A, B or C.',h:[
-        {l:'Substrate inhibition signature',b:`<p>In substrate inhibition, V₀ vs [S] passes through a <strong>maximum</strong> then <strong>decreases</strong> at excess substrate — excess substrate binds a second (non-productive) site.</p>`},
-        {l:'✅ Answer',sol:true,b:`<div class="answer-box"><strong>A — BMYR</strong>. Graph A shows a clear maximum with subsequent decrease — classic substrate inhibition.</div>`}
-      ]},
-      {c:`<p>QD3-3: For substrate inhibition (Equation 2):</p><div class="formula">[S]<sub>opt</sub> = √(K<sub>m</sub> · K<sub>i</sub>)</div><p style="margin-top:8px;">Calculate [S]<sub>opt</sub> for wild-type BMYR: <strong>K<sub>m</sub> = 40 µM, K<sub>i</sub> = 900 µM</strong>. Round to whole number.</p>`,rh:'Round to whole number (µM).',h:[
-        {l:'Substitution',b:`<div class="formula">[S]<sub>opt</sub> = √(40 × 900) = √36 000</div>`},
-        {l:'✅ Answer',sol:true,b:`<div class="formula">[S]<sub>opt</sub> = √36 000 ≈ 190 µM</div><div class="answer-box">[S]<sub>opt</sub> ≈ 190 µM</div>`}
       ]}
     ]
   }

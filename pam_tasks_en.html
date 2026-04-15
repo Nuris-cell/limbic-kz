@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAM Fluorometry — Practice</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e8eaf0;min-height:100vh;padding:24px 20px 60px}
+
+a{color:#4dc990;text-decoration:none}
+a:hover{text-decoration:underline}
+
+.top-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid #1e2530}
+.top-nav-title{font-size:11px;font-weight:600;color:#7eb8a4;letter-spacing:.09em;text-transform:uppercase}
+.top-nav-links{display:flex;gap:14px;font-size:11px}
+.top-nav-links a{color:#3a4d5a;transition:color .15s}
+.top-nav-links a:hover{color:#4dc990;text-decoration:none}
+
+.page-header{margin-bottom:30px}
+.page-header h1{font-size:22px;font-weight:600;margin-bottom:8px;color:#fff}
+.page-header p{font-size:14px;color:#94a3b8;line-height:1.5}
+
+.task-card{background:#141920;border:1px solid #1e2530;border-radius:12px;padding:24px;margin-bottom:24px}
+.task-num{font-size:12px;font-weight:700;color:#4dc990;text-transform:uppercase;margin-bottom:12px;display:block}
+.task-title{font-size:18px;font-weight:600;margin-bottom:14px;color:#f8fafc}
+.task-text{font-size:14px;line-height:1.6;color:#cbd5e1;margin-bottom:20px}
+
+.data-table-wrapper{overflow-x:auto;margin:20px 0;background:#0f1117;border-radius:8px;border:1px solid #1e2530}
+table{width:100%;border-collapse:collapse;font-size:13px;color:#94a3b8}
+th{background:#1a2029;color:#fff;font-weight:600;text-align:left;padding:12px 16px;border-bottom:1px solid #1e2530}
+td{padding:12px 16px;border-bottom:1px solid #1e2530}
+tr:last-child td{border-bottom:none}
+
+.calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:16px}
+.calc-item{display:flex;flex-direction:column;gap:6px}
+.calc-label{font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase}
+.calc-input{background:#1a2029;border:1px solid #2d3748;border-radius:6px;padding:10px;color:#fff;font-family:monospace;font-size:14px;transition:all .2s}
+.calc-input:focus{outline:none;border-color:#4dc990;background:#1e2d26}
+.calc-input.correct{border-color:#4dc990;background:rgba(77,201,144,0.1);color:#4dc990}
+.calc-input.wrong{border-color:#ef4444;background:rgba(239,68,68,0.1);color:#ef4444}
+
+.btn-check{margin-top:20px;background:#4dc990;color:#0f1117;border:none;padding:10px 24px;border-radius:6px;font-weight:600;font-size:13px;cursor:pointer;transition:transform .1s, opacity .15s}
+.btn-check:hover{opacity:0.9}
+.btn-check:active{transform:scale(0.97)}
+
+.status-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;margin-top:15px;padding:4px 12px;border-radius:4px;display:none}
+.status-tag.ok{display:inline-flex;background:rgba(77,201,144,0.1);color:#4dc990}
+
+.lab-promo{display:inline-block;margin-top:15px;padding:10px 20px;background:#1e2d26;border:1px solid #4dc990;border-radius:8px;color:#4dc990;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <div class="top-nav-title">Limbic — Molecular Biology</div>
+  <div class="top-nav-links">
+    <a href="index.html">← problem book</a>
+    <a href="pam_fluorometer.html" style="color: #4dc990; font-weight: bold;">🔬 launch lab</a>
+  </div>
+</div>
+
+<div class="page-header">
+  <h1>PAM Fluorometry: Tasks</h1>
+  <p>Practical cases for analyzing chlorophyll fluorescence induction.</p>
+  <a href="pam_fluorometer.html" class="lab-promo">
+    🔬 Open Virtual Laboratory
+  </a>
+</div>
+
+<div class="task-card">
+  <span class="task-num">Task 1</span>
+  <h2 class="task-title">The Basics: Fv/Fm and Dark Adaptation</h2>
+  <div class="task-text">
+    An experiment was conducted on two wheat leaves. Leaf A was kept in the dark for 30 minutes, while Leaf B was taken directly from under bright light. Using a saturating pulse, the following values were obtained:
+  </div>
+  
+  <div class="data-table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Leaf</th><th>F₀ (basal)</th><th>Fm (max)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Leaf A (Dark)</td><td>210</td><td>1050</td></tr>
+        <tr><td>Leaf B (Light)</td><td>250</td><td>680</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="task-text" style="font-weight:600">Calculate Fv/Fm for both leaves. Which leaf shows signs of photoinhibition?</p>
+
+  <div class="calc-grid">
+    <div class="calc-item">
+      <span class="calc-label">Fv/Fm (Leaf A)</span>
+      <input type="number" step="0.01" id="t1_fvfm1" class="calc-input" placeholder="0.000">
+    </div>
+    <div class="calc-item">
+      <span class="calc-label">Fv/Fm (Leaf B)</span>
+      <input type="number" step="0.01" id="t1_fvfm2" class="calc-input" placeholder="0.000">
+    </div>
+  </div>
+  
+  <button class="btn-check" onclick="checkT1()">Check</button>
+  <div id="t1_ok" class="status-tag ok">✓ Correct</div>
+</div>
+
+<div class="task-card">
+  <span class="task-num">Task 2</span>
+  <h2 class="task-title">Induction Kinetics</h2>
+  <div class="task-text">
+    A spinach leaf was transferred from darkness to actinic light (PAR = 200 µmol). Saturating pulses were applied every 2 minutes. The basal fluorescence in the dark (F₀) was <b>180</b>, and the maximum (Fm) was <b>900</b>.
+  </div>
+
+  <div class="data-table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Time (min)</th><th>Fs (steady-state)</th><th>Fm' (max in light)</th><th>F₀' (estimated)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2 min</td><td>320</td><td>650</td><td>160</td></tr>
+        <tr><td>4 min</td><td>280</td><td>720</td><td>155</td></tr>
+        <tr><td>6 min</td><td>260</td><td>780</td><td>150</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="task-text" style="font-weight:600">Calculate the Yield (Y(II)), NPQ, and qP for each point.</p>
+
+  <div class="data-table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Time</th><th>Y(II) (Yield)</th><th>NPQ</th><th>qP</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2 min</td>
+          <td><input type="number" step="0.01" id="t2a_fqfm_0" class="calc-input" placeholder="0.00"></td>
+          <td><input type="number" step="0.01" id="t2a_npq_0" class="calc-input" placeholder="0.00"></td>
+          <td><input type="number" step="0.01" id="t2a_qp_0" class="calc-input" placeholder="0.00"></td>
+        </tr>
+        <tr>
+          <td>6 min</td>
+          <td><input type="number" step="0.01" id="t2a_fqfm_2" class="calc-input" placeholder="0.00"></td>
+          <td><input type="number" step="0.01" id="t2a_npq_2" class="calc-input" placeholder="0.00"></td>
+          <td><input type="number" step="0.01" id="t2a_qp_2" class="calc-input" placeholder="0.00"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="btn-check" onclick="checkT2()">Check Calculations</button>
+  <div id="t2a_all" class="status-tag ok">✓ Values Correct</div>
+</div>
+
+<script>
+const FM_DARK = 900;
+const F0_DARK = 180;
+
+function markCorrect(id) {
+  const el = document.getElementById(id);
+  if(el) el.style.display = 'inline-flex';
+}
+
+function checkT1() {
+  const a = checkCalcInput('t1_fvfm1', 0.8, 0.01, 't1_fvfm1');
+  const b = checkCalcInput('t1_fvfm2', 0.632, 0.01, 't1_fvfm2');
+  if (a && b) markCorrect('t1_ok');
+}
+
+function checkT2() {
+  const data = [
+    { fs: 320, fm: 650, f0p: 160 },
+    { fs: 280, fm: 720, f0p: 155 },
+    { fs: 260, fm: 780, f0p: 150 }
+  ];
+  
+  let allOk = true;
+  [0, 2].forEach(i => {
+    const row = data[i];
+    const yieldVal = (row.fm - row.fs) / row.fm;
+    const npqVal   = FM_DARK / row.fm - 1;
+    const qpVal    = (row.fm - row.fs) / (row.fm - row.f0p);
+
+    const f1 = checkCalcInput(`t2a_fqfm_${i}`, yieldVal, 0.025);
+    const f2 = checkCalcInput(`t2a_npq_${i}`,  npqVal,   0.030);
+    const f3 = checkCalcInput(`t2a_qp_${i}`,   qpVal,    0.025);
+    if (!f1 || !f2 || !f3) allOk = false;
+  });
+  if (allOk) markCorrect('t2a_all');
+}
+
+function checkCalcInput(id, correct, tol) {
+  const el = document.getElementById(id);
+  if (!el) return false;
+  const val = parseFloat(el.value);
+  if (isNaN(val)) { el.className = 'calc-input'; return false; }
+  const ref = Math.abs(correct) < 0.001 ? 1 : Math.abs(correct);
+  const ok = Math.abs(val - correct) / ref <= tol;
+  el.className = 'calc-input ' + (ok ? 'correct' : 'wrong');
+  return ok;
+}
+</script>
+
+</body>
+</html>

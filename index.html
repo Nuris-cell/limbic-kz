@@ -185,6 +185,15 @@
       <div class="sidebar-subtopic" onclick="openSubtopic('olympiad2026','myrosinase')">Мирозиназа репы <span class="sidebar-count">9</span></div>
     </div>
   </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title" onclick="toggleSec(this)"><span data-i18n="sideBiochem">🧬 Биохимия</span> <span class="arr">▶</span></div>
+    <div class="sidebar-subtopics">
+      <div class="sidebar-subtopic" onclick="openSubtopic('biochemistry','titration')"><span data-i18n="subTitration">Дыхание семян</span> <span class="sidebar-count">1</span></div>
+      <div class="sidebar-subtopic" onclick="openSubtopic('biochemistry','lipase')"><span data-i18n="subLipase">Кинетика липазы</span> <span class="sidebar-count">6</span></div>
+      <div class="sidebar-subtopic" onclick="openSubtopic('biochemistry','aminoacid')"><span data-i18n="subAmino">Идентификация аминокислот</span> <span class="sidebar-count">8</span></div>
+      <div class="sidebar-subtopic" onclick="window.location.href='pam_tasks.html'"><span data-i18n="subPam">PAM-флуорометрия</span> <span class="sidebar-count">4</span></div>
+    </div>
+  </div>
 </aside>
 <main id="main">
 <div id="home-page">
@@ -289,7 +298,8 @@ const T = {
       {ic:'🧫',oc:"openSubtopic('biochemistry','lipase')",ti:'Кинетика липазы (КФ 3.1.1.3)',de:'Виртуальная лаборатория. Гидролиз триацилглицеридов, NaOH-титрование СЖК, расчёт концентрации и скорости реакции.',co:'6 задач · Практический тур'},
       {ic:'🔬',oc:"openSubtopic('biochemistry','aminoacid')",ti:'Идентификация аминокислот',de:'Виртуальная pH-лаборатория. Построение кривых титрования трёх неизвестных аминокислот, нахождение pKₐ, расчёт pI и идентификация по справочнику.',co:'8 задач · Практический тур → IBO'},
       {ic:'🏆',oc:"openSubtopic('olympiad2026','peroxidase')",ti:'Кинетика пероксидазы (Raphanus sativus)',de:'Республиканская олимпиада 2026 — Практическая биохимия. Кинетика пероксидазы из редьки методом спектрофотометрии при 500 нм. Влияние pH на активность фермента.',co:'2 задачи · Практический тур'},
-      {ic:'🌿',oc:"openSubtopic('olympiad2026','myrosinase')",ti:'Мирозиназа (Brassica rapa) — расчётные задачи',de:'Республиканская олимпиада 2026 — Теория (Часть D). Кинетика мирозиназы: закон Бугера–Ламберта–Бера, уравнение Хилла, кооперативность, субстратное ингибирование, MWC-модель.',co:'9 задач · Республиканский → IBO'}
+      {ic:'🌿',oc:"openSubtopic('olympiad2026','myrosinase')",ti:'Мирозиназа (Brassica rapa) — расчётные задачи',de:'Республиканская олимпиада 2026 — Теория (Часть D). Кинетика мирозиназы: закон Бугера–Ламберта–Бера, уравнение Хилла, кооперативность, субстратное ингибирование, MWC-модель.',co:'9 задач · Республиканский → IBO'},
+      {ic:'🌱',oc:"window.location.href='pam_tasks.html'",ti:'PAM-флуорометрия',de:'Практические задачи и виртуальная лаборатория. Анализ индукции флуоресценции, расчет ETR, Fv/Fm, qP и фотозащиты.',co:'4 задачи · Практический тур'}
     ]
   },
   en:{
@@ -332,7 +342,8 @@ const T = {
       {ic:'🧫',oc:"openSubtopic('biochemistry','lipase')",ti:'Lipase Kinetics (EC 3.1.1.3)',de:'Virtual lab. TAG hydrolysis, NaOH titration of FFA, calculate FFA concentration and reaction rate.',co:'6 problems · Practical tour'},
       {ic:'🔬',oc:"openSubtopic('biochemistry','aminoacid')",ti:'Amino Acid Identification',de:'Virtual pH lab. Build titration curves for three unknown amino acids, find pKₐ, calculate pI and identify by reference.',co:'8 problems · Practical tour → IBO'},
       {ic:'🏆',oc:"openSubtopic('olympiad2026','peroxidase')",ti:'Peroxidase Kinetics (Raphanus sativus)',de:'Republican Olympiad 2026 — Practical biochemistry. Radish peroxidase kinetics by spectrophotometry at 500 nm. Effect of pH on enzyme activity.',co:'2 problems · Practical tour'},
-      {ic:'🌿',oc:"openSubtopic('olympiad2026','myrosinase')",ti:'Myrosinase (Brassica rapa) — Calculation Problems',de:'Republican Olympiad 2026 — Theory (Part D). Myrosinase kinetics: Beer–Lambert law, Hill equation, cooperativity, substrate inhibition, MWC model.',co:'9 problems · National → IBO'}
+      {ic:'🌿',oc:"openSubtopic('olympiad2026','myrosinase')",ti:'Myrosinase (Brassica rapa) — Calculation Problems',de:'Republican Olympiad 2026 — Theory (Part D). Myrosinase kinetics: Beer–Lambert law, Hill equation, cooperativity, substrate inhibition, MWC model.',co:'9 problems · National → IBO'},
+      {ic:'🌱',oc:"window.location.href='pam_tasks.html'",ti:'PAM-fluorometry',de:'Practical problems and virtual laboratory. Analysis of fluorescence induction, calculation of ETR, Fv/Fm, qP, and photoprotection.',co:'4 tasks · Practical Tour'}
     ]
   }
 };

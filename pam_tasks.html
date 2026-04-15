@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAM-флуорометр — практика</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e8eaf0;min-height:100vh;padding:24px 20px 60px}
+
+a{color:#4dc990;text-decoration:none}
+a:hover{text-decoration:underline}
+
+.top-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid #1e2530}
+.top-nav-title{font-size:11px;font-weight:600;color:#7eb8a4;letter-spacing:.09em;text-transform:uppercase}
+.top-nav-links{display:flex;gap:14px;font-size:11px}
+.top-nav-links a{color:#3a4d5a;transition:color .15s}
+.top-nav-links a:hover{color:#4dc990;text-decoration:none}
+
+.page-header{margin-bottom:30px}
+.page-header h1{font-size:22px;font-weight:600;color:#e8eaf0;letter-spacing:-.02em;margin-bottom:6px}
+.page-header p{font-size:12px;color:#3a4d5a;line-height:1.6}
+
+/* Task card */
+.task{background:#141920;border:1px solid #1e2530;border-radius:14px;margin-bottom:18px;overflow:hidden}
+.task-head{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;user-select:none;transition:background .15s}
+.task-head:hover{background:#181f2a}
+.task-num{font-size:10px;font-weight:700;letter-spacing:.07em;color:#4dc990;background:#0d2518;border:1px solid #1e4a30;border-radius:6px;padding:3px 9px;white-space:nowrap}
+.task-head h2{font-size:14px;font-weight:500;color:#c8d0e0;flex:1}
+.task-arr{font-size:12px;color:#2a3a4a;transition:transform .2s}
+.task-arr.open{transform:rotate(180deg);color:#4dc990}
+.task-body{display:none;padding:0 18px 20px;border-top:1px solid #1a2230}
+.task-body.open{display:block}
+
+/* Data table */
+.data-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12px}
+.data-table th{background:#0d1520;color:#5a7080;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:7px 10px;text-align:left;border-bottom:1px solid #1a2530}
+.data-table td{padding:7px 10px;border-bottom:1px solid #141c26;color:#9ba8bf;font-family:'Courier New',monospace;font-size:12px}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:#0f1620}
+
+/* Sub-question */
+.sq{margin-top:16px}
+.sq-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#4dc990;margin-bottom:10px;letter-spacing:.02em}
+.sq-label .sq-tag{background:#0d2518;border:1px solid #1a4028;border-radius:5px;padding:2px 8px;font-size:10px}
+.sq-text{font-size:12px;color:#8090a8;line-height:1.7;margin-bottom:10px}
+.sq-text strong{color:#c0cad8}
+
+/* Calc table (answer inputs) */
+.calc-grid{display:grid;gap:8px;margin:10px 0}
+.calc-row{display:flex;align-items:center;gap:10px;background:#0d1520;border:1px solid #1a2230;border-radius:8px;padding:8px 12px}
+.calc-row-label{font-size:11px;color:#5a6a80;min-width:90px;font-family:'Courier New',monospace}
+.calc-sep{font-size:11px;color:#2a3540}
+.calc-input{background:#141c26;border:1px solid #1e2d40;border-radius:5px;padding:5px 8px;font-size:12px;font-family:'Courier New',monospace;color:#e8eaf0;width:90px;outline:none;transition:border-color .15s,background .15s}
+.calc-input:focus{border-color:#4dc990;background:#0d1a22}
+.calc-input.correct{border-color:#4dc990;background:#0a1e12;color:#4dc990}
+.calc-input.wrong{border-color:#e85555;background:#1e0a0a;color:#e85555}
+.calc-feedback{font-size:10px;flex:1}
+.calc-feedback.ok{color:#4dc990}
+.calc-feedback.err{color:#e85555}
+
+/* Big answer inputs */
+.ans-row{display:flex;align-items:center;gap:8px;margin:8px 0}
+.ans-label{font-size:11px;color:#5a6a80;min-width:120px}
+.ans-input{background:#141c26;border:1px solid #1e2d40;border-radius:6px;padding:6px 10px;font-size:13px;font-family:'Courier New',monospace;color:#e8eaf0;width:110px;outline:none;transition:all .15s}
+.ans-input:focus{border-color:#4dc990;background:#0d1a22}
+.ans-input.correct{border-color:#4dc990;background:#0a1e12;color:#4dc990}
+.ans-input.wrong{border-color:#e85555;background:#1e0a0a;color:#e85555}
+.ans-unit{font-size:11px;color:#2a3d4a}
+
+/* Buttons */
+.btn-check{cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;background:#0d2518;color:#4dc990;border:1px solid #1e4a30;border-radius:7px;padding:6px 14px;letter-spacing:.03em;transition:all .15s;margin-top:6px}
+.btn-check:hover{background:#122e1e;border-color:#2a6040}
+.btn-expl{cursor:pointer;font-family:inherit;font-size:11px;background:none;color:#3a5060;border:1px solid #1a2530;border-radius:7px;padding:5px 12px;transition:all .15s;margin-top:6px;margin-left:6px}
+.btn-expl:hover{color:#7eb8a4;border-color:#2a3d50}
+
+/* Explanation box */
+.expl{display:none;background:#080f18;border:1px solid #1a2d3a;border-radius:8px;padding:12px 14px;margin-top:10px;font-size:11px;color:#5a7a8a;line-height:1.8}
+.expl.open{display:block}
+.expl strong{color:#7eb8a4}
+.expl em{color:#9ba8bf;font-style:normal}
+.expl .formula{font-family:'Courier New',monospace;background:#0d1a24;border:1px solid #1a2a38;border-radius:4px;padding:2px 8px;color:#4dc990;font-size:11px}
+.expl ul{margin:6px 0 6px 16px}
+.expl li{margin:3px 0}
+
+/* Info box */
+.info-box{background:#0d1520;border:1px solid #1a2535;border-radius:8px;padding:10px 14px;font-size:11px;color:#5a6e8a;line-height:1.6;margin:10px 0}
+.info-box strong{color:#7eb8a4}
+
+/* Score bar */
+.score-bar{position:fixed;bottom:16px;right:20px;background:#141920;border:1px solid #1e2d30;border-radius:10px;padding:8px 16px;font-size:11px;color:#4a5a68;display:flex;align-items:center;gap:8px;z-index:100}
+.score-num{font-size:15px;font-weight:700;font-family:'Courier New',monospace;color:#4dc990}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <div class="top-nav-title">🌿 Limbic KZ — PAM-флуорометрия</div>
+  <div class="top-nav-links">
+    <a href="index.html">← задачник</a>
+    <a href="pam_fluorometer.html">🔬 виртуальная лаборатория</a>
+  </div>
+</div>
+
+<div class="page-header">
+  <h1>Практические задачи — PAM-флуорометр</h1>
+  <p>Введи ответы в поля и нажми «проверить». Допустимая погрешность ±2%. После проверки доступно объяснение.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ЗАДАНИЕ 1 — Базовые параметры
+══════════════════════════════════════════════════════════ -->
+<div class="task">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-num">ЗАДАНИЕ 1</span>
+    <h2>Базовые параметры темноадаптированного листа</h2>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="info-box" style="margin-top:14px">
+      Измерения тёмноадаптированного листа: <strong>F₀ = 120</strong>, <strong>Fm = 680</strong> (отн. ед.)
+    </div>
+
+    <!-- (а) -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">а</span> Рассчитай Fv и Fv/Fm</div>
+      <div class="sq-text">Используй формулы: <strong>Fv = Fm − F₀</strong> и <strong>Fv/Fm = Fv / Fm</strong>. Соответствует ли значение норме (~0.83)?</div>
+      <div class="ans-row">
+        <span class="ans-label">Fv =</span>
+        <input class="ans-input" id="t1a_fv" type="number" placeholder="???"> <span class="ans-unit">отн. ед.</span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">Fv/Fm =</span>
+        <input class="ans-input" id="t1a_fvfm" type="number" step="0.001" placeholder="0.???">
+      </div>
+      <button class="btn-check" onclick="checkT1a()">✓ проверить</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t1a')">объяснение</button>
+      <div class="expl" id="expl_t1a">
+        <strong>Fv = Fm − F₀ = 680 − 120 = 560</strong><br>
+        <strong>Fv/Fm = 560 / 680 = 0.824</strong> — близко к норме 0.83 ✓<br><br>
+        <em>Fv/Fm = максимальный квантовый выход фотохимии ФСII при условии, что все реакционные центры открыты (PQ-пул окислен). Отражает «потенциальную эффективность» фотосинтетического аппарата.</em>
+      </div>
+    </div>
+
+    <!-- (б) -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">б</span> Докажи алгебраически: Fv/Fm = 1 − F₀/Fm</div>
+      <div class="sq-text">Выведи из определения. Затем ответь: если F₀ вырастет при неизменном Fm — Fv/Fm увеличится или уменьшится?</div>
+      <div class="ans-row">
+        <span class="ans-label">Fv/Fm при F₀=200, Fm=680:</span>
+        <input class="ans-input" id="t1b_val" type="number" step="0.001" placeholder="0.???">
+      </div>
+      <button class="btn-check" onclick="checkT1b()">✓ проверить</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t1b')">объяснение</button>
+      <div class="expl" id="expl_t1b">
+        <strong>Доказательство:</strong><br>
+        <span class="formula">Fv/Fm = (Fm−F₀)/Fm = Fm/Fm − F₀/Fm = 1 − F₀/Fm</span><br><br>
+        При F₀ = 200, Fm = 680:<br>
+        <span class="formula">Fv/Fm = 1 − 200/680 = 1 − 0.294 = 0.706</span><br><br>
+        <em>↑F₀ → ↓Fv/Fm. Биологическая причина — деградация субъединицы D1 при фотоингибиции: повреждённые реакционные центры ФСII «рассеивают» возбуждение в виде флуоресценции вместо фотохимии, что повышает F₀.</em>
+      </div>
+    </div>
+
+    <!-- (в) -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">в</span> ★ Почему Fv/Fm никогда не достигает 1?</div>
+      <div class="sq-text">Подсказка: рассмотри конкурирующие пути деактивации возбуждённого хлорофилла.</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t1c')">объяснение</button>
+      <div class="expl" id="expl_t1c">
+        У возбуждённого хлорофилла (Chl*) три конкурирующих пути деактивации:<br><br>
+        <ul>
+          <li><strong>Фотохимия (kp)</strong> — передача энергии в реакционный центр → перенос электрона</li>
+          <li><strong>Флуоресценция (kf)</strong> — испускание фотона</li>
+          <li><strong>Тепловая диссипация (kd)</strong> — безызлучательный переход</li>
+        </ul>
+        <br>
+        Fv/Fm = kp / (kp + kf + kd). Поскольку kf и kd всегда > 0, знаменатель > числителя, и Fv/Fm < 1.<br><br>
+        <em>Даже при «идеальных» условиях F₀ > 0, потому что хлорофилл всегда немного флуоресцирует и рассеивает тепло — это физическое ограничение.</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ЗАДАНИЕ 2 — Индукция флуоресценции
+══════════════════════════════════════════════════════════ -->
+<div class="task">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-num">ЗАДАНИЕ 2</span>
+    <h2>Индукция флуоресценции — кривая Каутского</h2>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="info-box" style="margin-top:14px">
+      PAR = <strong>300 мкмоль/м²·с</strong>. Используй Fm = 680 (темновое).
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Время (мин)</th><th>Fs</th><th>Fm'</th><th>F₀'</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>0 (темнота)</td><td>120</td><td>680</td><td>120</td></tr>
+        <tr><td>2</td><td>310</td><td>570</td><td>105</td></tr>
+        <tr><td>4</td><td>270</td><td>530</td><td>98</td></tr>
+        <tr><td>6</td><td>255</td><td>510</td><td>95</td></tr>
+        <tr><td>8</td><td>248</td><td>505</td><td>94</td></tr>
+        <tr><td>10</td><td>245</td><td>502</td><td>93</td></tr>
+      </tbody>
+    </table>
+
+    <!-- (а) — расчётная таблица -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">а</span> Рассчитай Fq'/Fm', NPQ и qP в каждой точке</div>
+      <div class="sq-text">
+        <strong>Fq'/Fm' = (Fm'−Fs)/Fm'</strong> &nbsp;|&nbsp;
+        <strong>NPQ = Fm/Fm' − 1</strong> &nbsp;|&nbsp;
+        <strong>qP = (Fm'−Fs)/(Fm'−F₀')</strong>
+      </div>
+
+      <div class="calc-grid" id="t2a_grid">
+        <!-- rows injected by JS -->
+      </div>
+      <button class="btn-check" onclick="checkT2a()">✓ проверить все</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t2a')">объяснение</button>
+      <div class="expl" id="expl_t2a" id="expl_t2a">
+        <strong>Правильные значения:</strong><br>
+        <table style="width:100%;font-size:10px;border-collapse:collapse;margin-top:6px">
+          <tr style="color:#4dc990"><td style="padding:2px 6px">t</td><td>Fq'/Fm'</td><td>NPQ</td><td>qP</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">0</td><td>0.824</td><td>0.000</td><td>1.000</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">2</td><td>0.456</td><td>0.193</td><td>0.559</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">4</td><td>0.491</td><td>0.283</td><td>0.602</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">6</td><td>0.500</td><td>0.333</td><td>0.614</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">8</td><td>0.509</td><td>0.347</td><td>0.625</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">10</td><td>0.512</td><td>0.355</td><td>0.628</td></tr>
+        </table>
+        <br><em>NPQ растёт по мере включения ксантофиллового цикла (виолаксантин → зеаксантин). qP постепенно растёт — PQ-пул «раскрывается» по мере набора скорости цикла Кальвина.</em>
+      </div>
+    </div>
+
+    <!-- (б) -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">б</span> Почему в первые 2 минуты Fs резко возрастает?</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t2b')">объяснение</button>
+      <div class="expl" id="expl_t2b">
+        При включении актиникового света сначала фотосистема II активно поглощает свет, но ферредоксин-НАДФ-редуктаза и цикл Кальвина ещё не раскручены. PQ-пул быстро восстанавливается → реакционные центры ФСII «закрываются» (QA восстановлен) → электроны не уходят → <strong>Fs растёт (пик Пика/I)</strong>.<br><br>
+        Затем за 4–10 мин активируется цикл Кальвина, PQ-пул «открывается», одновременно нарастает NPQ (тепловая диссипация) → <strong>Fs снижается к стационарному уровню (уровень S)</strong>.<br><br>
+        <em>Это и есть кривая Каутского (OJIP-переход). Высокий Fs при t=2 говорит о временно «закрытых» (восстановленных) реакционных центрах ФСII.</em>
+      </div>
+    </div>
+
+    <!-- (в) -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">в</span> Рассчитай ETR при t = 2 мин и t = 10 мин</div>
+      <div class="sq-text"><strong>ETR = Fq'/Fm' × PAR × 0.5 × 0.84</strong></div>
+      <div class="ans-row">
+        <span class="ans-label">ETR (t = 2 мин) =</span>
+        <input class="ans-input" id="t2c_etr2" type="number" step="0.1" placeholder="??.?"> <span class="ans-unit">мкмоль e⁻/м²·с</span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">ETR (t = 10 мин) =</span>
+        <input class="ans-input" id="t2c_etr10" type="number" step="0.1" placeholder="??.?"> <span class="ans-unit">мкмоль e⁻/м²·с</span>
+      </div>
+      <button class="btn-check" onclick="checkT2c()">✓ проверить</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t2c')">объяснение</button>
+      <div class="expl" id="expl_t2c">
+        <strong>t = 2 мин:</strong> Fq'/Fm' = 0.456<br>
+        <span class="formula">ETR = 0.456 × 300 × 0.5 × 0.84 = 57.5</span><br><br>
+        <strong>t = 10 мин:</strong> Fq'/Fm' = 0.512<br>
+        <span class="formula">ETR = 0.512 × 300 × 0.5 × 0.84 = 64.5</span><br><br>
+        <em>ETR ниже при t=2 — реакционные центры «закрыты» (qP=0.56), электронный транспорт тормозится. При t=10 система вышла на стационар, qP=0.63 — больше центров открыто, поток электронов выше.</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ЗАДАНИЕ 3 — Стрессовая диагностика
+══════════════════════════════════════════════════════════ -->
+<div class="task">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-num">ЗАДАНИЕ 3</span>
+    <h2>Стрессовая диагностика</h2>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <table class="data-table" style="margin-top:14px">
+      <thead>
+        <tr><th>Параметр</th><th>Норма</th><th>Засуха</th><th>Фотоингибиция</th><th>Дефицит N</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>F₀</td><td>120</td><td>125</td><td>185</td><td>142</td></tr>
+        <tr><td>Fm</td><td>680</td><td>560</td><td>490</td><td>430</td></tr>
+        <tr><td>Fv/Fm</td><td>0.82</td><td>?</td><td>?</td><td>?</td></tr>
+        <tr><td>NPQ (при свете)</td><td>1.8</td><td>0.4</td><td>0.6</td><td>1.1</td></tr>
+      </tbody>
+    </table>
+
+    <!-- (а) -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">а</span> Рассчитай Fv/Fm для каждого стрессового варианта</div>
+      <div class="ans-row">
+        <span class="ans-label">Засуха:</span>
+        <input class="ans-input" id="t3_drought" type="number" step="0.001" placeholder="0.???">
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">Фотоингибиция:</span>
+        <input class="ans-input" id="t3_photo" type="number" step="0.001" placeholder="0.???">
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">Дефицит N:</span>
+        <input class="ans-input" id="t3_n" type="number" step="0.001" placeholder="0.???">
+      </div>
+      <button class="btn-check" onclick="checkT3a()">✓ проверить</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t3a')">объяснение</button>
+      <div class="expl" id="expl_t3a">
+        <strong>Засуха:</strong> <span class="formula">(560−125)/560 = 435/560 = 0.777</span><br>
+        <strong>Фотоингибиция:</strong> <span class="formula">(490−185)/490 = 305/490 = 0.622</span><br>
+        <strong>Дефицит N:</strong> <span class="formula">(430−142)/430 = 288/430 = 0.670</span><br><br>
+        <em>Фотоингибиция даёт самый низкий Fv/Fm из-за резкого роста F₀ (D1 деградирует) и сильного падения Fm.</em>
+      </div>
+    </div>
+
+    <!-- (б) -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">б</span> Парадокс засухи: Fv/Fm снижен умеренно, но NPQ очень мало (0.4)</div>
+      <div class="sq-text">Почему растение при закрытых устьицах не активирует фотозащиту?</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t3b')">объяснение</button>
+      <div class="expl" id="expl_t3b">
+        Ключевое — <strong>ΔpH тилакоида</strong>.<br><br>
+        При засухе устьица закрыты → CO₂ не поступает → цикл Кальвина тормозит → НАДФН/НАДФ⁺ растёт → электронный транспорт замедляется → <strong>протоны перестают активно перекачиваться в тилакоидный просвет</strong> → ΔpH мал → люменный pH не падает → <strong>VDE (виолаксантин-де-эпоксидаза) не активируется</strong> → зеаксантин не образуется → NPQ низкий.<br><br>
+        <em>Парадокс в том, что именно при засухе, когда свет опасен (CO₂ мало), фотозащита через ΔpH-зависимый NPQ не включается в полную силу.</em>
+      </div>
+    </div>
+
+    <!-- (в) -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">в</span> Фотоингибиция: F₀ резко вырос, Fm упал. Молекулярный уровень.</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t3c')">объяснение</button>
+      <div class="expl" id="expl_t3c">
+        При избытке света синглетный кислород (¹O₂) и другие АФК атакуют <strong>субъединицу D1</strong> реакционного центра ФСII.<br><br>
+        <ul>
+          <li><strong>↑F₀</strong> — повреждённые центры не могут проводить фотохимию (QA заблокирован), вся поглощённая энергия уходит во флуоресценцию → базовый уровень растёт</li>
+          <li><strong>↓Fm</strong> — меньше функциональных ФСII способны достичь Fm при насыщающей вспышке</li>
+        </ul>
+        <br>
+        <strong>Обратимость:</strong> Да, частично. D1 — самый быстро обновляемый хлоропластный белок. При снижении интенсивности света за несколько часов D1 синтезируется заново (FtsH-протеаза удаляет повреждённый D1, рибосомы вставляют новый). Однако при сильной фотоингибиции восстановление неполное.
+      </div>
+    </div>
+
+    <!-- (г) -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">г</span> Дефицит N: Fm сильно снижен при умеренном F₀</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t3d')">объяснение</button>
+      <div class="expl" id="expl_t3d">
+        При дефиците азота растение прежде всего разбирает <strong>светособирающие комплексы (LHCII)</strong> — они самые богатые белком структуры хлоропласта и служат резервом N.<br><br>
+        <ul>
+          <li><strong>↓Fm</strong> — меньше антенных хлорофиллов → меньше суммарной флуоресценции при насыщении</li>
+          <li><strong>Умеренный F₀</strong> — базовая флуоресценция реакционных центров сохраняется (D1 цел), но антенн мало → F₀ растёт незначительно</li>
+        </ul>
+        <br>
+        <em>Таким образом, основной «диагностический след» дефицита N — снижение Fm при относительно невысоком F₀ и умеренный Fv/Fm (~0.67).</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ЗАДАНИЕ 4 — Мутант npq1 и фотозащита
+══════════════════════════════════════════════════════════ -->
+<div class="task">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-num">ЗАДАНИЕ 4</span>
+    <h2>Мутант npq1 и фотозащита</h2>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="info-box" style="margin-top:14px">
+      Мутант <strong>npq1</strong> лишён гена VDE (виолаксантин-де-эпоксидаза) → не синтезирует зеаксантин.
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>PAR (мкмоль/м²·с)</th><th>NPQ WT</th><th>NPQ npq1</th><th>ETR WT</th><th>ETR npq1</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>100</td><td>0.3</td><td>0.1</td><td>28</td><td>29</td></tr>
+        <tr><td>300</td><td>1.8</td><td>0.4</td><td>52</td><td>48</td></tr>
+        <tr><td>600</td><td>3.2</td><td>0.7</td><td>61</td><td>51</td></tr>
+        <tr><td>1200</td><td>4.1</td><td>0.9</td><td>63</td><td>42</td></tr>
+        <tr><td>1800</td><td>4.5</td><td>1.0</td><td>62</td><td>31</td></tr>
+      </tbody>
+    </table>
+
+    <!-- (а) -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">а</span> При каком PAR разница NPQ становится физиологически значимой?</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t4a')">объяснение</button>
+      <div class="expl" id="expl_t4a">
+        При PAR = 100: ΔNPQ = 0.3 − 0.1 = 0.2 — незначимо (слабый свет).<br>
+        При PAR = 300: ΔNPQ = 1.8 − 0.4 = <strong>1.4</strong> — уже значимо. ETR начинает расходиться (52 vs 48).<br>
+        При PAR ≥ 600: ΔNPQ = 3.2 − 0.7 = 2.5, ΔETR = 10 — явная разница в фотозащите.<br><br>
+        <em>Физиологически значимой разница становится при <strong>PAR ≥ 300 мкмоль/м²·с</strong> — это уровень умеренного дневного освещения, где ксантофилловый цикл критически важен.</em>
+      </div>
+    </div>
+
+    <!-- (б) -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">б</span> ETR у npq1 падает при высоком PAR — объясни механизм</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t4b')">объяснение</button>
+      <div class="expl" id="expl_t4b">
+        У npq1 нет зеаксантина → нет эффективного рассеивания избыточного возбуждения.<br><br>
+        При избытке света в ФСII накапливается триплетный хлорофилл (³Chl*) → реагирует с O₂ → <strong>синглетный кислород (¹O₂)</strong> → атакует субъединицу D1.<br><br>
+        Деградация D1 → <strong>фотоингибиция ФСII</strong> → меньше функциональных реакционных центров → ↓ETR.<br><br>
+        <em>У WT зеаксантин рассеивает ³Chl* безопасно (через конформационные изменения LHC), D1 сохраняется → ETR стабилен даже при 1800.</em>
+      </div>
+    </div>
+
+    <!-- (в) — с расчётом -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">в</span> Насколько больше электронов уходит на побочные реакции у npq1 при PAR = 1800?</div>
+      <div class="sq-text">
+        ETR WT = 62, ETR npq1 = 31. Рассчитай разницу и процент «лишних» электронов npq1.
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">ΔETR =</span>
+        <input class="ans-input" id="t4c_delta" type="number" placeholder="??"> <span class="ans-unit">мкмоль e⁻/м²·с</span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">% больше у npq1 =</span>
+        <input class="ans-input" id="t4c_pct" type="number" placeholder="??"> <span class="ans-unit">%</span>
+      </div>
+      <button class="btn-check" onclick="checkT4c()">✓ проверить</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t4c')">объяснение</button>
+      <div class="expl" id="expl_t4c">
+        <span class="formula">ΔETR = 62 − 31 = 31 мкмоль e⁻/м²·с</span><br><br>
+        <span class="formula">% = 31/62 × 100% = 50%</span><br><br>
+        Т.е. у npq1 при PAR=1800 вдвое меньше электронов доходит до полезного транспорта. «Лишние» электроны у npq1 уходят на:<br>
+        <ul>
+          <li><strong>Реакция Мелера (фотовосстановление O₂)</strong>: e⁻ + O₂ → O₂•⁻ (супероксид-анион)</li>
+          <li><strong>Фотодыхание</strong>: при накоплении O₂ Rubisco оксигенирует РуБФ, расходуя электроны впустую</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- (г) ★ -->
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">г</span> ★ Остаточный NPQ ~1.0 у npq1: два механизма, не зависящих от зеаксантина</div>
+      <div class="sq-text">Как их различить экспериментально с помощью PAM-флуорометра?</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t4d')">объяснение</button>
+      <div class="expl" id="expl_t4d">
+        Остаточный NPQ при отсутствии зеаксантина включает:<br><br>
+        <strong>1. qE (ΔpH-зависимый, PsbS-зависимый)</strong><br>
+        Конформационное тушение через PsbS при низком люменном pH — даже без зеаксантина PsbS частично активируется. Быстро обратим при темноте (секунды–минуты).<br><br>
+        <strong>2. qI (фотоингибиционное тушение)</strong><br>
+        Повреждённые D1-содержащие центры ФСII сами по себе тушат флуоресценцию. Очень медленно обратим (часы).<br><br>
+        <strong>Как различить PAM-флуорометром:</strong><br>
+        <em>Протокол relaxation kinetics:</em><br>
+        <ul>
+          <li>Выключить актиниковый свет → следить за восстановлением Fm' до Fm</li>
+          <li><strong>qE</strong> расслабляется быстро: t½ ~ 1–2 мин (в темноте)</li>
+          <li><strong>qI</strong> сохраняется часами: после 30 мин темноты Fm всё ещё ниже исходного</li>
+        </ul>
+        Дополнительно: дальний красный свет (FR) снижает ΔpH → снимает qE, но не qI.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Score bar -->
+<div class="score-bar">
+  ✓ <span class="score-num" id="scoreNum">0</span> / <span id="scoreTotal">0</span> ответов верно
+</div>
+
+<script>
+/* ── Toggle task open/close ── */
+function toggleTask(head) {
+  const body = head.nextElementSibling;
+  const arr = head.querySelector('.task-arr');
+  body.classList.toggle('open');
+  arr.classList.toggle('open');
+}
+// Open first task by default
+document.querySelector('.task-head').click();
+
+/* ── Toggle explanation ── */
+function toggleExpl(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+/* ── Score tracking ── */
+let correctSet = new Set();
+function markCorrect(key) {
+  correctSet.add(key);
+  document.getElementById('scoreNum').textContent = correctSet.size;
+  document.getElementById('scoreTotal').textContent = 10; // total checkable items
+}
+
+/* ── Helper: check numeric answer ── */
+function checkNum(inputId, correct, tolerance, key) {
+  const el = document.getElementById(inputId);
+  const val = parseFloat(el.value);
+  if (isNaN(val)) { el.className = 'ans-input'; return false; }
+  const ok = Math.abs(val - correct) / Math.abs(correct) <= tolerance;
+  el.className = 'ans-input ' + (ok ? 'correct' : 'wrong');
+  if (ok) markCorrect(key);
+  return ok;
+}
+
+/* ══ TASK 1 ══ */
+function checkT1a() {
+  checkNum('t1a_fv', 560, 0.02, 't1a_fv');
+  checkNum('t1a_fvfm', 0.8235, 0.025, 't1a_fvfm');
+}
+function checkT1b() {
+  checkNum('t1b_val', 0.7059, 0.025, 't1b_val');
+}
+
+/* ══ TASK 2a — calc table ══ */
+const T2_DATA = [
+  {t:'0', Fs:120, Fm:680, F0p:120},
+  {t:'2', Fs:310, Fm:570, F0p:105},
+  {t:'4', Fs:270, Fm:530, F0p:98},
+  {t:'6', Fs:255, Fm:510, F0p:95},
+  {t:'8', Fs:248, Fm:505, F0p:94},
+  {t:'10',Fs:245, Fm:502, F0p:93},
+];
+const FM_DARK = 680;
+
+function buildT2aGrid() {
+  const grid = document.getElementById('t2a_grid');
+  T2_DATA.forEach((row, i) => {
+    const div = document.createElement('div');
+    div.className = 'calc-row';
+    div.style.flexWrap = 'wrap';
+    div.style.gap = '6px';
+    div.innerHTML = `
+      <span class="calc-row-label" style="min-width:60px">t = ${row.t} мин</span>
+      <span class="calc-sep">Fq'/Fm'=</span>
+      <input class="calc-input" id="t2a_fqfm_${i}" type="number" step="0.001" placeholder="0.???">
+      <span class="calc-sep">NPQ=</span>
+      <input class="calc-input" id="t2a_npq_${i}" type="number" step="0.001" placeholder="0.???">
+      <span class="calc-sep">qP=</span>
+      <input class="calc-input" id="t2a_qp_${i}" type="number" step="0.001" placeholder="0.???">
+    `;
+    grid.appendChild(div);
+  });
+}
+buildT2aGrid();
+
+function checkT2a() {
+  let allOk = true;
+  T2_DATA.forEach((row, i) => {
+    const fqfm = (row.Fm - row.Fs) / row.Fm;
+    const npq  = FM_DARK / row.Fm - 1;
+    const qp   = (row.Fm - row.Fs) / (row.Fm - row.F0p);
+
+    const f1 = checkCalcInput(`t2a_fqfm_${i}`, fqfm, 0.025, `t2a_fqfm_${i}`);
+    const f2 = checkCalcInput(`t2a_npq_${i}`,  npq,  0.030, `t2a_npq_${i}`);
+    const f3 = checkCalcInput(`t2a_qp_${i}`,   qp,   0.025, `t2a_qp_${i}`);
+    if (!f1||!f2||!f3) allOk = false;
+  });
+  if (allOk) markCorrect('t2a_all');
+}
+
+function checkCalcInput(id, correct, tol, key) {
+  const el = document.getElementById(id);
+  if (!el) return false;
+  const val = parseFloat(el.value);
+  if (isNaN(val)) { el.className = 'calc-input'; return false; }
+  const ref = Math.abs(correct) < 0.001 ? 1 : Math.abs(correct);
+  const ok = Math.abs(val - correct) / ref <= tol;
+  el.className = 'calc-input ' + (ok ? 'correct' : 'wrong');
+  if (ok) markCorrect(key);
+  return ok;
+}
+
+function checkT2c() {
+  // t=2: fq/fm = 260/570 = 0.4561, ETR = 0.4561*300*0.5*0.84 = 57.47
+  checkNum('t2c_etr2',  57.47, 0.04, 't2c_etr2');
+  // t=10: fq/fm = 257/502 = 0.5120, ETR = 0.5120*300*0.5*0.84 = 64.5
+  checkNum('t2c_etr10', 64.51, 0.04, 't2c_etr10');
+}
+
+/* ══ TASK 3 ══ */
+function checkT3a() {
+  checkNum('t3_drought', 0.7768, 0.025, 't3_drought');
+  checkNum('t3_photo',   0.6224, 0.025, 't3_photo');
+  checkNum('t3_n',       0.6698, 0.025, 't3_n');
+}
+
+/* ══ TASK 4 ══ */
+function checkT4c() {
+  checkNum('t4c_delta', 31,  0.02, 't4c_delta');
+  checkNum('t4c_pct',   50,  0.03, 't4c_pct');
+}
+</script>
+</body>
+</html>

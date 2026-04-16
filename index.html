@@ -191,6 +191,14 @@
       <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'pam_tasks_en.html':'pam_tasks.html')"><span data-i18n="subPam">PAM-флуорометрия</span> <span class="sidebar-count">4</span></div>
     </div>
   </div>
+  <div class="sidebar-section">
+  <div class="sidebar-section-title" onclick="toggleSec(this)"><span data-i18n="sideVsosh">🏆 ВсОШ по биологии</span> <span class="arr">▶</span></div>
+  <div class="sidebar-subtopics">
+    <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'vsosh_biochem_2122_en.html':'vsosh_biochem_2122.html')">
+      <span data-i18n="subVsosh2122">Биохимия 2021–22 (11 кл.)</span> <span class="sidebar-count">5</span>
+    </div>
+  </div>
+</div>
 </aside>
 <main id="main">
 <div id="home-page">
@@ -233,9 +241,10 @@
   </div>
   <div class="topics-grid" id="topics-grid"></div>
   <footer class="site-footer">
-    <p><strong>Limbic KZ</strong> — <span data-i18n="footerText">Олимпиадный задачник по популяционной генетике и статистике (1-е издание)</span></p>
+    <p><strong>Limbic KZ</strong> — <span data-i18n="footerText">Сайт для подготовки к практической части олимпиады</span></p>
     <p style="margin-top:5px">Lead Author &amp; Founder: <strong onclick="window.open('https://t.me/Apoprotein','_blank')" style="cursor:pointer;color:var(--blue2)">Sailaubek Nurislam</strong> · Co-author: <strong onclick="window.open('https://t.me/glycoliez','_blank')" style="cursor:pointer;color:var(--blue2)">Alimukhammed Samatuly</strong> · Co-founder: <strong onclick="window.open('https://t.me/bauqalife','_blank')" style="cursor:pointer;color:var(--blue2)">Akimbayev Baurzhan</strong></p>
     <p style="margin-top:4px;font-size:0.66rem" data-i18n="footerFor">Для школьников Казахстана, готовящихся к биологическим олимпиадам</p>
+    <p style="margin-top:8px;font-size:0.62rem">Все права на условия олимпиадных задач принадлежат их законным правообладателям. Материалы используются в ознакомительных и образовательных целях.</p>
   </footer>
 </div>
 <div id="task-page">
@@ -257,7 +266,7 @@ let currentSection = null, currentSubtopic = null;
 const T = {
   ru:{
     navHome:'Главная',navGenetics:'Генетика',navStats:'Статистика',navBiochem:'Биохимия',
-    sideGenetics:'🧬 Генетика',sideStats:'📊 Статистика',sideBiochem:'🧬 Биохимия',sideBotany: '🌻 Ботаника',
+    sideGenetics:'🧬 Генетика',sideStats:'📊 Статистика',sideBiochem:'🧬 Биохимия',sideBotany: '🌻 Ботаника',sideVsosh:'🏆 ВсОШ по биологии', subVsosh2122:'Биохимия 2021–22 (11 кл.)',
     subHW:'Харди-Вайнберг',subMut:'Мутации',subSel:'Естественный отбор',
     subMig:'Миграция',subHet:'Гетерозис',subInb:'Инбридинг',subDrift:'Дрейф генов',
     subChi:'Критерий χ²',subTtest:'t-тест',subBayes:'Байес',
@@ -296,12 +305,13 @@ const T = {
       {ic:'🔬',oc:"openSubtopic('biochemistry','aminoacid')",ti:'Идентификация аминокислот',de:'Виртуальная pH-лаборатория. Построение кривых титрования трёх неизвестных аминокислот, нахождение pKₐ, расчёт pI и идентификация по справочнику.',co:'8 задач · Практический тур → IBO'},
       {ic:'🏆',oc:"openSubtopic('olympiad2026','peroxidase')",ti:'Кинетика пероксидазы (Raphanus sativus)',de:'Республиканская олимпиада 2026 — Практическая биохимия. Кинетика пероксидазы из редьки методом спектрофотометрии при 500 нм. Влияние pH на активность фермента.',co:'2 задачи · Практический тур'},
       {ic:'🌿',oc:"openSubtopic('olympiad2026','myrosinase')",ti:'Мирозиназа (Brassica rapa) — расчётные задачи',de:'Республиканская олимпиада 2026 — Теория (Часть D). Кинетика мирозиназы: закон Бугера–Ламберта–Бера, уравнение Хилла, кооперативность, субстратное ингибирование, MWC-модель.',co:'9 задач · Республиканский → IBO'},
-      {ic:'🌱',oc:"window.location.href='pam_tasks.html'",ti:'PAM-флуорометрия',de:'Практические задачи и виртуальная лаборатория. Анализ индукции флуоресценции, расчет ETR, Fv/Fm, qP и фотозащиты.',co:'4 задачи · Практический тур'}
+      {ic:'🌱',oc:"window.location.href='pam_tasks.html'",ti:'PAM-флуорометрия',de:'Практические задачи и виртуальная лаборатория. Анализ индукции флуоресценции, расчет ETR, Fv/Fm, qP и фотозащиты.',co:'4 задачи · Практический тур'},
+      {ic:'🏆',oc:"window.location.href='vsosh_biochem_2122.html'",ti:'ВсОШ 2021–22: Биохимия (11 класс)',de:'Практический тур ВсОШ. Определение активности липазы: биуретовый метод, калибровочный график, NaOH-титрование, расчёт молекулярной массы жира.',co:'5 заданий · Практический тур · 50 баллов'}
     ]
   },
   en:{
     navHome:'Home',navGenetics:'Genetics',navStats:'Statistics',navBiochem:'Biochemistry',
-    sideGenetics:'🧬 Genetics',sideStats:'📊 Statistics',sideBiochem:'🧬 Biochemistry',sideBotany: '🌻 Botany',
+    sideGenetics:'🧬 Genetics',sideStats:'📊 Statistics',sideBiochem:'🧬 Biochemistry',sideBotany: '🌻 Botany',sideVsosh:'🏆 Russian Biology Olympiad', subVsosh2122:'Biochemistry 2021–22 (Grade 11)',
     subHW:'Hardy-Weinberg',subMut:'Mutations',subSel:'Natural Selection',
     subMig:'Migration',subHet:'Heterosis',subInb:'Inbreeding',subDrift:'Genetic Drift',
     subChi:'χ² Test',subTtest:'t-test',subBayes:'Bayes',
@@ -320,7 +330,7 @@ const T = {
     answerLabel:'Your answer',placeholder:'Enter answer (numbers, formula...)',
     checkBtn:'Check',showHints:'Show hints ↓',
     feedOk:'✓ Correct! Great work.',feedWrong:'✗ Incorrect. See the hint below.',
-    footerText:'Olympiad problem book in population genetics and statistics (1st edition)',
+    footerText:'Website to prepare for practial tour of olympiad',
     footerFor:'For students in Kazakhstan preparing for biology olympiads',
     dRegional:'Regional',dNational:'National',dIBO:'IBO',dPractical:'Lab',
     introBody:`<p>This project started as a specialised problem book in population genetics, but preparing for modern biology olympiads — from regional rounds to IBO — requires more than just calculating allele frequencies.</p><p>The main barrier for many talented students is the <strong>practical tour</strong>. Lack of lab access, expensive reagents and fear of real equipment are often decisive factors. We decided to fix that.</p><p><strong>Interactive practical lab</strong>: Virtual simulations where you can perform titrations, work with 96-well plates and analyse spectrophotometric data. Mistakes here cost nothing but give invaluable experience.</p><p><strong>Calculation problems</strong>: A comprehensive database in genetics, biochemistry and statistics — a complete trainer for all theoretical blocks that require a mathematical approach.</p><p>Biology is the science of life, and an olympiad tests your ability to apply that science in practice. Limbic KZ gives you the tools to feel confident at a theoretical test as well as in a lab. Good luck!</p>`,
@@ -340,7 +350,8 @@ const T = {
       {ic:'🔬',oc:"openSubtopic('biochemistry','aminoacid')",ti:'Amino Acid Identification',de:'Virtual pH lab. Build titration curves for three unknown amino acids, find pKₐ, calculate pI and identify by reference.',co:'8 problems · Practical tour → IBO'},
       {ic:'🏆',oc:"openSubtopic('olympiad2026','peroxidase')",ti:'Peroxidase Kinetics (Raphanus sativus)',de:'Republican Olympiad 2026 — Practical biochemistry. Radish peroxidase kinetics by spectrophotometry at 500 nm. Effect of pH on enzyme activity.',co:'2 problems · Practical tour'},
       {ic:'🌿',oc:"openSubtopic('olympiad2026','myrosinase')",ti:'Myrosinase (Brassica rapa) — Calculation Problems',de:'Republican Olympiad 2026 — Theory (Part D). Myrosinase kinetics: Beer–Lambert law, Hill equation, cooperativity, substrate inhibition, MWC model.',co:'9 problems · National → IBO'},
-      {ic:'🌱',oc:"window.location.href='pam_tasks_en.html'",ti:'PAM-fluorometry',de:'Practical problems and virtual laboratory. Analysis of fluorescence induction, calculation of ETR, Fv/Fm, qP, and photoprotection.',co:'4 tasks · Practical Tour'}
+      {ic:'🌱',oc:"window.location.href='pam_tasks_en.html'",ti:'PAM-fluorometry',de:'Practical problems and virtual laboratory. Analysis of fluorescence induction, calculation of ETR, Fv/Fm, qP, and photoprotection.',co:'4 tasks · Practical Tour'},
+      {ic:'🏆',oc:"window.location.href='vsosh_biochem_2122_en.html'",ti:'RBO 2021–22: Biochemistry (Grade 11)',de:'RBO practical tour. Lipase activity: Biuret method, calibration curve, NaOH titration, calculation of fat molecular weight.',co:'5 tasks · Practical tour · 50 points'}
     ]
   }
 };

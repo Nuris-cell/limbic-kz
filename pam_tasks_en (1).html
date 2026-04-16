@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAM Fluorometer — Practice Tasks</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e8eaf0;min-height:100vh;padding:24px 20px 60px}
+a{color:#4dc990;text-decoration:none}
+a:hover{text-decoration:underline}
+.top-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid #1e2530}
+.top-nav-title{font-size:11px;font-weight:600;color:#7eb8a4;letter-spacing:.09em;text-transform:uppercase}
+.top-nav-links{display:flex;gap:14px;font-size:11px}
+.top-nav-links a{color:#3a4d5a;transition:color .15s}
+.top-nav-links a:hover{color:#4dc990;text-decoration:none}
+.page-header{margin-bottom:30px}
+.page-header h1{font-size:22px;font-weight:600;color:#e8eaf0;letter-spacing:-.02em;margin-bottom:6px}
+.page-header p{font-size:12px;color:#3a4d5a;line-height:1.6}
+.task{background:#141920;border:1px solid #1e2530;border-radius:14px;margin-bottom:18px;overflow:hidden}
+.task-head{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;user-select:none;transition:background .15s}
+.task-head:hover{background:#181f2a}
+.task-num{font-size:10px;font-weight:700;letter-spacing:.07em;color:#4dc990;background:#0d2518;border:1px solid #1e4a30;border-radius:6px;padding:3px 9px;white-space:nowrap}
+.task-head h2{font-size:14px;font-weight:500;color:#c8d0e0;flex:1}
+.task-arr{font-size:12px;color:#2a3a4a;transition:transform .2s}
+.task-arr.open{transform:rotate(180deg);color:#4dc990}
+.task-body{display:none;padding:0 18px 20px;border-top:1px solid #1a2230}
+.task-body.open{display:block}
+.data-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12px}
+.data-table th{background:#0d1520;color:#5a7080;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:7px 10px;text-align:left;border-bottom:1px solid #1a2530}
+.data-table td{padding:7px 10px;border-bottom:1px solid #141c26;color:#9ba8bf;font-family:'Courier New',monospace;font-size:12px}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:#0f1620}
+.sq{margin-top:16px}
+.sq-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#4dc990;margin-bottom:10px;letter-spacing:.02em}
+.sq-label .sq-tag{background:#0d2518;border:1px solid #1a4028;border-radius:5px;padding:2px 8px;font-size:10px}
+.sq-text{font-size:12px;color:#8090a8;line-height:1.7;margin-bottom:10px}
+.sq-text strong{color:#c0cad8}
+.calc-grid{display:grid;gap:8px;margin:10px 0}
+.calc-row{display:flex;align-items:center;gap:10px;background:#0d1520;border:1px solid #1a2230;border-radius:8px;padding:8px 12px}
+.calc-row-label{font-size:11px;color:#5a6a80;min-width:90px;font-family:'Courier New',monospace}
+.calc-sep{font-size:11px;color:#2a3540}
+.calc-input{background:#141c26;border:1px solid #1e2d40;border-radius:5px;padding:5px 8px;font-size:12px;font-family:'Courier New',monospace;color:#e8eaf0;width:90px;outline:none;transition:border-color .15s,background .15s}
+.calc-input:focus{border-color:#4dc990;background:#0d1a22}
+.calc-input.correct{border-color:#4dc990;background:#0a1e12;color:#4dc990}
+.calc-input.wrong{border-color:#e85555;background:#1e0a0a;color:#e85555}
+.ans-row{display:flex;align-items:center;gap:8px;margin:8px 0}
+.ans-label{font-size:11px;color:#5a6a80;min-width:140px}
+.ans-input{background:#141c26;border:1px solid #1e2d40;border-radius:6px;padding:6px 10px;font-size:13px;font-family:'Courier New',monospace;color:#e8eaf0;width:110px;outline:none;transition:all .15s}
+.ans-input:focus{border-color:#4dc990;background:#0d1a22}
+.ans-input.correct{border-color:#4dc990;background:#0a1e12;color:#4dc990}
+.ans-input.wrong{border-color:#e85555;background:#1e0a0a;color:#e85555}
+.ans-unit{font-size:11px;color:#2a3d4a}
+.btn-check{cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;background:#0d2518;color:#4dc990;border:1px solid #1e4a30;border-radius:7px;padding:6px 14px;letter-spacing:.03em;transition:all .15s;margin-top:6px}
+.btn-check:hover{background:#122e1e;border-color:#2a6040}
+.btn-expl{cursor:pointer;font-family:inherit;font-size:11px;background:none;color:#3a5060;border:1px solid #1a2530;border-radius:7px;padding:5px 12px;transition:all .15s;margin-top:6px;margin-left:6px}
+.btn-expl:hover{color:#7eb8a4;border-color:#2a3d50}
+.expl{display:none;background:#080f18;border:1px solid #1a2d3a;border-radius:8px;padding:12px 14px;margin-top:10px;font-size:11px;color:#5a7a8a;line-height:1.8}
+.expl.open{display:block}
+.expl strong{color:#7eb8a4}
+.expl em{color:#9ba8bf;font-style:normal}
+.expl .formula{font-family:'Courier New',monospace;background:#0d1a24;border:1px solid #1a2a38;border-radius:4px;padding:2px 8px;color:#4dc990;font-size:11px}
+.expl ul{margin:6px 0 6px 16px}
+.expl li{margin:3px 0}
+.info-box{background:#0d1520;border:1px solid #1a2535;border-radius:8px;padding:10px 14px;font-size:11px;color:#5a6e8a;line-height:1.6;margin:10px 0}
+.info-box strong{color:#7eb8a4}
+.score-bar{position:fixed;bottom:16px;right:20px;background:#141920;border:1px solid #1e2d30;border-radius:10px;padding:8px 16px;font-size:11px;color:#4a5a68;display:flex;align-items:center;gap:8px;z-index:100}
+.score-num{font-size:15px;font-weight:700;font-family:'Courier New',monospace;color:#4dc990}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <div class="top-nav-title">🌿 Limbic KZ — PAM Fluorometry</div>
+  <div class="top-nav-links">
+    <a href="index.html">← problem set</a>
+    <a href="pam_fluorometer_en.html">🔬 virtual laboratory</a>
+    <a href="pam_tasks.html">🇷🇺 RU</a>
+  </div>
+</div>
+
+<div class="page-header">
+  <h1>Practice Tasks — PAM Fluorometer</h1>
+  <p>Enter your answers in the fields and click "check". Tolerance ±2%. Explanations become available after checking.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     TASK 1 — Basic parameters
+════════════════════════════════════════════════════════ -->
+<div class="task">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-num">TASK 1</span>
+    <h2>Basic parameters of a dark-adapted leaf</h2>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="info-box" style="margin-top:14px">
+      Measurements from a dark-adapted leaf: <strong>F₀ = 120</strong>, <strong>Fm = 680</strong> (rel. units)
+    </div>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">a</span> Calculate Fv and Fv/Fm</div>
+      <div class="sq-text">Use the formulas: <strong>Fv = Fm − F₀</strong> and <strong>Fv/Fm = Fv / Fm</strong>. Does the value match the normal range (~0.83)?</div>
+      <div class="ans-row">
+        <span class="ans-label">Fv =</span>
+        <input class="ans-input" id="t1a_fv" type="number" placeholder="???"> <span class="ans-unit">rel. units</span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">Fv/Fm =</span>
+        <input class="ans-input" id="t1a_fvfm" type="number" step="0.001" placeholder="0.???">
+      </div>
+      <button class="btn-check" onclick="checkT1a()">✓ check</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t1a')">explanation</button>
+      <div class="expl" id="expl_t1a">
+        <strong>Fv = Fm − F₀ = 680 − 120 = 560</strong><br>
+        <strong>Fv/Fm = 560 / 680 = 0.824</strong> — close to the normal value 0.83 ✓<br><br>
+        <em>Fv/Fm = maximum quantum yield of PSII photochemistry, measured when all reaction centres are open (PQ pool oxidised). It reflects the "potential efficiency" of the photosynthetic apparatus.</em>
+      </div>
+    </div>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">b</span> Prove algebraically: Fv/Fm = 1 − F₀/Fm</div>
+      <div class="sq-text">Derive from the definition. Then answer: if F₀ rises while Fm stays constant — does Fv/Fm increase or decrease?</div>
+      <div class="ans-row">
+        <span class="ans-label">Fv/Fm when F₀=200, Fm=680:</span>
+        <input class="ans-input" id="t1b_val" type="number" step="0.001" placeholder="0.???">
+      </div>
+      <button class="btn-check" onclick="checkT1b()">✓ check</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t1b')">explanation</button>
+      <div class="expl" id="expl_t1b">
+        <strong>Proof:</strong><br>
+        <span class="formula">Fv/Fm = (Fm−F₀)/Fm = Fm/Fm − F₀/Fm = 1 − F₀/Fm</span><br><br>
+        With F₀ = 200, Fm = 680:<br>
+        <span class="formula">Fv/Fm = 1 − 200/680 = 1 − 0.294 = 0.706</span><br><br>
+        <em>↑F₀ → ↓Fv/Fm. The biological reason: D1 subunit degradation during photoinhibition. Damaged PSII reaction centres "waste" excitation as fluorescence instead of photochemistry, raising F₀.</em>
+      </div>
+    </div>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">c</span> ★ Why does Fv/Fm never reach 1?</div>
+      <div class="sq-text">Hint: consider the competing deactivation pathways of excited chlorophyll.</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t1c')">explanation</button>
+      <div class="expl" id="expl_t1c">
+        Excited chlorophyll (Chl*) has three competing deactivation pathways:<br><br>
+        <ul>
+          <li><strong>Photochemistry (kp)</strong> — energy transfer to the reaction centre → electron transfer</li>
+          <li><strong>Fluorescence (kf)</strong> — photon emission</li>
+          <li><strong>Thermal dissipation (kd)</strong> — radiationless transition</li>
+        </ul>
+        <br>
+        Fv/Fm = kp / (kp + kf + kd). Since kf and kd are always &gt; 0, the denominator exceeds the numerator, so Fv/Fm &lt; 1.<br><br>
+        <em>Even under "ideal" conditions F₀ &gt; 0, because chlorophyll always fluoresces and dissipates some heat — this is a physical constraint.</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     TASK 2 — Fluorescence induction
+════════════════════════════════════════════════════════ -->
+<div class="task">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-num">TASK 2</span>
+    <h2>Fluorescence induction — Kautsky curve</h2>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="info-box" style="margin-top:14px">
+      PAR = <strong>300 µmol/m²·s</strong>. Use Fm = 680 (dark-adapted value).
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Time (min)</th><th>Fs</th><th>Fm'</th><th>F₀'</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0 (dark)</td><td>120</td><td>680</td><td>120</td></tr>
+        <tr><td>2</td><td>310</td><td>570</td><td>105</td></tr>
+        <tr><td>4</td><td>270</td><td>530</td><td>98</td></tr>
+        <tr><td>6</td><td>255</td><td>510</td><td>95</td></tr>
+        <tr><td>8</td><td>248</td><td>505</td><td>94</td></tr>
+        <tr><td>10</td><td>245</td><td>502</td><td>93</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">a</span> Calculate Fq'/Fm', NPQ and qP at each time point</div>
+      <div class="sq-text">
+        <strong>Fq'/Fm' = (Fm'−Fs)/Fm'</strong> &nbsp;|&nbsp;
+        <strong>NPQ = Fm/Fm' − 1</strong> &nbsp;|&nbsp;
+        <strong>qP = (Fm'−Fs)/(Fm'−F₀')</strong>
+      </div>
+      <div class="calc-grid" id="t2a_grid"></div>
+      <button class="btn-check" onclick="checkT2a()">✓ check all</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t2a')">explanation</button>
+      <div class="expl" id="expl_t2a">
+        <strong>Correct values:</strong><br>
+        <table style="width:100%;font-size:10px;border-collapse:collapse;margin-top:6px">
+          <tr style="color:#4dc990"><td style="padding:2px 6px">t</td><td>Fq'/Fm'</td><td>NPQ</td><td>qP</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">0</td><td>0.824</td><td>0.000</td><td>1.000</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">2</td><td>0.456</td><td>0.193</td><td>0.559</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">4</td><td>0.491</td><td>0.283</td><td>0.602</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">6</td><td>0.500</td><td>0.333</td><td>0.614</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">8</td><td>0.509</td><td>0.347</td><td>0.625</td></tr>
+          <tr style="color:#7a8a9a"><td style="padding:2px 6px">10</td><td>0.512</td><td>0.355</td><td>0.628</td></tr>
+        </table>
+        <br><em>NPQ rises as the xanthophyll cycle activates (violaxanthin → zeaxanthin). qP gradually increases — the PQ pool "opens up" as the Calvin cycle accelerates.</em>
+      </div>
+    </div>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">b</span> Why does Fs rise sharply in the first 2 minutes?</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t2b')">explanation</button>
+      <div class="expl" id="expl_t2b">
+        When actinic light is switched on, PSII absorbs light immediately, but ferredoxin–NADP⁺-reductase and the Calvin cycle have not yet ramped up. The PQ pool is rapidly reduced → PSII reaction centres "close" (Q_A reduced) → electrons cannot leave → <strong>Fs rises (I-peak of OJIP)</strong>.<br><br>
+        Then over 4–10 min the Calvin cycle activates, the PQ pool "opens", and simultaneously NPQ increases → <strong>Fs declines to the steady state (S-level)</strong>.<br><br>
+        <em>This is the Kautsky curve (OJIP transient). The high Fs at t=2 indicates temporarily "closed" (reduced) PSII reaction centres.</em>
+      </div>
+    </div>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">c</span> Calculate ETR at t = 2 min and t = 10 min</div>
+      <div class="sq-text"><strong>ETR = Fq'/Fm' × PAR × 0.5 × 0.84</strong></div>
+      <div class="ans-row">
+        <span class="ans-label">ETR (t = 2 min) =</span>
+        <input class="ans-input" id="t2c_etr2" type="number" step="0.1" placeholder="??.?"> <span class="ans-unit">µmol e⁻/m²·s</span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">ETR (t = 10 min) =</span>
+        <input class="ans-input" id="t2c_etr10" type="number" step="0.1" placeholder="??.?"> <span class="ans-unit">µmol e⁻/m²·s</span>
+      </div>
+      <button class="btn-check" onclick="checkT2c()">✓ check</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t2c')">explanation</button>
+      <div class="expl" id="expl_t2c">
+        <strong>t = 2 min:</strong> Fq'/Fm' = 0.456<br>
+        <span class="formula">ETR = 0.456 × 300 × 0.5 × 0.84 = 57.5</span><br><br>
+        <strong>t = 10 min:</strong> Fq'/Fm' = 0.512<br>
+        <span class="formula">ETR = 0.512 × 300 × 0.5 × 0.84 = 64.5</span><br><br>
+        <em>ETR is lower at t=2 — reaction centres are "closed" (qP=0.56), restricting electron flow. By t=10 the system has reached steady state (qP=0.63), more centres are open, so throughput is higher.</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     TASK 3 — Stress diagnostics
+════════════════════════════════════════════════════════ -->
+<div class="task">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-num">TASK 3</span>
+    <h2>Stress diagnostics</h2>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <table class="data-table" style="margin-top:14px">
+      <thead>
+        <tr><th>Parameter</th><th>Control</th><th>Drought</th><th>Photoinhibition</th><th>N deficiency</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>F₀</td><td>120</td><td>125</td><td>185</td><td>142</td></tr>
+        <tr><td>Fm</td><td>680</td><td>560</td><td>490</td><td>430</td></tr>
+        <tr><td>Fv/Fm</td><td>0.82</td><td>?</td><td>?</td><td>?</td></tr>
+        <tr><td>NPQ (light)</td><td>1.8</td><td>0.4</td><td>0.6</td><td>1.1</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">a</span> Calculate Fv/Fm for each stress treatment</div>
+      <div class="ans-row">
+        <span class="ans-label">Drought:</span>
+        <input class="ans-input" id="t3_drought" type="number" step="0.001" placeholder="0.???">
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">Photoinhibition:</span>
+        <input class="ans-input" id="t3_photo" type="number" step="0.001" placeholder="0.???">
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">N deficiency:</span>
+        <input class="ans-input" id="t3_n" type="number" step="0.001" placeholder="0.???">
+      </div>
+      <button class="btn-check" onclick="checkT3a()">✓ check</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t3a')">explanation</button>
+      <div class="expl" id="expl_t3a">
+        <strong>Drought:</strong> <span class="formula">(560−125)/560 = 435/560 = 0.777</span><br>
+        <strong>Photoinhibition:</strong> <span class="formula">(490−185)/490 = 305/490 = 0.622</span><br>
+        <strong>N deficiency:</strong> <span class="formula">(430−142)/430 = 288/430 = 0.670</span><br><br>
+        <em>Photoinhibition gives the lowest Fv/Fm due to a sharp rise in F₀ (D1 degrades) and a strong drop in Fm.</em>
+      </div>
+    </div>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">b</span> Drought paradox: Fv/Fm is only moderately reduced, yet NPQ is very low (0.4)</div>
+      <div class="sq-text">Why does the plant fail to activate photoprotection when stomata are closed?</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t3b')">explanation</button>
+      <div class="expl" id="expl_t3b">
+        The key is the <strong>thylakoid ΔpH</strong>.<br><br>
+        During drought stomata close → CO₂ cannot enter → Calvin cycle slows → NADPH/NADP⁺ ratio rises → electron transport slows → <strong>protons are not actively pumped into the thylakoid lumen</strong> → ΔpH remains low → lumenal pH does not drop → <strong>VDE (violaxanthin de-epoxidase) is not activated</strong> → zeaxanthin is not formed → NPQ stays low.<br><br>
+        <em>The paradox: precisely when light is most dangerous (low CO₂), the ΔpH-dependent NPQ cannot engage fully.</em>
+      </div>
+    </div>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">c</span> Photoinhibition: F₀ rose strongly, Fm dropped. Explain at the molecular level.</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t3c')">explanation</button>
+      <div class="expl" id="expl_t3c">
+        Excess light leads to accumulation of singlet oxygen (¹O₂) and other ROS, which attack the <strong>D1 subunit</strong> of the PSII reaction centre.<br><br>
+        <ul>
+          <li><strong>↑F₀</strong> — damaged centres cannot perform photochemistry (Q_A is blocked), all absorbed energy becomes fluorescence → baseline rises</li>
+          <li><strong>↓Fm</strong> — fewer functional PSII units can reach Fm during a saturating flash</li>
+        </ul>
+        <br>
+        <strong>Reversibility:</strong> Partially yes. D1 is the most rapidly turned-over chloroplast protein. At lower light intensities, D1 is re-synthesised within hours (FtsH protease removes the damaged D1; ribosomes insert a new one). However, severe photoinhibition leads to incomplete recovery.
+      </div>
+    </div>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">d</span> N deficiency: Fm is strongly reduced with only moderate F₀ rise</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t3d')">explanation</button>
+      <div class="expl" id="expl_t3d">
+        Under nitrogen deficiency the plant primarily dismantles <strong>light-harvesting complexes (LHCII)</strong> — these are the most protein-rich structures in the chloroplast and serve as an N reserve.<br><br>
+        <ul>
+          <li><strong>↓Fm</strong> — fewer antenna chlorophylls → lower total fluorescence at saturation</li>
+          <li><strong>Moderate F₀</strong> — the reaction centre baseline is preserved (D1 intact), but with fewer antennae F₀ rises only slightly</li>
+        </ul>
+        <br>
+        <em>The diagnostic signature of N deficiency is a drop in Fm with relatively intact F₀ and moderate Fv/Fm (~0.67).</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     TASK 4 — npq1 mutant and photoprotection
+════════════════════════════════════════════════════════ -->
+<div class="task">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-num">TASK 4</span>
+    <h2>npq1 mutant and photoprotection</h2>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="info-box" style="margin-top:14px">
+      The <strong>npq1</strong> mutant lacks the VDE gene (violaxanthin de-epoxidase) → cannot synthesise zeaxanthin.
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>PAR (µmol/m²·s)</th><th>NPQ WT</th><th>NPQ npq1</th><th>ETR WT</th><th>ETR npq1</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>100</td><td>0.3</td><td>0.1</td><td>28</td><td>29</td></tr>
+        <tr><td>300</td><td>1.8</td><td>0.4</td><td>52</td><td>48</td></tr>
+        <tr><td>600</td><td>3.2</td><td>0.7</td><td>61</td><td>51</td></tr>
+        <tr><td>1200</td><td>4.1</td><td>0.9</td><td>63</td><td>42</td></tr>
+        <tr><td>1800</td><td>4.5</td><td>1.0</td><td>62</td><td>31</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">a</span> At what PAR does the NPQ difference become physiologically significant?</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t4a')">explanation</button>
+      <div class="expl" id="expl_t4a">
+        At PAR = 100: ΔNPQ = 0.3 − 0.1 = 0.2 — negligible (low light).<br>
+        At PAR = 300: ΔNPQ = 1.8 − 0.4 = <strong>1.4</strong> — already significant. ETR starts to diverge (52 vs 48).<br>
+        At PAR ≥ 600: ΔNPQ = 2.5, ΔETR = 10 — clear difference in photoprotection.<br><br>
+        <em>The difference becomes physiologically significant at <strong>PAR ≥ 300 µmol/m²·s</strong> — the level of moderate daylight at which the xanthophyll cycle is critically important.</em>
+      </div>
+    </div>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">b</span> ETR of npq1 drops at high PAR — explain the mechanism</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t4b')">explanation</button>
+      <div class="expl" id="expl_t4b">
+        npq1 has no zeaxanthin → no efficient dissipation of excess excitation.<br><br>
+        Under excess light, triplet chlorophyll (³Chl*) accumulates in PSII → reacts with O₂ → <strong>singlet oxygen (¹O₂)</strong> → attacks the D1 subunit.<br><br>
+        D1 degradation → <strong>PSII photoinhibition</strong> → fewer functional reaction centres → ↓ETR.<br><br>
+        <em>In WT, zeaxanthin safely quenches ³Chl* (via conformational changes in LHC), D1 is preserved → ETR stays stable even at 1800.</em>
+      </div>
+    </div>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">c</span> How many more electrons flow into alternative reactions in npq1 at PAR = 1800?</div>
+      <div class="sq-text">ETR WT = 62, ETR npq1 = 31. Calculate the difference and the percentage of "excess" electrons in npq1.</div>
+      <div class="ans-row">
+        <span class="ans-label">ΔETR =</span>
+        <input class="ans-input" id="t4c_delta" type="number" placeholder="??"> <span class="ans-unit">µmol e⁻/m²·s</span>
+      </div>
+      <div class="ans-row">
+        <span class="ans-label">% more in npq1 =</span>
+        <input class="ans-input" id="t4c_pct" type="number" placeholder="??"> <span class="ans-unit">%</span>
+      </div>
+      <button class="btn-check" onclick="checkT4c()">✓ check</button>
+      <button class="btn-expl" onclick="toggleExpl('expl_t4c')">explanation</button>
+      <div class="expl" id="expl_t4c">
+        <span class="formula">ΔETR = 62 − 31 = 31 µmol e⁻/m²·s</span><br><br>
+        <span class="formula">% = 31/62 × 100 = 50%</span><br><br>
+        So npq1 at PAR=1800 channels only half as many electrons through productive transport. The "excess" electrons in npq1 go to:<br>
+        <ul>
+          <li><strong>Mehler reaction (photoreduction of O₂)</strong>: e⁻ + O₂ → O₂•⁻ (superoxide)</li>
+          <li><strong>Photorespiration</strong>: accumulating O₂ causes Rubisco to oxygenate RuBP, wasting electrons</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sq">
+      <div class="sq-label"><span class="sq-tag">d</span> ★ Residual NPQ ~1.0 in npq1: two zeaxanthin-independent mechanisms</div>
+      <div class="sq-text">How can they be distinguished experimentally using a PAM fluorometer?</div>
+      <button class="btn-expl" onclick="toggleExpl('expl_t4d')">explanation</button>
+      <div class="expl" id="expl_t4d">
+        Residual NPQ without zeaxanthin includes:<br><br>
+        <strong>1. qE (ΔpH-dependent, PsbS-dependent)</strong><br>
+        Conformational quenching via PsbS at low lumenal pH — even without zeaxanthin, PsbS is partially activated. Rapidly reversible in darkness (seconds–minutes).<br><br>
+        <strong>2. qI (photoinhibitory quenching)</strong><br>
+        Damaged D1-containing PSII centres themselves quench fluorescence. Very slowly reversible (hours).<br><br>
+        <strong>How to distinguish with the PAM fluorometer:</strong><br>
+        <em>Relaxation kinetics protocol:</em><br>
+        <ul>
+          <li>Switch off actinic light → monitor recovery of Fm' towards Fm</li>
+          <li><strong>qE</strong> relaxes quickly: t½ ~ 1–2 min in the dark</li>
+          <li><strong>qI</strong> persists for hours: after 30 min of darkness Fm is still below the initial value</li>
+        </ul>
+        Additionally: far-red light (FR) lowers ΔpH → removes qE but not qI.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="score-bar">
+  ✓ <span class="score-num" id="scoreNum">0</span> / <span id="scoreTotal">0</span> correct
+</div>
+
+<script>
+function toggleTask(head){
+  const body=head.nextElementSibling;const arr=head.querySelector('.task-arr');
+  body.classList.toggle('open');arr.classList.toggle('open');
+}
+document.querySelector('.task-head').click();
+
+function toggleExpl(id){document.getElementById(id).classList.toggle('open');}
+
+let correctSet=new Set();
+function markCorrect(key){
+  correctSet.add(key);
+  document.getElementById('scoreNum').textContent=correctSet.size;
+  document.getElementById('scoreTotal').textContent=10;
+}
+
+function checkNum(inputId,correct,tolerance,key){
+  const el=document.getElementById(inputId);const val=parseFloat(el.value);
+  if(isNaN(val)){el.className='ans-input';return false;}
+  const ok=Math.abs(val-correct)/Math.abs(correct)<=tolerance;
+  el.className='ans-input '+(ok?'correct':'wrong');
+  if(ok)markCorrect(key);return ok;
+}
+
+function checkT1a(){checkNum('t1a_fv',560,0.02,'t1a_fv');checkNum('t1a_fvfm',0.8235,0.025,'t1a_fvfm');}
+function checkT1b(){checkNum('t1b_val',0.7059,0.025,'t1b_val');}
+
+const T2_DATA=[
+  {t:'0',Fs:120,Fm:680,F0p:120},{t:'2',Fs:310,Fm:570,F0p:105},
+  {t:'4',Fs:270,Fm:530,F0p:98},{t:'6',Fs:255,Fm:510,F0p:95},
+  {t:'8',Fs:248,Fm:505,F0p:94},{t:'10',Fs:245,Fm:502,F0p:93},
+];
+const FM_DARK=680;
+
+function buildT2aGrid(){
+  const grid=document.getElementById('t2a_grid');
+  T2_DATA.forEach((row,i)=>{
+    const div=document.createElement('div');div.className='calc-row';div.style.flexWrap='wrap';div.style.gap='6px';
+    div.innerHTML=`
+      <span class="calc-row-label" style="min-width:60px">t = ${row.t} min</span>
+      <span class="calc-sep">Fq'/Fm'=</span>
+      <input class="calc-input" id="t2a_fqfm_${i}" type="number" step="0.001" placeholder="0.???">
+      <span class="calc-sep">NPQ=</span>
+      <input class="calc-input" id="t2a_npq_${i}" type="number" step="0.001" placeholder="0.???">
+      <span class="calc-sep">qP=</span>
+      <input class="calc-input" id="t2a_qp_${i}" type="number" step="0.001" placeholder="0.???">
+    `;
+    grid.appendChild(div);
+  });
+}
+buildT2aGrid();
+
+function checkT2a(){
+  let allOk=true;
+  T2_DATA.forEach((row,i)=>{
+    const fqfm=(row.Fm-row.Fs)/row.Fm;const npq=FM_DARK/row.Fm-1;const qp=(row.Fm-row.Fs)/(row.Fm-row.F0p);
+    const f1=checkCalcInput(`t2a_fqfm_${i}`,fqfm,0.025,`t2a_fqfm_${i}`);
+    const f2=checkCalcInput(`t2a_npq_${i}`,npq,0.030,`t2a_npq_${i}`);
+    const f3=checkCalcInput(`t2a_qp_${i}`,qp,0.025,`t2a_qp_${i}`);
+    if(!f1||!f2||!f3)allOk=false;
+  });
+  if(allOk)markCorrect('t2a_all');
+}
+
+function checkCalcInput(id,correct,tol,key){
+  const el=document.getElementById(id);if(!el)return false;
+  const val=parseFloat(el.value);if(isNaN(val)){el.className='calc-input';return false;}
+  const ref=Math.abs(correct)<0.001?1:Math.abs(correct);
+  const ok=Math.abs(val-correct)/ref<=tol;
+  el.className='calc-input '+(ok?'correct':'wrong');if(ok)markCorrect(key);return ok;
+}
+
+function checkT2c(){
+  checkNum('t2c_etr2',57.47,0.04,'t2c_etr2');
+  checkNum('t2c_etr10',64.51,0.04,'t2c_etr10');
+}
+
+function checkT3a(){
+  checkNum('t3_drought',0.7768,0.025,'t3_drought');
+  checkNum('t3_photo',0.6224,0.025,'t3_photo');
+  checkNum('t3_n',0.6698,0.025,'t3_n');
+}
+
+function checkT4c(){
+  checkNum('t4c_delta',31,0.02,'t4c_delta');
+  checkNum('t4c_pct',50,0.03,'t4c_pct');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAM Fluorometer — Virtual Laboratory</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0c1018;color:#dde2ec;min-height:100vh;padding:18px 20px}
+.header{margin-bottom:18px}
+.header h1{font-size:15px;font-weight:600;color:#7eb8a4;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
+.header p{font-size:12px;color:#4a6058;line-height:1.6;max-width:820px}
+.intro-card{background:#0d1a14;border:1px solid #1a2e22;border-radius:12px;padding:14px 18px;margin-bottom:16px}
+.intro-card h2{font-size:12px;font-weight:600;color:#5aaa88;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
+.param-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.param-item{background:#0a1410;border:1px solid #162210;border-radius:8px;padding:8px 10px}
+.param-name{font-size:13px;font-weight:600;color:#7ed4a8;font-family:'Courier New',monospace;margin-bottom:3px}
+.param-desc{font-size:11px;color:#4a6858;line-height:1.5}
+.param-formula{font-size:11px;color:#3a8860;font-style:italic;margin-top:2px;font-family:'Courier New',monospace}
+.purpose-box{background:#0d1520;border:1px solid #1a2535;border-left:3px solid #3a7acc;border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#5a7898;line-height:1.6}
+.purpose-box b{color:#7aaecc}
+.main-layout{display:grid;grid-template-columns:155px 1fr;gap:14px;margin-bottom:14px}
+.chamber{background:#0d1a10;border:1px solid #1a2e18;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;gap:10px}
+.phase-badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.04em}
+.ph-dark{background:#161c18;color:#5a7060}
+.ph-meas{background:#0d1a28;color:#5a9acc}
+.ph-act{background:#0d1e10;color:#4db880}
+.params-wrap{display:flex;flex-direction:column;gap:8px}
+.params-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.pc{background:#0d1410;border:1px solid #1a2018;border-radius:8px;padding:7px 9px;text-align:center;cursor:help;position:relative;transition:border-color .2s}
+.pc:hover{border-color:#3a5840}
+.pc-label{font-size:10px;color:#3a5838;margin-bottom:2px;font-weight:500}
+.pc-val{font-size:20px;font-weight:600;font-family:'Courier New',monospace;color:#c8e0c8;transition:color .4s}
+.pc-val.good{color:#4dc990}
+.pc-val.warn{color:#e8a040}
+.pc-val.bad{color:#e85555}
+.pc-unit{font-size:9px;color:#2a4028;margin-top:1px}
+.pc-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0d1e18;border:1px solid #2a4a38;border-radius:7px;padding:7px 10px;font-size:11px;white-space:normal;width:200px;line-height:1.5;z-index:10;display:none;pointer-events:none;color:#7abaa8}
+.pc:hover .pc-tip{display:block}
+.chart-section{background:#0d1410;border:1px solid #1a2018;border-radius:12px;padding:14px;margin-bottom:14px}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.chart-title{font-size:11px;color:#5a7858;font-weight:500;letter-spacing:.04em}
+.legend{display:flex;gap:16px;font-size:11px;color:#3a5838;flex-wrap:wrap}
+.leg-dot{width:8px;height:8px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:4px}
+.leg-line{width:14px;height:3px;border-radius:2px;display:inline-block;vertical-align:middle;margin-right:4px}
+.chart-controls{display:flex;gap:6px;align-items:center}
+.ctrl-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.cg{background:#0d1410;border:1px solid #1a2018;border-radius:12px;padding:11px 13px}
+.cg-title{font-size:10px;font-weight:600;color:#3a5030;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+.cg-hint{font-size:10px;color:#2a3a28;margin-top:6px;line-height:1.4}
+.btn-row{display:flex;gap:6px;flex-wrap:wrap}
+button{cursor:pointer;font-family:inherit;font-size:12px;background:#141e10;color:#7a9868;border:1px solid #1e3018;border-radius:7px;padding:5px 11px;transition:all .15s}
+button:hover:not(:disabled){background:#1a2a14;color:#a8c890}
+button.on{background:#0d2010;color:#4dc990;border-color:#1e4020}
+button:disabled{opacity:.32;cursor:not-allowed}
+.flash-btn{background:#1a1606;color:#b89030;border-color:#2e2408}
+.flash-btn:hover:not(:disabled){background:#221c08;color:#d8b040}
+.pause-btn{background:#141820;color:#6a88b0;border-color:#1e2a38}
+.pause-btn:hover{background:#1a2230;color:#8aaecc}
+.pause-btn.on{background:#0d1828;color:#5aaac8;border-color:#1a3848}
+select{width:100%;font-family:inherit;font-size:12px;background:#141e10;color:#7a9868;border:1px solid #1e3018;border-radius:7px;padding:5px 9px}
+input[type=range]{width:100%;accent-color:#4dc990}
+.val-lbl{font-size:12px;font-family:'Courier New',monospace;color:#6aaa80;min-width:75px;text-align:right}
+.status-bar{background:#0a1410;border:1px solid #141e12;border-radius:8px;padding:8px 14px;font-size:11px;color:#3a5838;margin-bottom:12px;display:flex;gap:20px;flex-wrap:wrap}
+.status-item b{color:#5a8a60}
+.status-item.highlight b{color:#4dc990}
+.explain-panel{background:#0d1a14;border:1px solid #1a2e20;border-radius:12px;padding:14px 18px;margin-bottom:14px}
+.explain-panel h3{font-size:11px;font-weight:600;color:#4a8860;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.step-list{display:flex;flex-direction:column;gap:6px}
+.step{display:flex;gap:10px;font-size:11px;color:#4a6858;line-height:1.5}
+.step-num{min-width:20px;height:20px;background:#0d2018;border:1px solid #1a3a28;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#5aaa80;font-weight:600;flex-shrink:0;margin-top:1px}
+.etr-note{display:none;background:#0a1e18;border:1px solid #1a3828;border-radius:8px;padding:8px 12px;font-size:11px;color:#4a8060;margin-top:8px;line-height:1.5}
+.etr-note b{color:#5aba80}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #141e12}
+.top-bar-links{display:flex;gap:12px;font-size:11px}
+.top-bar-links a{color:#3a5848;text-decoration:none;transition:color .15s}
+.top-bar-links a:hover{color:#4dc990}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <span style="font-size:11px;color:#3a5848">🌿 Limbic KZ — Botany</span>
+  <div class="top-bar-links">
+    <a href="index.html">← problem set</a>
+    <a href="pam_tasks_en.html">📝 Practice Tasks</a>
+    <a href="pam_fluorometer.html">🇷🇺 RU</a>
+  </div>
+</div>
+
+<div class="header">
+  <h1>🌿 PAM Fluorometer — Virtual Laboratory</h1>
+  <p>Study of photosynthetic activity in <i>Arabidopsis thaliana</i> leaves using pulse amplitude modulated (PAM) fluorometry. Goal: determine PSII quantum yield, electron transport rate, and non-photochemical quenching under different light conditions and stress treatments.</p>
+</div>
+
+<div class="purpose-box">
+  <b>Why this experiment?</b> Chlorophyll absorbs light and can use that energy via three pathways: photochemistry (productive photosynthesis), heat dissipation (protection), and fluorescence (emission ~1–2%). The PAM fluorometer measures this emission in real time. By analysing fluorescence changes we can calculate <b>how much energy drives photosynthesis</b> (ETR), how efficient the reaction centres are (Fv/Fm), and how the plant protects itself from excess light (NPQ) — without destroying the leaf.
+</div>
+
+<div class="intro-card">
+  <h2>Parameter Reference</h2>
+  <div class="param-grid">
+    <div class="param-item">
+      <div class="param-name">F₀</div>
+      <div class="param-desc">Minimal fluorescence — signal when the weak measuring light is turned on. All PSII reaction centres are <b>open</b> (ready to work). Higher F₀ under stress signals more damage.</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">Fm</div>
+      <div class="param-desc">Maximum fluorescence — reached after a saturating flash that <b>closes all</b> reaction centres simultaneously. Measured on a dark-adapted leaf.</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">Fv/Fm</div>
+      <div class="param-desc">Maximum quantum yield of PSII — the primary indicator of photosynthetic health. Normal ≈ 0.83. Decrease signals stress or damage.</div>
+      <div class="param-formula">Fv/Fm = (Fm − F₀) / Fm</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">Fm′</div>
+      <div class="param-desc">Maximum fluorescence <b>under actinic light</b>. Always lower than Fm — because some energy is dissipated as heat via NPQ. Measured with repeated saturating flashes.</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">NPQ</div>
+      <div class="param-desc">Non-photochemical quenching — active protection from excess light. The plant dissipates surplus energy as heat via the xanthophyll cycle. The brighter the light, the higher the NPQ.</div>
+      <div class="param-formula">NPQ = Fm/Fm′ − 1</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">qP</div>
+      <div class="param-desc">Photochemical quenching — the fraction of <b>open</b> reaction centres under actinic light. qP = 1: all RCs open; qP = 0: all closed (light-saturated).</div>
+      <div class="param-formula">qP = (Fm′ − Fs) / (Fm′ − F₀′)</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">ETR</div>
+      <div class="param-desc">Linear electron transport rate — actual photosynthetic output. Shows how many electrons per second pass through PSII per m² of leaf.</div>
+      <div class="param-formula">ETR = (Fq′/Fm′) × PAR × 0.5 × 0.84</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">Fs</div>
+      <div class="param-desc">Steady-state fluorescence — signal level during steady photosynthesis (actinic light on, no flash). Used to calculate all "working" parameters.</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">PAR</div>
+      <div class="param-desc">Photosynthetically active radiation — actinic light intensity (400–700 nm). Units: µmol photons/m²·s. Full midday sun ≈ 1800–2000.</div>
+    </div>
+  </div>
+</div>
+
+<div class="explain-panel">
+  <h3>Experimental Protocol — what to do and why</h3>
+  <div class="step-list">
+    <div class="step"><div class="step-num">1</div><span><b style="color:#6aaa80">Dark adaptation (30 s in simulation = 30 min in reality)</b> — all reaction centres oxidise and "open", NPQ relaxes. Without this, F₀ and Fm will be underestimated.</span></div>
+    <div class="step"><div class="step-num">2</div><span><b style="color:#6aaa80">Turn on measuring light</b> — very weak (&lt;0.1 µmol/m²·s), does not drive photosynthesis, only registers F₀.</span></div>
+    <div class="step"><div class="step-num">3</div><span><b style="color:#6aaa80">Saturating flash → Fm</b> — a flash &gt;6000 µmol/m²·s for 0.8 s closes ALL RCs → Fm peak. Then calculate Fv/Fm.</span></div>
+    <div class="step"><div class="step-num">4</div><span><b style="color:#6aaa80">Actinic light</b> — working illumination drives photosynthesis. The OJIP transient is visible (Fs rises sharply), then slowly drops as NPQ builds and RCs reopen.</span></div>
+    <div class="step"><div class="step-num">5</div><span><b style="color:#6aaa80">Repeat flashes → Fm′</b> — every 1–2 min apply a flash and record Fm′. Calculate NPQ, qP, ETR. Watch NPQ rise and Fm′ drop.</span></div>
+  </div>
+</div>
+
+<div class="main-layout">
+  <div class="chamber">
+    <svg id="svgLeaf" width="100" height="84" viewBox="0 0 100 84">
+      <rect id="lightBeam" x="30" y="0" width="40" height="14" rx="3" fill="#d8e840" opacity="0"/>
+      <ellipse id="glowEll" cx="50" cy="46" rx="24" ry="20" fill="#4dc990" opacity="0"/>
+      <path d="M50,10 C70,10 84,27 84,48 C84,66 70,75 50,72 C30,75 16,66 16,48 C16,27 30,10 50,10 Z" id="leafFill" fill="#1e4010"/>
+      <line x1="50" y1="14" x2="50" y2="71" stroke="#0e2408" stroke-width="1.5"/>
+      <line x1="50" y1="30" x2="28" y2="48" stroke="#0e2408" stroke-width="0.9" opacity="0.7"/>
+      <line x1="50" y1="30" x2="72" y2="48" stroke="#0e2408" stroke-width="0.9" opacity="0.7"/>
+      <line x1="50" y1="50" x2="24" y2="62" stroke="#0e2408" stroke-width="0.8" opacity="0.5"/>
+      <line x1="50" y1="50" x2="76" y2="62" stroke="#0e2408" stroke-width="0.8" opacity="0.5"/>
+    </svg>
+    <div id="phaseBadge" class="phase-badge ph-dark">dark</div>
+    <div style="font-size:10px;color:#2a4028;text-align:center;line-height:1.4"><i>Arabidopsis thaliana</i><br>WT</div>
+  </div>
+
+  <div class="params-wrap">
+    <div class="params-grid">
+      <div class="pc">
+        <div class="pc-label">F₀</div>
+        <div class="pc-val" id="vF0">—</div>
+        <div class="pc-unit">dark baseline</div>
+        <div class="pc-tip">Minimal fluorescence. All RCs open. Normal value depends on chlorophyll content. Rising F₀ under stress = antenna complex damage.</div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">Fm</div>
+        <div class="pc-val" id="vFm">—</div>
+        <div class="pc-unit">max flash</div>
+        <div class="pc-tip">Maximum fluorescence after saturating flash (all RCs closed). Required to calculate Fv/Fm.</div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">Fv/Fm</div>
+        <div class="pc-val" id="vFvFm">—</div>
+        <div class="pc-unit">PSII quantum yield</div>
+        <div class="pc-tip">Key indicator of photosynthetic health. Normal: 0.80–0.84. Below 0.75 — stress. Below 0.65 — severe damage.</div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">NPQ</div>
+        <div class="pc-val" id="vNPQ">—</div>
+        <div class="pc-unit">heat protection</div>
+        <div class="pc-tip">Non-photochemical quenching. Rises with bright light — protection via xanthophyll cycle. Anomalously low during drought!</div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">qP</div>
+        <div class="pc-val" id="vqP">—</div>
+        <div class="pc-unit">open RCs (fraction)</div>
+        <div class="pc-tip">Photochemical quenching = fraction of open reaction centres. At light saturation qP → 0. High at the start of actinic phase, then decreases.</div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">ETR</div>
+        <div class="pc-val" id="vETR">—</div>
+        <div class="pc-unit">µmol e⁻/m²·s</div>
+        <div class="pc-tip">Electron transport rate = actual photosynthetic output. High at start of actinic phase (NPQ=0, qP≈1) — this is normal! Stabilises lower as NPQ builds.</div>
+      </div>
+    </div>
+    <div id="etrNote" class="etr-note">
+      <b>Why is ETR high at the start of actinic phase?</b> In the first minutes, NPQ has not yet built up (xanthophyll cycle is slow), all reaction centres are open (qP≈1) — Fq′/Fm′ ≈ Fv/Fm. Therefore electron transport is maximally efficient. As NPQ accumulates and RCs partially close, ETR stabilises at a lower level.
+    </div>
+  </div>
+</div>
+
+<div class="status-bar" id="statusBar">
+  <span class="status-item"><b>Phase:</b> idle</span>
+  <span class="status-item"><b>Time:</b> 0.0 min</span>
+  <span class="status-item"><b>PAR:</b> 300 µmol/m²·s</span>
+  <span class="status-item"><b>Stress:</b> none</span>
+</div>
+
+<div class="chart-section">
+  <div class="chart-header">
+    <div>
+      <div class="chart-title">Chlorophyll fluorescence curve — Kautsky curve</div>
+      <div class="legend" style="margin-top:5px">
+        <span><span class="leg-line" style="background:#4dc990"></span>F — current fluorescence</span>
+        <span><span class="leg-dot" style="background:#e8a040"></span>Fm / Fm′ — saturating flashes</span>
+      </div>
+    </div>
+    <div class="chart-controls">
+      <button class="pause-btn" id="btnPause" onclick="togglePause()" disabled>⏸ pause</button>
+    </div>
+  </div>
+  <div id="pauseInfo" style="display:none;font-size:11px;color:#5a7898;margin-bottom:6px;padding:6px 10px;background:#0d1520;border-radius:6px;border:1px solid #1a2535">
+    ⏸ Chart paused. Use tooltip to read values. Press "▶ resume" to continue.
+  </div>
+  <div style="position:relative;width:100%;height:230px">
+    <canvas id="fc" role="img" aria-label="PAM chlorophyll fluorescence curve showing F0, Fm and changes under actinic light.">Chlorophyll fluorescence curve.</canvas>
+  </div>
+</div>
+
+<div class="ctrl-grid">
+  <div class="cg">
+    <div class="cg-title">① Protocol</div>
+    <div class="btn-row">
+      <button id="btnDark" onclick="doAdapt()">⏱ dark adaptation</button>
+      <button id="btnML" onclick="doMeasuring()">💡 measuring light</button>
+    </div>
+    <div class="cg-hint">Adapt first → then measuring light → F₀ appears</div>
+  </div>
+  <div class="cg">
+    <div class="cg-title">② Light &amp; Flashes</div>
+    <div class="btn-row">
+      <button class="flash-btn" id="btnFlash" onclick="doFlash()" disabled>⚡ sat. flash → Fm</button>
+      <button id="btnAct" onclick="doActinic()">☀ actinic light</button>
+    </div>
+    <div class="cg-hint">Flash first for Fm → then actinic light → repeat flashes for Fm′</div>
+  </div>
+  <div class="cg">
+    <div class="cg-title">PAR of actinic light</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <input type="range" min="50" max="1800" value="300" step="50" id="parSlider" oninput="setPAR(this.value)">
+      <span class="val-lbl" id="parLbl">300</span>
+    </div>
+    <div class="cg-hint">µmol photons/m²·s. Higher PAR → larger NPQ</div>
+  </div>
+</div>
+<div class="ctrl-grid">
+  <div class="cg">
+    <div class="cg-title">Stress Treatment</div>
+    <select id="stressSel" onchange="setStress(this.value)">
+      <option value="none">— control (no stress)</option>
+      <option value="drought">drought 72 h</option>
+      <option value="photo">photoinhibition 2 h at 1800</option>
+      <option value="n">nitrogen deficiency</option>
+    </select>
+    <div id="stressInfo" class="cg-hint" style="margin-top:6px;color:#5a7858"></div>
+  </div>
+  <div class="cg">
+    <div class="cg-title">Plant Genotype</div>
+    <select id="genoSel" onchange="setGeno(this.value)">
+      <option value="wt">Wild type (WT)</option>
+      <option value="npq1">Mutant npq1 (no zeaxanthin)</option>
+    </select>
+    <div id="genoInfo" class="cg-hint" style="margin-top:6px;color:#5a7858">Normal: Fv/Fm ≈ 0.83, NPQ up to 4.5</div>
+  </div>
+  <div class="cg" style="display:flex;align-items:center;justify-content:center">
+    <button onclick="doReset()" style="font-size:12px;color:#4a6040;padding:8px 18px">↺ reset experiment</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const BASE = {
+  wt:  {F0:120,Fm:680,NPQmax:4.5,tau:2.2},
+  npq1:{F0:122,Fm:675,NPQmax:0.95,tau:4.0},
+};
+const STRESS_MOD = {
+  none:   {dF0:0,  mFm:1.00,mNPQ:1.00,info:'Normal: Fv/Fm ≈ 0.83, NPQ up to 4–5'},
+  drought:{dF0:5,  mFm:0.82,mNPQ:0.09,info:'Drought: F₀ slightly higher, Fm ↓, NPQ anomalously low — stomata closed, thylakoid ΔpH does not build up'},
+  photo:  {dF0:65, mFm:0.72,mNPQ:0.13,info:'Photoinhibition: F₀ strongly increased (D1 degradation), Fm ↓↓ — irreversible PSII damage'},
+  n:      {dF0:22, mFm:0.63,mNPQ:0.24,info:'N deficiency: Fm sharply reduced (LHC degraded), low chlorophyll'},
+};
+
+let S={geno:'wt',stress:'none',PAR:300,measOn:false,actOn:false,adapted:false,F0:null,Fm:null,t:0,tAct:null,ticker:null,adaptTick:null,flashCool:false,paused:false};
+
+function pr(){
+  const b=BASE[S.geno];const m=STRESS_MOD[S.stress];
+  return{F0:b.F0+m.dF0,Fm:b.Fm*m.mFm,NPQmax:b.NPQmax*m.mNPQ,tau:b.tau};
+}
+function noise(n){return(Math.random()-.5)*n}
+
+const ctx=document.getElementById('fc').getContext('2d');
+const chart=new Chart(ctx,{
+  type:'line',
+  data:{datasets:[
+    {label:'F',data:[],borderColor:'#4dc990',backgroundColor:'rgba(77,201,144,0.05)',borderWidth:2,pointRadius:0,tension:0.2,fill:true},
+    {label:'Flash',data:[],borderColor:'#e8a040',backgroundColor:'rgba(232,160,64,0.22)',borderWidth:0,pointRadius:6,pointBackgroundColor:'#e8a040',showLine:false},
+  ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,animation:{duration:0},
+    scales:{
+      x:{type:'linear',title:{display:true,text:'time (min)',color:'#3a5038',font:{size:10}},min:0,max:12,grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#3a5038',font:{size:10},stepSize:1}},
+      y:{title:{display:true,text:'fluorescence (rel. units)',color:'#3a5038',font:{size:10}},min:0,max:760,grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#3a5038',font:{size:10}}},
+    },
+    plugins:{
+      legend:{display:false},
+      tooltip:{backgroundColor:'#0d1e14',titleColor:'#7aaa80',bodyColor:'#a8d0a8',borderColor:'#1e3820',borderWidth:1,
+        callbacks:{
+          title:items=>`t = ${items[0].raw.x.toFixed(2)} min`,
+          label:c=>{const v=c.raw.y;const p=pr();const F0=S.F0||p.F0;const Fm=S.Fm;const lines=[` F = ${Math.round(v)} rel. u.`];if(Fm&&v>0)lines.push(` Fv/Fm = ${((Fm-F0)/Fm).toFixed(3)}`);return lines;}
+        }
+      }
+    },
+  }
+});
+
+function calcF(){
+  if(!S.measOn)return 8+noise(1.5);
+  const p=pr();
+  if(!S.actOn)return p.F0+noise(2.5);
+  const ta=S.tAct!=null?(S.t-S.tAct):0;
+  const npq=p.NPQmax*(1-Math.exp(-ta/p.tau));
+  const Fmp=p.Fm/(1+npq);
+  const qP=0.55+0.45*Math.exp(-ta/1.8);
+  const F0p=p.F0*(Fmp/p.Fm);
+  const Fs=F0p+(Fmp-F0p)*(1-qP);
+  const ojip=ta<0.20?(Fmp-Fs)*Math.exp(-ta*30)*0.70:0;
+  return Math.max(0,Fs+ojip+noise(4));
+}
+
+function pushPt(t,f){const d=chart.data.datasets[0].data;d.push({x:+t.toFixed(3),y:Math.max(0,f)});if(d.length>1600)d.shift();}
+
+function tick(){
+  if(S.paused)return;
+  S.t+=0.0075;pushPt(S.t,calcF());
+  if(S.t>12){chart.options.scales.x.min=+((S.t-12).toFixed(2));chart.options.scales.x.max=+(S.t.toFixed(2));}
+  chart.update('none');refreshParams();refreshStatus();
+}
+
+function refreshParams(){
+  const p=pr();const F0=S.F0||p.F0;const Fm=S.Fm;
+  sv('vF0',S.measOn?Math.round(F0):'—');
+  sv('vFm',Fm?Math.round(Fm):'—');
+  if(Fm){const fvfm=(Fm-F0)/Fm;const el=document.getElementById('vFvFm');el.textContent=fvfm.toFixed(3);el.className='pc-val '+(fvfm>0.75?'good':fvfm>0.65?'warn':'bad');}else sv('vFvFm','—');
+  if(S.actOn&&S.tAct!=null){
+    const ta=S.t-S.tAct;const npq=p.NPQmax*(1-Math.exp(-ta/p.tau));const Fmp=p.Fm/(1+npq);const F0p=p.F0*(Fmp/p.Fm);
+    const d=chart.data.datasets[0].data;const Fs=d.length?d[d.length-1].y:F0;
+    const denom=Fmp-F0p;const qPv=denom>1?Math.max(0,Math.min(1,(Fmp-Fs)/denom)):0;
+    const FqFm=(Fmp-Fs)/Fmp;const etr=FqFm*S.PAR*0.5*0.84;
+    sv('vNPQ',npq.toFixed(2));sv('vqP',qPv.toFixed(3));sv('vETR',etr.toFixed(1));
+    document.getElementById('etrNote').style.display=(ta<3.5&&etr>50)?'block':'none';
+  }else{sv('vNPQ','—');sv('vqP','—');sv('vETR','—');document.getElementById('etrNote').style.display='none';}
+}
+
+function sv(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
+
+function refreshStatus(){
+  const phases={idle:'idle',adapting:'dark adaptation',adapted:'adapted',measuring:'measuring light',act_on:'actinic light'};
+  const phase=S.actOn?'act_on':S.phase;
+  const stressNames={none:'none',drought:'drought',photo:'photoinhibition',n:'N deficiency'};
+  document.getElementById('statusBar').innerHTML=`
+    <span class="status-item"><b>Phase:</b> ${phases[phase]||S.phase}</span>
+    <span class="status-item"><b>Time:</b> ${S.t.toFixed(1)} min</span>
+    <span class="status-item"><b>PAR:</b> ${S.actOn?S.PAR:0} µmol/m²·s</span>
+    <span class="status-item"><b>Stress:</b> ${stressNames[S.stress]}</span>
+    <span class="status-item"><b>Genotype:</b> ${S.geno.toUpperCase()}</span>
+    ${S.paused?'<span class="status-item highlight"><b>⏸ PAUSED</b></span>':''}
+  `;
+}
+
+function doAdapt(){
+  doReset();S.phase='adapting';setPhase('dark adaptation...','ph-dark');setLeaf('dark');
+  document.getElementById('btnDark').classList.add('on');
+  document.getElementById('btnDark').textContent='⏳ adapting...';
+  let cnt=0;
+  S.adaptTick=setInterval(()=>{
+    cnt++;S.t+=0.016;pushPt(S.t,7+noise(1.5));chart.update('none');
+    if(cnt>=62){
+      clearInterval(S.adaptTick);S.adaptTick=null;S.adapted=true;S.phase='adapted';
+      document.getElementById('btnDark').classList.remove('on');
+      document.getElementById('btnDark').textContent='✓ adapted';
+      setPhase('✓ adapted','ph-dark');refreshStatus();
+    }
+  },80);
+}
+
+function doMeasuring(){
+  if(!S.adapted){alert('Please run dark adaptation first.');return;}
+  if(S.measOn)return;
+  S.measOn=true;S.phase='measuring';
+  const p=pr();if(!S.F0)S.F0=p.F0+noise(4);
+  document.getElementById('btnML').classList.add('on');
+  document.getElementById('btnFlash').disabled=false;
+  document.getElementById('btnPause').disabled=false;
+  setPhase('measuring light','ph-meas');setLeaf('meas');
+  if(!S.ticker)S.ticker=setInterval(tick,75);
+}
+
+function doFlash(){
+  if(!S.measOn||S.flashCool)return;
+  const p=pr();let fmVal;
+  if(!S.actOn){fmVal=p.Fm+noise(9);S.Fm=fmVal;}
+  else{const ta=S.tAct!=null?(S.t-S.tAct):0;const npq=p.NPQmax*(1-Math.exp(-ta/p.tau));fmVal=p.Fm/(1+npq)+noise(8);}
+  pushPt(S.t,fmVal);
+  chart.data.datasets[1].data.push({x:+S.t.toFixed(3),y:fmVal});
+  if(chart.data.datasets[1].data.length>60)chart.data.datasets[1].data.shift();
+  chart.update('none');
+  const gl=document.getElementById('glowEll');gl.setAttribute('opacity','0.78');
+  setTimeout(()=>gl.setAttribute('opacity',S.actOn?'0.30':'0.08'),600);
+  S.flashCool=true;setTimeout(()=>S.flashCool=false,1500);refreshParams();
+}
+
+function doActinic(){
+  if(!S.measOn){alert('Please turn on the measuring light first.');return;}
+  S.actOn=!S.actOn;
+  if(S.actOn){S.tAct=S.t;document.getElementById('btnAct').classList.add('on');setPhase('actinic light','ph-act');setLeaf('act');}
+  else{S.tAct=null;document.getElementById('btnAct').classList.remove('on');setPhase('measuring light','ph-meas');setLeaf('meas');sv('vNPQ','—');sv('vqP','—');sv('vETR','—');document.getElementById('etrNote').style.display='none';}
+}
+
+function togglePause(){
+  S.paused=!S.paused;
+  const btn=document.getElementById('btnPause');const info=document.getElementById('pauseInfo');
+  if(S.paused){btn.classList.add('on');btn.textContent='▶ resume';info.style.display='block';}
+  else{btn.classList.remove('on');btn.textContent='⏸ pause';info.style.display='none';}
+  refreshStatus();
+}
+
+function setPAR(v){S.PAR=parseInt(v);document.getElementById('parLbl').textContent=v;}
+
+function setStress(v){
+  S.stress=v;document.getElementById('stressInfo').textContent=STRESS_MOD[v].info;
+  S.F0=null;S.Fm=null;doReset();
+}
+
+function setGeno(v){
+  S.geno=v;
+  document.getElementById('genoInfo').textContent=v==='wt'?'Normal: Fv/Fm ≈ 0.83, NPQ up to 4.5':'npq1: no zeaxanthin. NPQ very low at any light intensity!';
+  S.F0=null;S.Fm=null;doReset();
+}
+
+function doReset(){
+  if(S.ticker){clearInterval(S.ticker);S.ticker=null;}
+  if(S.adaptTick){clearInterval(S.adaptTick);S.adaptTick=null;}
+  chart.data.datasets[0].data=[];chart.data.datasets[1].data=[];
+  chart.options.scales.x.min=0;chart.options.scales.x.max=12;chart.update('none');
+  S.phase='idle';S.measOn=false;S.actOn=false;S.adapted=false;S.t=0;S.tAct=null;S.flashCool=false;S.paused=false;S.F0=null;S.Fm=null;
+  ['btnDark','btnML','btnAct','btnPause'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('on');});
+  document.getElementById('btnDark').textContent='⏱ dark adaptation';
+  document.getElementById('btnFlash').disabled=true;
+  document.getElementById('btnPause').disabled=true;
+  document.getElementById('btnPause').textContent='⏸ pause';
+  document.getElementById('pauseInfo').style.display='none';
+  document.getElementById('etrNote').style.display='none';
+  setPhase('dark','ph-dark');setLeaf('dark');
+  ['vF0','vFm','vFvFm','vNPQ','vqP','vETR'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='—';el.className='pc-val';}});
+  refreshStatus();
+}
+
+function setPhase(txt,cls){const el=document.getElementById('phaseBadge');if(el){el.textContent=txt;el.className='phase-badge '+cls;}}
+
+function setLeaf(m){
+  const lf=document.getElementById('leafFill');const lb=document.getElementById('lightBeam');const gl=document.getElementById('glowEll');
+  if(m==='dark'){lf.setAttribute('fill','#1a3a0c');lb.setAttribute('opacity','0');gl.setAttribute('opacity','0');}
+  else if(m==='meas'){lf.setAttribute('fill','#2e5c1a');lb.setAttribute('opacity','0.28');gl.setAttribute('opacity','0.08');}
+  else{lf.setAttribute('fill','#4a8c22');lb.setAttribute('opacity','0.88');gl.setAttribute('opacity','0.30');}
+}
+
+refreshStatus();
+</script>
+</body>
+</html>

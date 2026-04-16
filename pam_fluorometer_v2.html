@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAM-флуорометр — виртуальная лаборатория</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0c1018;color:#dde2ec;min-height:100vh;padding:18px 20px}
+
+/* ── HEADER ── */
+.header{margin-bottom:18px}
+.header h1{font-size:15px;font-weight:600;color:#7eb8a4;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
+.header p{font-size:12px;color:#4a6058;line-height:1.6;max-width:820px}
+
+/* ── INTRO CARD ── */
+.intro-card{background:#0d1a14;border:1px solid #1a2e22;border-radius:12px;padding:14px 18px;margin-bottom:16px}
+.intro-card h2{font-size:12px;font-weight:600;color:#5aaa88;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
+.param-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.param-item{background:#0a1410;border:1px solid #162210;border-radius:8px;padding:8px 10px}
+.param-name{font-size:13px;font-weight:600;color:#7ed4a8;font-family:'Courier New',monospace;margin-bottom:3px}
+.param-desc{font-size:11px;color:#4a6858;line-height:1.5}
+.param-formula{font-size:11px;color:#3a8860;font-style:italic;margin-top:2px;font-family:'Courier New',monospace}
+
+/* ── PURPOSE BOX ── */
+.purpose-box{background:#0d1520;border:1px solid #1a2535;border-left:3px solid #3a7acc;border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#5a7898;line-height:1.6}
+.purpose-box b{color:#7aaecc}
+
+/* ── MAIN LAYOUT ── */
+.main-layout{display:grid;grid-template-columns:155px 1fr;gap:14px;margin-bottom:14px}
+
+/* Leaf chamber */
+.chamber{background:#0d1a10;border:1px solid #1a2e18;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;gap:10px}
+.phase-badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.04em}
+.ph-dark{background:#161c18;color:#5a7060}
+.ph-meas{background:#0d1a28;color:#5a9acc}
+.ph-act{background:#0d1e10;color:#4db880}
+
+/* Param display cards */
+.params-wrap{display:flex;flex-direction:column;gap:8px}
+.params-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.pc{background:#0d1410;border:1px solid #1a2018;border-radius:8px;padding:7px 9px;text-align:center;cursor:help;position:relative;transition:border-color .2s}
+.pc:hover{border-color:#3a5840}
+.pc-label{font-size:10px;color:#3a5838;margin-bottom:2px;font-weight:500}
+.pc-val{font-size:20px;font-weight:600;font-family:'Courier New',monospace;color:#c8e0c8;transition:color .4s}
+.pc-val.good{color:#4dc990}
+.pc-val.warn{color:#e8a040}
+.pc-val.bad{color:#e85555}
+.pc-unit{font-size:9px;color:#2a4028;margin-top:1px}
+.pc-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0d1e18;border:1px solid #2a4a38;border-radius:7px;padding:7px 10px;font-size:11px;color:#7aboa8;white-space:normal;width:200px;line-height:1.5;z-index:10;display:none;pointer-events:none;color:#7abaa8}
+.pc:hover .pc-tip{display:block}
+
+/* ── CHART AREA ── */
+.chart-section{background:#0d1410;border:1px solid #1a2018;border-radius:12px;padding:14px;margin-bottom:14px}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.chart-title{font-size:11px;color:#5a7858;font-weight:500;letter-spacing:.04em}
+.legend{display:flex;gap:16px;font-size:11px;color:#3a5838;flex-wrap:wrap}
+.leg-dot{width:8px;height:8px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:4px}
+.leg-line{width:14px;height:3px;border-radius:2px;display:inline-block;vertical-align:middle;margin-right:4px}
+.chart-controls{display:flex;gap:6px;align-items:center}
+
+/* ── CONTROLS ── */
+.ctrl-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.cg{background:#0d1410;border:1px solid #1a2018;border-radius:12px;padding:11px 13px}
+.cg-title{font-size:10px;font-weight:600;color:#3a5030;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+.cg-hint{font-size:10px;color:#2a3a28;margin-top:6px;line-height:1.4}
+.btn-row{display:flex;gap:6px;flex-wrap:wrap}
+
+button{cursor:pointer;font-family:inherit;font-size:12px;background:#141e10;color:#7a9868;border:1px solid #1e3018;border-radius:7px;padding:5px 11px;transition:all .15s}
+button:hover:not(:disabled){background:#1a2a14;color:#a8c890}
+button.on{background:#0d2010;color:#4dc990;border-color:#1e4020}
+button:disabled{opacity:.32;cursor:not-allowed}
+
+.flash-btn{background:#1a1606;color:#b89030;border-color:#2e2408}
+.flash-btn:hover:not(:disabled){background:#221c08;color:#d8b040}
+.pause-btn{background:#141820;color:#6a88b0;border-color:#1e2a38}
+.pause-btn:hover{background:#1a2230;color:#8aaecc}
+.pause-btn.on{background:#0d1828;color:#5aaac8;border-color:#1a3848}
+
+select{width:100%;font-family:inherit;font-size:12px;background:#141e10;color:#7a9868;border:1px solid #1e3018;border-radius:7px;padding:5px 9px}
+input[type=range]{width:100%;accent-color:#4dc990}
+.val-lbl{font-size:12px;font-family:'Courier New',monospace;color:#6aaa80;min-width:75px;text-align:right}
+
+/* ── STATUS BAR ── */
+.status-bar{background:#0a1410;border:1px solid #141e12;border-radius:8px;padding:8px 14px;font-size:11px;color:#3a5838;margin-bottom:12px;display:flex;gap:20px;flex-wrap:wrap}
+.status-item b{color:#5a8a60}
+.status-item.highlight b{color:#4dc990}
+
+/* ── EXPLANATION PANEL ── */
+.explain-panel{background:#0d1a14;border:1px solid #1a2e20;border-radius:12px;padding:14px 18px;margin-bottom:14px}
+.explain-panel h3{font-size:11px;font-weight:600;color:#4a8860;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.step-list{display:flex;flex-direction:column;gap:6px}
+.step{display:flex;gap:10px;font-size:11px;color:#4a6858;line-height:1.5}
+.step-num{min-width:20px;height:20px;background:#0d2018;border:1px solid #1a3a28;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#5aaa80;font-weight:600;flex-shrink:0;margin-top:1px}
+
+/* ── ETR LIVE NOTE ── */
+.etr-note{display:none;background:#0a1e18;border:1px solid #1a3828;border-radius:8px;padding:8px 12px;font-size:11px;color:#4a8060;margin-top:8px;line-height:1.5}
+.etr-note b{color:#5aba80}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>🌿 PAM-флуорометр — виртуальная лаборатория</h1>
+  <p>Изучение фотосинтетической активности листа <i>Arabidopsis thaliana</i> методом импульсной амплитудно-модулированной флуорометрии. Цель: определить квантовый выход ФС II, скорость электронного транспорта и нефотохимическое тушение при разных условиях освещения и стрессе.</p>
+</div>
+
+<!-- PURPOSE -->
+<div class="purpose-box">
+  <b>Зачем этот эксперимент?</b> Хлорофилл поглощает свет и может использовать эту энергию тремя путями: фотохимия (полезный фотосинтез), тепловая диссипация (защита), флуоресценция (свечение ~1–2%). PAM-флуорометр измеряет именно это свечение в реальном времени. По изменениям флуоресценции мы можем рассчитать, <b>сколько энергии идёт на фотосинтез</b> (ETR), насколько эффективны реакционные центры (Fv/Fm), и как растение защищает себя от избытка света (NPQ) — не разрушая листья.
+</div>
+
+<!-- PARAMETER GLOSSARY -->
+<div class="intro-card">
+  <h2>Справочник параметров</h2>
+  <div class="param-grid">
+    <div class="param-item">
+      <div class="param-name">F₀</div>
+      <div class="param-desc">Базовая флуоресценция — сигнал при включении слабого измерительного света. Все реакционные центры ФС II <b>открыты</b> (готовы к работе). Чем выше F₀ при стрессе — тем больше повреждений.</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">Fm</div>
+      <div class="param-desc">Максимальная флуоресценция — достигается после насыщающей вспышки, которая <b>закрывает все</b> реакционные центры одновременно. Измеряется у тёмноадаптированного листа.</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">Fv/Fm</div>
+      <div class="param-desc">Максимальный квантовый выход ФС II — главный показатель «здоровья» фотосинтеза. Норма ≈ 0.83. Снижение говорит о стрессе или повреждении.</div>
+      <div class="param-formula">Fv/Fm = (Fm − F₀) / Fm</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">Fm′</div>
+      <div class="param-desc">Максимальная флуоресценция <b>при включённом актиниковом свете</b>. Всегда ниже Fm — потому что часть энергии уходит в тепло через NPQ (защитный механизм). Измеряется повторными вспышками.</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">NPQ</div>
+      <div class="param-desc">Нефотохимическое тушение — активная защита от избытка света. Растение «гасит» лишнюю энергию как тепло через ксантофилловый цикл. Чем ярче свет — тем выше NPQ.</div>
+      <div class="param-formula">NPQ = Fm/Fm′ − 1</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">qP</div>
+      <div class="param-desc">Фотохимическое тушение — доля <b>открытых</b> реакционных центров при актиниковом свете. qP = 1 означает все РЦ открыты (готовы); qP = 0 — все закрыты (насыщены светом).</div>
+      <div class="param-formula">qP = (Fm′ − Fs) / (Fm′ − F₀′)</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">ETR</div>
+      <div class="param-desc">Скорость линейного электронного транспорта — реальная «производительность» фотосинтеза. Показывает сколько электронов в секунду проходит через ФС II на 1 м² листа.</div>
+      <div class="param-formula">ETR = (Fq′/Fm′) × PAR × 0.5 × 0.84</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">Fs</div>
+      <div class="param-desc">Стационарная флуоресценция — уровень сигнала при установившемся фотосинтезе (актиниковый свет включён, без вспышки). Используется для расчёта всех «рабочих» параметров.</div>
+    </div>
+    <div class="param-item">
+      <div class="param-name">PAR</div>
+      <div class="param-desc">Фотосинтетически активная радиация — интенсивность актиникового света (400–700 нм). Единица: мкмоль фотонов/м²·с. Солнечный полдень ≈ 1800–2000.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROTOCOL STEPS -->
+<div class="explain-panel">
+  <h3>Протокол эксперимента — что делать и зачем</h3>
+  <div class="step-list">
+    <div class="step"><div class="step-num">1</div><span><b style="color:#6aaa80">Тёмновая адаптация (30 с в симуляции = 30 мин в реальности)</b> — все реакционные центры окисляются и «открываются», NPQ рассасывается. Без этого F₀ и Fm будут занижены.</span></div>
+    <div class="step"><div class="step-num">2</div><span><b style="color:#6aaa80">Включить измерительный свет</b> — очень слабый (< 0.1 мкмоль/м²·с), не вызывает фотосинтез, только регистрирует F₀.</span></div>
+    <div class="step"><div class="step-num">3</div><span><b style="color:#6aaa80">Насыщающая вспышка → Fm</b> — вспышка &gt;6000 мкмоль/м²·с на 0.8 с закрывает ВСЕ РЦ → пик Fm. Затем рассчитываем Fv/Fm.</span></div>
+    <div class="step"><div class="step-num">4</div><span><b style="color:#6aaa80">Актиниковый свет</b> — рабочее освещение запускает фотосинтез. Виден OJIP-скачок (Fs резко растёт), затем медленный спад по мере включения NPQ и открытия РЦ.</span></div>
+    <div class="step"><div class="step-num">5</div><span><b style="color:#6aaa80">Повторные вспышки → Fm′</b> — каждые 1–2 мин даём вспышку и фиксируем Fm′. Рассчитываем NPQ, qP, ETR. Видно как NPQ растёт, Fm′ падает.</span></div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+  <div class="chamber">
+    <svg id="svgLeaf" width="100" height="84" viewBox="0 0 100 84">
+      <rect id="lightBeam" x="30" y="0" width="40" height="14" rx="3" fill="#d8e840" opacity="0"/>
+      <ellipse id="glowEll" cx="50" cy="46" rx="24" ry="20" fill="#4dc990" opacity="0"/>
+      <path d="M50,10 C70,10 84,27 84,48 C84,66 70,75 50,72 C30,75 16,66 16,48 C16,27 30,10 50,10 Z" id="leafFill" fill="#1e4010"/>
+      <line x1="50" y1="14" x2="50" y2="71" stroke="#0e2408" stroke-width="1.5"/>
+      <line x1="50" y1="30" x2="28" y2="48" stroke="#0e2408" stroke-width="0.9" opacity="0.7"/>
+      <line x1="50" y1="30" x2="72" y2="48" stroke="#0e2408" stroke-width="0.9" opacity="0.7"/>
+      <line x1="50" y1="50" x2="24" y2="62" stroke="#0e2408" stroke-width="0.8" opacity="0.5"/>
+      <line x1="50" y1="50" x2="76" y2="62" stroke="#0e2408" stroke-width="0.8" opacity="0.5"/>
+    </svg>
+    <div id="phaseBadge" class="phase-badge ph-dark">темнота</div>
+    <div style="font-size:10px;color:#2a4028;text-align:center;line-height:1.4"><i>Arabidopsis thaliana</i><br>WT</div>
+  </div>
+
+  <div class="params-wrap">
+    <div class="params-grid">
+      <div class="pc">
+        <div class="pc-label">F₀</div>
+        <div class="pc-val" id="vF0">—</div>
+        <div class="pc-unit">тёмновая база</div>
+        <div class="pc-tip">Базовая флуоресценция. Все РЦ открыты. Норма зависит от содержания хлорофилла. Рост F₀ при стрессе = повреждение антенных комплексов.</div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">Fm</div>
+        <div class="pc-val" id="vFm">—</div>
+        <div class="pc-unit">макс. вспышка</div>
+        <div class="pc-tip">Максимальная флуоресценция после насыщающей вспышки (все РЦ закрыты). Нужна для расчёта Fv/Fm.</div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">Fv/Fm</div>
+        <div class="pc-val" id="vFvFm">—</div>
+        <div class="pc-unit">квант. выход ФС II</div>
+        <div class="pc-tip">Главный показатель здоровья фотосинтеза. Норма: 0.80–0.84. Ниже 0.75 — стресс. Ниже 0.65 — сильное повреждение.</div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">NPQ</div>
+        <div class="pc-val" id="vNPQ">—</div>
+        <div class="pc-unit">тепловая защита</div>
+        <div class="pc-tip">Нефотохимическое тушение. Растёт при ярком свете — защита через ксантофилловый цикл. При засухе NPQ аномально низкий!</div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">qP</div>
+        <div class="pc-val" id="vqP">—</div>
+        <div class="pc-unit">откр. РЦ (доля)</div>
+        <div class="pc-tip">Фотохимическое тушение = доля открытых реакционных центров. При насыщении светом qP → 0. В начале актиники высокий, потом снижается.</div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">ETR</div>
+        <div class="pc-val" id="vETR">—</div>
+        <div class="pc-unit">мкмоль e⁻/м²·с</div>
+        <div class="pc-tip">Скорость электронного транспорта = реальная производительность фотосинтеза. В начале актиники ETR высокий (NPQ=0, qP≈1) — это нормально! Потом стабилизируется.</div>
+      </div>
+    </div>
+    <div id="etrNote" class="etr-note">
+      <b>Почему ETR высокий в начале актиники?</b> В первые минуты NPQ ещё не сформировался (ксантофилловый цикл медленный), все реакционные центры открыты (qP≈1) — Fv/Fm≈Fv/Fm_тёмн. Поэтому электронный транспорт максимально эффективен. По мере накопления NPQ и частичного закрытия РЦ ETR стабилизируется на более низком уровне.
+    </div>
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar" id="statusBar">
+  <span class="status-item"><b>Фаза:</b> ожидание</span>
+  <span class="status-item"><b>Время:</b> 0.0 мин</span>
+  <span class="status-item"><b>PAR:</b> 300 мкмоль/м²·с</span>
+  <span class="status-item"><b>Стресс:</b> норма</span>
+</div>
+
+<!-- CHART -->
+<div class="chart-section">
+  <div class="chart-header">
+    <div>
+      <div class="chart-title">Кривая флуоресценции хлорофилла — кривая Каутского</div>
+      <div class="legend" style="margin-top:5px">
+        <span><span class="leg-line" style="background:#4dc990"></span>F — текущая флуоресценция</span>
+        <span><span class="leg-dot" style="background:#e8a040"></span>Fm / Fm′ — насыщающие вспышки</span>
+      </div>
+    </div>
+    <div class="chart-controls">
+      <button class="pause-btn" id="btnPause" onclick="togglePause()" disabled>⏸ пауза</button>
+    </div>
+  </div>
+  <div id="pauseInfo" style="display:none;font-size:11px;color:#5a7898;margin-bottom:6px;padding:6px 10px;background:#0d1520;border-radius:6px;border:1px solid #1a2535">
+    ⏸ График на паузе. Используй тултип на графике для чтения значений. Нажми «▶ продолжить» чтобы возобновить.
+  </div>
+  <div style="position:relative;width:100%;height:230px">
+    <canvas id="fc" role="img" aria-label="PAM кривая флуоресценции хлорофилла. Показаны F0, Fm и изменения при актиниковом свете.">Кривая флуоресценции хлорофилла.</canvas>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="ctrl-grid">
+  <div class="cg">
+    <div class="cg-title">① Протокол</div>
+    <div class="btn-row">
+      <button id="btnDark" onclick="doAdapt()">⏱ тёмновая адаптация</button>
+      <button id="btnML" onclick="doMeasuring()">💡 измерительный свет</button>
+    </div>
+    <div class="cg-hint">Сначала адаптация → потом измерительный свет → появится F₀</div>
+  </div>
+  <div class="cg">
+    <div class="cg-title">② Свет и вспышки</div>
+    <div class="btn-row">
+      <button class="flash-btn" id="btnFlash" onclick="doFlash()" disabled>⚡ насыщ. вспышка → Fm</button>
+      <button id="btnAct" onclick="doActinic()">☀ актиниковый свет</button>
+    </div>
+    <div class="cg-hint">Сначала вспышка для Fm → потом актиниковый свет → повторные вспышки для Fm′</div>
+  </div>
+  <div class="cg">
+    <div class="cg-title">PAR актиникового света</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <input type="range" min="50" max="1800" value="300" step="50" id="parSlider" oninput="setPAR(this.value)">
+      <span class="val-lbl" id="parLbl">300</span>
+    </div>
+    <div class="cg-hint">мкмоль фотонов/м²·с. Высокий PAR → больший NPQ</div>
+  </div>
+</div>
+<div class="ctrl-grid">
+  <div class="cg">
+    <div class="cg-title">Стрессовая обработка</div>
+    <select id="stressSel" onchange="setStress(this.value)">
+      <option value="none">— норма (без стресса)</option>
+      <option value="drought">засуха 72 ч</option>
+      <option value="photo">фотоингибиция 2 ч при 1800</option>
+      <option value="n">дефицит азота</option>
+    </select>
+    <div id="stressInfo" class="cg-hint" style="margin-top:6px;color:#5a7858"></div>
+  </div>
+  <div class="cg">
+    <div class="cg-title">Генотип растения</div>
+    <select id="genoSel" onchange="setGeno(this.value)">
+      <option value="wt">Дикий тип (WT)</option>
+      <option value="npq1">Мутант npq1 (нет зеаксантина)</option>
+    </select>
+    <div id="genoInfo" class="cg-hint" style="margin-top:6px;color:#5a7858">Норма: Fv/Fm ≈ 0.83, NPQ до 4.5</div>
+  </div>
+  <div class="cg" style="display:flex;align-items:center;justify-content:center">
+    <button onclick="doReset()" style="font-size:12px;color:#4a6040;padding:8px 18px">↺ сбросить эксперимент</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+/* ─── STRESS + GENO PARAMS ─── */
+const BASE = {
+  wt:  {F0:120,Fm:680,NPQmax:4.5,tau:2.2},
+  npq1:{F0:122,Fm:675,NPQmax:0.95,tau:4.0},
+};
+const STRESS_MOD = {
+  none:   {dF0:0,   mFm:1.00, mNPQ:1.00, info:'Норма: Fv/Fm ≈ 0.83, NPQ до 4–5'},
+  drought:{dF0:5,   mFm:0.82, mNPQ:0.09, info:'Засуха: F₀ чуть выше, Fm ↓, NPQ аномально низкий — устьица закрыты, ΔpH тилакоида не накапливается'},
+  photo:  {dF0:65,  mFm:0.72, mNPQ:0.13, info:'Фотоингибиция: F₀ сильно вырос (деградация D1), Fm ↓↓ — необратимое повреждение ФС II'},
+  n:      {dF0:22,  mFm:0.63, mNPQ:0.24, info:'Дефицит N: Fm резко снижен (разрушены LHC), мало хлорофилла'},
+};
+
+let S = {
+  geno:'wt', stress:'none', PAR:300,
+  measOn:false, actOn:false, adapted:false,
+  F0:null, Fm:null,
+  t:0, tAct:null,
+  ticker:null, adaptTick:null,
+  flashCool:false, paused:false,
+};
+
+function pr(){
+  const b=BASE[S.geno];
+  const m=STRESS_MOD[S.stress];
+  return {
+    F0: b.F0+m.dF0,
+    Fm: b.Fm*m.mFm,
+    NPQmax: b.NPQmax*m.mNPQ,
+    tau: b.tau,
+  };
+}
+function noise(n){return (Math.random()-.5)*n}
+
+/* ─── CHART ─── */
+const ctx = document.getElementById('fc').getContext('2d');
+const chart = new Chart(ctx,{
+  type:'line',
+  data:{datasets:[
+    {label:'F',data:[],borderColor:'#4dc990',backgroundColor:'rgba(77,201,144,0.05)',borderWidth:2,pointRadius:0,tension:0.2,fill:true},
+    {label:'Flash',data:[],borderColor:'#e8a040',backgroundColor:'rgba(232,160,64,0.22)',borderWidth:0,pointRadius:6,pointBackgroundColor:'#e8a040',showLine:false},
+  ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,animation:{duration:0},
+    scales:{
+      x:{type:'linear',title:{display:true,text:'время (мин)',color:'#3a5038',font:{size:10}},min:0,max:12,
+         grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#3a5038',font:{size:10},stepSize:1}},
+      y:{title:{display:true,text:'флуоресценция (отн. ед.)',color:'#3a5038',font:{size:10}},min:0,max:760,
+         grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#3a5038',font:{size:10}}},
+    },
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        backgroundColor:'#0d1e14',titleColor:'#7aaa80',bodyColor:'#a8d0a8',borderColor:'#1e3820',borderWidth:1,
+        callbacks:{
+          title:items=>`t = ${items[0].raw.x.toFixed(2)} мин`,
+          label:c=>{
+            const v=c.raw.y;
+            const p=pr();
+            const F0=S.F0||p.F0;
+            const Fm=S.Fm;
+            const lines=[` F = ${Math.round(v)} отн. ед.`];
+            if(Fm&&v>0){
+              const fvfm_now=((Fm-F0)/Fm).toFixed(3);
+              lines.push(` Fv/Fm = ${fvfm_now}`);
+            }
+            return lines;
+          }
+        }
+      }
+    },
+  }
+});
+
+/* ─── SIGNAL MODEL ─── */
+function calcF(){
+  if(!S.measOn) return 8+noise(1.5);
+  const p=pr();
+  if(!S.actOn) return p.F0+noise(2.5);
+  const ta=S.tAct!=null?(S.t-S.tAct):0;
+  const npq=p.NPQmax*(1-Math.exp(-ta/p.tau));
+  const Fmp=p.Fm/(1+npq);
+  const qP=0.55+0.45*Math.exp(-ta/1.8);
+  const F0p=p.F0*(Fmp/p.Fm);
+  const Fs=F0p+(Fmp-F0p)*(1-qP);
+  const ojip=ta<0.20?(Fmp-Fs)*Math.exp(-ta*30)*0.70:0;
+  return Math.max(0,Fs+ojip+noise(4));
+}
+
+function pushPt(t,f){
+  const d=chart.data.datasets[0].data;
+  d.push({x:+t.toFixed(3),y:Math.max(0,f)});
+  if(d.length>1600)d.shift();
+}
+
+function tick(){
+  if(S.paused)return;
+  S.t+=0.0075;
+  pushPt(S.t,calcF());
+  if(S.t>12){
+    chart.options.scales.x.min=+((S.t-12).toFixed(2));
+    chart.options.scales.x.max=+(S.t.toFixed(2));
+  }
+  chart.update('none');
+  refreshParams();
+  refreshStatus();
+}
+
+/* ─── PARAMS DISPLAY ─── */
+function refreshParams(){
+  const p=pr();
+  const F0=S.F0||p.F0;
+  const Fm=S.Fm;
+  sv('vF0',S.measOn?Math.round(F0):'—');
+  sv('vFm',Fm?Math.round(Fm):'—');
+
+  if(Fm){
+    const fvfm=(Fm-F0)/Fm;
+    const el=document.getElementById('vFvFm');
+    el.textContent=fvfm.toFixed(3);
+    el.className='pc-val '+(fvfm>0.75?'good':fvfm>0.65?'warn':'bad');
+  } else sv('vFvFm','—');
+
+  if(S.actOn&&S.tAct!=null){
+    const ta=S.t-S.tAct;
+    const npq=p.NPQmax*(1-Math.exp(-ta/p.tau));
+    const Fmp=p.Fm/(1+npq);
+    const F0p=p.F0*(Fmp/p.Fm);
+    const d=chart.data.datasets[0].data;
+    const Fs=d.length?d[d.length-1].y:F0;
+    const denom=Fmp-F0p;
+    const qPv=denom>1?Math.max(0,Math.min(1,(Fmp-Fs)/denom)):0;
+    const FqFm=(Fmp-Fs)/Fmp;
+    const etr=FqFm*S.PAR*0.5*0.84;
+    sv('vNPQ',npq.toFixed(2));
+    sv('vqP',qPv.toFixed(3));
+    sv('vETR',etr.toFixed(1));
+    // show ETR note in first 3 min of actinics
+    document.getElementById('etrNote').style.display=(ta<3.5&&etr>50)?'block':'none';
+  } else {
+    sv('vNPQ','—');sv('vqP','—');sv('vETR','—');
+    document.getElementById('etrNote').style.display='none';
+  }
+}
+
+function sv(id,v){
+  const el=document.getElementById(id);
+  if(el)el.textContent=v;
+}
+
+function refreshStatus(){
+  const p=pr();
+  const phases={idle:'ожидание',adapting:'тёмновая адаптация',adapted:'адаптирован',measuring:'измерит. свет',act_on:'актиниковый свет'};
+  const phase=S.actOn?'act_on':S.phase;
+  const stressNames={none:'норма',drought:'засуха',photo:'фотоингибиция',n:'дефицит N'};
+  const sb=document.getElementById('statusBar');
+  sb.innerHTML=`
+    <span class="status-item"><b>Фаза:</b> ${phases[phase]||S.phase}</span>
+    <span class="status-item"><b>Время:</b> ${S.t.toFixed(1)} мин</span>
+    <span class="status-item"><b>PAR:</b> ${S.actOn?S.PAR:0} мкмоль/м²·с</span>
+    <span class="status-item"><b>Стресс:</b> ${stressNames[S.stress]}</span>
+    <span class="status-item"><b>Генотип:</b> ${S.geno.toUpperCase()}</span>
+    ${S.paused?'<span class="status-item highlight"><b>⏸ ПАУЗА</b></span>':''}
+  `;
+}
+
+/* ─── PROTOCOL ─── */
+function doAdapt(){
+  doReset();
+  S.phase='adapting';
+  setPhase('тёмновая адаптация...','ph-dark');
+  setLeaf('dark');
+  document.getElementById('btnDark').classList.add('on');
+  document.getElementById('btnDark').textContent='⏳ адаптация...';
+  let cnt=0;
+  S.adaptTick=setInterval(()=>{
+    cnt++;
+    S.t+=0.016;
+    pushPt(S.t,7+noise(1.5));
+    chart.update('none');
+    if(cnt>=62){
+      clearInterval(S.adaptTick);S.adaptTick=null;
+      S.adapted=true;S.phase='adapted';
+      document.getElementById('btnDark').classList.remove('on');
+      document.getElementById('btnDark').textContent='✓ адаптирован';
+      setPhase('✓ адаптирован','ph-dark');
+      refreshStatus();
+    }
+  },80);
+}
+
+function doMeasuring(){
+  if(!S.adapted){alert('Сначала проведите тёмновую адаптацию.');return;}
+  if(S.measOn)return;
+  S.measOn=true;S.phase='measuring';
+  const p=pr();
+  if(!S.F0)S.F0=p.F0+noise(4);
+  document.getElementById('btnML').classList.add('on');
+  document.getElementById('btnFlash').disabled=false;
+  document.getElementById('btnPause').disabled=false;
+  setPhase('измерительный свет','ph-meas');
+  setLeaf('meas');
+  if(!S.ticker)S.ticker=setInterval(tick,75);
+}
+
+function doFlash(){
+  if(!S.measOn||S.flashCool)return;
+  const p=pr();
+  let fmVal;
+  if(!S.actOn){
+    fmVal=p.Fm+noise(9);
+    S.Fm=fmVal;
+  } else {
+    const ta=S.tAct!=null?(S.t-S.tAct):0;
+    const npq=p.NPQmax*(1-Math.exp(-ta/p.tau));
+    fmVal=p.Fm/(1+npq)+noise(8);
+  }
+  pushPt(S.t,fmVal);
+  chart.data.datasets[1].data.push({x:+S.t.toFixed(3),y:fmVal});
+  if(chart.data.datasets[1].data.length>60)chart.data.datasets[1].data.shift();
+  chart.update('none');
+  const gl=document.getElementById('glowEll');
+  gl.setAttribute('opacity','0.78');
+  setTimeout(()=>gl.setAttribute('opacity',S.actOn?'0.30':'0.08'),600);
+  S.flashCool=true;
+  setTimeout(()=>S.flashCool=false,1500);
+  refreshParams();
+}
+
+function doActinic(){
+  if(!S.measOn){alert('Сначала включите измерительный свет.');return;}
+  S.actOn=!S.actOn;
+  if(S.actOn){
+    S.tAct=S.t;
+    document.getElementById('btnAct').classList.add('on');
+    setPhase('актиниковый свет','ph-act');
+    setLeaf('act');
+  } else {
+    S.tAct=null;
+    document.getElementById('btnAct').classList.remove('on');
+    setPhase('измерительный свет','ph-meas');
+    setLeaf('meas');
+    sv('vNPQ','—');sv('vqP','—');sv('vETR','—');
+    document.getElementById('etrNote').style.display='none';
+  }
+}
+
+function togglePause(){
+  S.paused=!S.paused;
+  const btn=document.getElementById('btnPause');
+  const info=document.getElementById('pauseInfo');
+  if(S.paused){
+    btn.classList.add('on');
+    btn.textContent='▶ продолжить';
+    info.style.display='block';
+  } else {
+    btn.classList.remove('on');
+    btn.textContent='⏸ пауза';
+    info.style.display='none';
+  }
+  refreshStatus();
+}
+
+function setPAR(v){
+  S.PAR=parseInt(v);
+  document.getElementById('parLbl').textContent=v;
+}
+
+function setStress(v){
+  S.stress=v;
+  document.getElementById('stressInfo').textContent=STRESS_MOD[v].info;
+  S.F0=null;S.Fm=null;
+  doReset();
+}
+
+function setGeno(v){
+  S.geno=v;
+  document.getElementById('genoInfo').textContent=v==='wt'?'Норма: Fv/Fm ≈ 0.83, NPQ до 4.5':'npq1: нет ксантофилла. NPQ очень низкий при любом свете!';
+  S.F0=null;S.Fm=null;
+  doReset();
+}
+
+function doReset(){
+  if(S.ticker){clearInterval(S.ticker);S.ticker=null;}
+  if(S.adaptTick){clearInterval(S.adaptTick);S.adaptTick=null;}
+  chart.data.datasets[0].data=[];
+  chart.data.datasets[1].data=[];
+  chart.options.scales.x.min=0;
+  chart.options.scales.x.max=12;
+  chart.update('none');
+  S.phase='idle';S.measOn=false;S.actOn=false;S.adapted=false;
+  S.t=0;S.tAct=null;S.flashCool=false;S.paused=false;
+  S.F0=null;S.Fm=null;
+  ['btnDark','btnML','btnAct','btnPause'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.classList.remove('on');
+  });
+  document.getElementById('btnDark').textContent='⏱ тёмновая адаптация';
+  document.getElementById('btnFlash').disabled=true;
+  document.getElementById('btnPause').disabled=true;
+  document.getElementById('btnPause').textContent='⏸ пауза';
+  document.getElementById('pauseInfo').style.display='none';
+  document.getElementById('etrNote').style.display='none';
+  setPhase('темнота','ph-dark');
+  setLeaf('dark');
+  ['vF0','vFm','vFvFm','vNPQ','vqP','vETR'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.textContent='—';el.className='pc-val';}
+  });
+  refreshStatus();
+}
+
+function setPhase(txt,cls){
+  const el=document.getElementById('phaseBadge');
+  if(el){el.textContent=txt;el.className='phase-badge '+cls;}
+}
+
+function setLeaf(m){
+  const lf=document.getElementById('leafFill');
+  const lb=document.getElementById('lightBeam');
+  const gl=document.getElementById('glowEll');
+  if(m==='dark'){lf.setAttribute('fill','#1a3a0c');lb.setAttribute('opacity','0');gl.setAttribute('opacity','0');}
+  else if(m==='meas'){lf.setAttribute('fill','#2e5c1a');lb.setAttribute('opacity','0.28');gl.setAttribute('opacity','0.08');}
+  else{lf.setAttribute('fill','#4a8c22');lb.setAttribute('opacity','0.88');gl.setAttribute('opacity','0.30');}
+}
+
+refreshStatus();
+</script>
+</body>
+</html>

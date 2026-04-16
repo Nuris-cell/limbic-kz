@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RBO 2021–22 · Biochemistry · Grade 11</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--surface:#10101a;--s2:#161622;--border:#1e1e30;--b2:#28283e;--blue:#3b7fff;--blue2:#6fa3ff;--green:#22c55e;--green2:#4ade80;--red:#ef4444;--orange:#f59e0b;--purple:#a78bfa;--text:#c8ccd8;--text2:#7a7a9a;--text-bright:#eeeef8;--radius:14px;--font:'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+a{color:var(--blue2);text-decoration:none}a:hover{text-decoration:underline}
+.topbar{background:rgba(10,10,20,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-logo{font-size:13px;font-weight:700;color:var(--text-bright);letter-spacing:-.01em}
+.topbar-sep{color:var(--border);font-size:16px}
+.topbar-title{font-size:11px;color:var(--text2);font-weight:500}
+.topbar-links{display:flex;gap:10px;font-size:11px}
+.topbar-links a{color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:4px 10px;transition:all .15s}
+.topbar-links a:hover{color:var(--blue2);border-color:var(--blue);text-decoration:none}
+.hero{padding:48px 32px 36px;max-width:900px;margin:0 auto}
+.hero-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);background:rgba(59,127,255,.12);border:1px solid rgba(59,127,255,.25);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:16px}
+.hero h1{font-size:clamp(22px,4vw,36px);font-weight:800;color:var(--text-bright);letter-spacing:-.03em;line-height:1.1;margin-bottom:10px}
+.hero-sub{font-size:13px;color:var(--text2);line-height:1.7;max-width:680px;margin-bottom:24px}
+.hero-meta{display:flex;gap:12px;flex-wrap:wrap}
+.meta-chip{font-size:10px;font-weight:600;background:var(--s2);border:1px solid var(--border);padding:4px 10px;border-radius:6px;color:var(--text2)}
+.content{max-width:900px;margin:0 auto;padding:0 32px 80px}
+.task-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
+.task-head{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none;transition:background .15s}
+.task-head:hover{background:var(--s2)}
+.task-badge{font-size:10px;font-weight:800;letter-spacing:.07em;background:rgba(59,127,255,.15);border:1px solid rgba(59,127,255,.3);color:var(--blue2);padding:3px 10px;border-radius:6px;white-space:nowrap}
+.task-badge.green{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.25);color:var(--green2)}
+.task-badge.orange{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.25);color:var(--orange)}
+.task-head h2{font-size:14px;font-weight:600;color:#c0c4d8;flex:1;letter-spacing:-.01em}
+.task-score{font-size:10px;color:var(--text2);white-space:nowrap}
+.task-arr{font-size:11px;color:var(--b2);transition:transform .2s}
+.task-arr.open{transform:rotate(180deg);color:var(--blue2)}
+.task-body{display:none;border-top:1px solid var(--border)}
+.task-body.open{display:block}
+.task-inner{padding:20px 20px 24px}
+.condition{background:rgba(10,10,20,.6);border:1px solid var(--b2);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:20px;font-size:12px;color:var(--text2);line-height:1.8}
+.condition strong{color:var(--text-bright)}
+.condition em{color:var(--blue2);font-style:normal}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;margin:14px 0}
+.data-table th{background:rgba(10,10,20,.8);color:var(--text2);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;text-align:center;border:1px solid var(--border)}
+.data-table td{padding:7px 10px;border:1px solid var(--border);text-align:center;font-family:'Courier New',monospace;font-size:12px;color:#a0a8c0}
+.data-table td.label{text-align:left;color:var(--text2);font-family:inherit;font-size:11px}
+.data-table tr:hover td{background:rgba(59,127,255,.04)}
+.lab-link{display:inline-flex;align-items:center;gap:8px;background:rgba(59,127,255,.1);border:1px solid rgba(59,127,255,.25);color:var(--blue2);font-size:12px;font-weight:600;padding:10px 18px;border-radius:10px;margin:12px 0;transition:all .15s}
+.lab-link:hover{background:rgba(59,127,255,.2);border-color:var(--blue);text-decoration:none}
+.lab-link .icon{font-size:16px}
+.calc-section{background:rgba(59,127,255,.04);border:1px solid rgba(59,127,255,.15);border-radius:10px;padding:16px;margin-top:16px}
+.calc-title{font-size:10px;font-weight:700;color:var(--blue2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+.calc-row{display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap}
+.calc-label{font-size:11px;color:var(--text2);min-width:220px}
+.calc-input{background:rgba(10,10,20,.8);border:1px solid var(--b2);border-radius:7px;padding:7px 10px;font-size:13px;font-family:'Courier New',monospace;color:var(--text-bright);width:110px;outline:none;transition:all .15s}
+.calc-input:focus{border-color:var(--blue)}
+.calc-input.ok{border-color:var(--green);color:var(--green2)}
+.calc-input.err{border-color:var(--red);color:var(--red)}
+.calc-unit{font-size:11px;color:var(--border);font-family:'Courier New',monospace}
+.btn-check{background:rgba(59,127,255,.15);border:1px solid rgba(59,127,255,.3);color:var(--blue2);font-size:11px;font-weight:700;padding:7px 16px;border-radius:8px;cursor:pointer;letter-spacing:.03em;transition:all .15s;font-family:inherit;margin-top:6px}
+.btn-check:hover{background:rgba(59,127,255,.25)}
+.btn-reveal{background:none;border:1px solid var(--border);color:var(--text2);font-size:11px;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:inherit;margin-top:6px;margin-left:6px;transition:all .15s}
+.btn-reveal:hover{border-color:var(--b2);color:var(--text)}
+.expl{display:none;background:rgba(5,5,15,.8);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-top:10px;font-size:11px;color:var(--text2);line-height:1.85}
+.expl.open{display:block}
+.expl strong{color:#7eb8a4}
+.expl .f{font-family:'Courier New',monospace;background:rgba(59,127,255,.1);border:1px solid rgba(59,127,255,.2);border-radius:4px;padding:2px 7px;color:var(--blue2);font-size:11px}
+.chart-wrap{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:16px;margin:16px 0}
+.chart-title{font-size:10px;color:var(--text2);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.score-bar{position:fixed;bottom:16px;right:20px;background:var(--surface);border:1px solid var(--b2);border-radius:10px;padding:8px 16px;font-size:11px;color:var(--text2);display:flex;align-items:center;gap:8px;z-index:100}
+.score-num{font-size:15px;font-weight:700;font-family:'Courier New',monospace;color:var(--green2)}
+.site-footer{border-top:1px solid var(--border);padding:20px 32px;text-align:center;font-size:10px;color:var(--text2);line-height:1.8;max-width:900px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-logo">Limbic KZ</span>
+    <span class="topbar-sep">›</span>
+    <span class="topbar-title">RBO 2021–22 · Biochemistry Grade 11</span>
+  </div>
+  <div class="topbar-links">
+    <a href="index.html">← Home</a>
+    <a href="vsosh_biochem_2122.html">RU</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">🏆 RBO — Practical Tour</div>
+  <h1>Determining Lipase Activity<br>in an Enzyme Preparation</h1>
+  <p class="hero-sub">XXXVIII Russian Biology Olympiad (All-Russian), 2021–22, Grade 11. Biochemistry, 50 points.</p>
+  <div class="hero-meta">
+    <span class="meta-chip">📋 5 tasks</span>
+    <span class="meta-chip">⚗️ Biuret method</span>
+    <span class="meta-chip">🧫 NaOH titration</span>
+    <span class="meta-chip">🔢 50 points</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- TASK 1 -->
+<div class="task-card">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-badge">Task 1</span>
+    <h2>Biuret method — loading the 96-well plate</h2>
+    <span class="task-score">15 points</span>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="task-inner">
+      <div class="condition">
+        The total volume per well <strong>before adding Biuret reagent</strong> must be <em>50 µL</em>. BSA (10 mg/mL standard): wells A1–A6 and B1–B6. Lipase: 25 µL into A7, B7; 50 µL into A8, B8. Fill with distilled water to 50 µL. Add <em>200 µL Biuret reagent</em> to all wells.
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>Wells</th><th>A1,B1</th><th>A2,B2</th><th>A3,B3</th><th>A4,B4</th><th>A5,B5</th><th>A6,B6</th><th>A7,B7</th><th>A8,B8</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="label">BSA, µg</td><td>0</td><td>100</td><td>200</td><td>300</td><td>400</td><td>500</td><td>—</td><td>—</td></tr>
+          <tr><td class="label">BSA, µL</td><td style="color:var(--green2)">0</td><td style="color:var(--green2)">10</td><td style="color:var(--green2)">20</td><td style="color:var(--green2)">30</td><td style="color:var(--green2)">40</td><td style="color:var(--green2)">50</td><td>—</td><td>—</td></tr>
+          <tr><td class="label">Water, µL</td><td style="color:var(--green2)">50</td><td style="color:var(--green2)">40</td><td style="color:var(--green2)">30</td><td style="color:var(--green2)">20</td><td style="color:var(--green2)">10</td><td style="color:var(--green2)">0</td><td style="color:var(--green2)">25</td><td style="color:var(--green2)">0</td></tr>
+          <tr><td class="label">Lipase (E), µL</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>25</td><td>50</td></tr>
+          <tr><td class="label">Biuret, µL</td><td>200</td><td>200</td><td>200</td><td>200</td><td>200</td><td>200</td><td>200</td><td>200</td></tr>
+        </tbody>
+      </table>
+
+      <a class="lab-link" href="biuret_en.html" target="_blank">
+        <span class="icon">🔬</span> Open virtual laboratory — Biuret method
+      </a>
+
+      <div class="expl open" style="margin-top:8px">
+        <strong>Table key:</strong> BSA (10 mg/mL), so 100 µg = 10 µL, 500 µg = 50 µL. Water = 50 − V(BSA). For A7: 25 µL lipase + 25 µL water = 50 µL. For A8: 50 µL lipase + 0 water = 50 µL.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TASK 2 -->
+<div class="task-card">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-badge green">Task 2</span>
+    <h2>Calibration curve and protein concentration</h2>
+    <span class="task-score">15 points</span>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="task-inner">
+      <div class="condition">
+        Using spectrophotometric data at 540 nm, build a calibration curve (OD vs µg protein) and determine the protein concentration in the lipase preparation.
+        <br><strong>Reader output (variant A):</strong>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>Well</th><th>A1</th><th>A2</th><th>A3</th><th>A4</th><th>A5</th><th>A6</th><th>A7</th><th>A8</th></tr></thead>
+        <tbody>
+          <tr><td class="label">BSA, µg</td><td>0</td><td>100</td><td>200</td><td>300</td><td>400</td><td>500</td><td>—</td><td>—</td></tr>
+          <tr><td class="label">OD (row A)</td><td>0.059</td><td>0.134</td><td>0.212</td><td>0.284</td><td>0.362</td><td>0.438</td><td>0.192</td><td>0.329</td></tr>
+          <tr><td class="label">OD (row B)</td><td>0.061</td><td>0.136</td><td>0.208</td><td>0.286</td><td>0.358</td><td>0.432</td><td>0.194</td><td>0.323</td></tr>
+          <tr><td class="label" style="color:var(--blue2)">Mean</td><td style="color:var(--blue2)">0.060</td><td style="color:var(--blue2)">0.135</td><td style="color:var(--blue2)">0.210</td><td style="color:var(--blue2)">0.285</td><td style="color:var(--blue2)">0.360</td><td style="color:var(--blue2)">0.435</td><td style="color:var(--blue2)">0.193</td><td style="color:var(--blue2)">0.326</td></tr>
+        </tbody>
+      </table>
+
+      <div class="chart-wrap">
+        <div class="chart-title">Calibration curve: OD₅₄₀ = f(µg protein)</div>
+        <canvas id="calibChart" height="200"></canvas>
+      </div>
+
+      <div class="calc-section">
+        <div class="calc-title">Protein concentration calculation</div>
+        <p style="font-size:11px;color:var(--text2);margin-bottom:10px">From the linear equation (y = kx + b), find x when OD = 0.193 (A7, 25 µL lipase) and OD = 0.326 (A8, 50 µL).</p>
+        <div class="calc-row">
+          <span class="calc-label">Protein content (from A7, 25 µL):</span>
+          <input class="calc-input" id="t2_a7" type="number" step="0.1" placeholder="??">
+          <span class="calc-unit">µg / 25 µL</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">Protein content (from A8, 50 µL):</span>
+          <input class="calc-input" id="t2_a8" type="number" step="0.1" placeholder="??">
+          <span class="calc-unit">µg / 50 µL</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">Protein concentration in prep:</span>
+          <input class="calc-input" id="t2_conc" type="number" step="0.1" placeholder="??">
+          <span class="calc-unit">mg/mL</span>
+        </div>
+        <button class="btn-check" onclick="checkT2()">✓ Check</button>
+        <button class="btn-reveal" onclick="toggleExpl('expl_t2')">Explanation</button>
+        <div class="expl" id="expl_t2">
+          Linear equation: <span class="f">OD = 0.00075 × µg + 0.060</span><br>
+          From A7 (OD = 0.193): <span class="f">µg = (0.193 − 0.060) / 0.00075 = 177 µg</span> in 25 µL → <strong>7.1 mg/mL</strong><br>
+          From A8 (OD = 0.326): <span class="f">µg = (0.326 − 0.060) / 0.00075 = 355 µg</span> in 50 µL → <strong>7.1 mg/mL</strong><br>
+          <strong>Protein concentration ≈ 7.1 mg/mL</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TASK 3 -->
+<div class="task-card">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-badge">Task 3</span>
+    <h2>Titration — determining acid concentration</h2>
+    <span class="task-score">10 points</span>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="task-inner">
+      <div class="condition">
+        Add <em>1 mL of Sample 1 (S1)</em> into 2 titration flasks and <em>1 mL of Sample 2 (S2)</em> into another 2. Add ~20 mL of water and 2–3 drops of phenolphthalein. Titrate with <em>5 mM NaOH</em>. Record volume used; calculate acid concentration.
+      </div>
+
+      <a class="lab-link" href="lipase_titration_en.html" target="_blank">
+        <span class="icon">⚗️</span> Open virtual laboratory — NaOH titration
+      </a>
+
+      <div class="calc-section">
+        <div class="calc-title">Titration results</div>
+        <table class="data-table" style="margin-bottom:14px">
+          <thead><tr><th>Sample</th><th>V(NaOH) mL · rep 1</th><th>V(NaOH) mL · rep 2</th><th>Mean, mL</th><th>Acid conc., mM</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="label">Sample 1 (5 min)</td>
+              <td><input class="calc-input" style="width:80px" id="t3_p1a" type="number" step="0.1" placeholder="?"></td>
+              <td><input class="calc-input" style="width:80px" id="t3_p1b" type="number" step="0.1" placeholder="?"></td>
+              <td id="t3_p1avg" style="color:var(--blue2);font-family:monospace">—</td>
+              <td id="t3_p1conc" style="color:var(--green2);font-family:monospace">—</td>
+            </tr>
+            <tr>
+              <td class="label">Sample 2 (10 min)</td>
+              <td><input class="calc-input" style="width:80px" id="t3_p2a" type="number" step="0.1" placeholder="?"></td>
+              <td><input class="calc-input" style="width:80px" id="t3_p2b" type="number" step="0.1" placeholder="?"></td>
+              <td id="t3_p2avg" style="color:var(--blue2);font-family:monospace">—</td>
+              <td id="t3_p2conc" style="color:var(--green2);font-family:monospace">—</td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn-check" onclick="calcT3()">⟳ Calculate</button>
+        <button class="btn-reveal" onclick="toggleExpl('expl_t3')">Explanation</button>
+        <div class="expl" id="expl_t3">
+          Formula: <span class="f">c(acid) = c(NaOH) × V(NaOH) / V(sample)</span><br>
+          Example: V(NaOH) mean = 4.2 mL → <span class="f">c = 5 mM × 4.2 mL / 1.0 mL = 21.0 mM</span><br>
+          Sample 1 has lower acid concentration (5 min), Sample 2 higher (10 min), because more fat was hydrolysed over time.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TASK 4 -->
+<div class="task-card">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-badge orange">Task 4</span>
+    <h2>Specific activity of lipase in the enzyme preparation</h2>
+    <span class="task-score">5 points</span>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="task-inner">
+      <div class="condition">
+        Calculate lipase activity in <em>µmol neutral fat / min / mg protein</em>, using data from Tasks 2 and 3.
+        <br><br>
+        <strong>Key data:</strong> 250 µL enzyme preparation was added to 500 mL emulsion. Aliquots = 1 mL each.
+      </div>
+
+      <div class="calc-section">
+        <div class="calc-title">Activity calculation</div>
+        <div class="condition" style="margin-bottom:14px;font-size:11px">
+          <strong>Algorithm:</strong><br>
+          1. n(acid in 1 mL aliquot) = c(acid) × 0.001 L → µmol<br>
+          2. Total reaction volume = 500 mL → n(total) = n(1 mL) × 500<br>
+          3. Rate = Δn / Δt (µmol/min)<br>
+          4. Protein mass in reaction = c(protein) × 0.25 mL → mg<br>
+          5. Specific activity = Rate / m(protein) [µmol/min/mg]
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">Δn(acid) between samples (µmol in 1 mL):</span>
+          <input class="calc-input" id="t4_dn" type="number" step="0.01" placeholder="??">
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">Δn(acid) in 500 mL total (µmol):</span>
+          <input class="calc-input" id="t4_dn500" type="number" step="0.1" placeholder="??">
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">Δt between samples:</span>
+          <input class="calc-input" value="5" readonly style="opacity:.6" type="number">
+          <span class="calc-unit">min</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">Hydrolysis rate:</span>
+          <input class="calc-input" id="t4_rate" type="number" step="0.1" placeholder="??">
+          <span class="calc-unit">µmol/min</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">Protein mass in reaction (250 µL × c):</span>
+          <input class="calc-input" id="t4_mass" type="number" step="0.01" placeholder="??">
+          <span class="calc-unit">mg</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label" style="color:var(--blue2);font-weight:700">Specific activity:</span>
+          <input class="calc-input" id="t4_act" type="number" step="0.01" placeholder="??">
+          <span class="calc-unit">µmol/min/mg</span>
+        </div>
+        <button class="btn-check" onclick="checkT4()">✓ Check</button>
+        <button class="btn-reveal" onclick="toggleExpl('expl_t4')">Explanation</button>
+        <div class="expl" id="expl_t4">
+          Example with c(acid)₁ = 21.0 mM, c₂ = 37.5 mM:<br>
+          Δc = 16.5 mM in 1 mL → <span class="f">Δn = 16.5 µmol</span><br>
+          In 500 mL: <span class="f">16.5 × 500 = 8250 µmol</span><br>
+          Rate = 8250 / 5 = 1650 µmol/min<br>
+          Protein mass: 7.1 mg/mL × 0.25 mL = 1.775 mg<br>
+          <strong>Specific activity ≈ 930 µmol/min/mg</strong> (varies with titration results)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TASK 5 -->
+<div class="task-card">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-badge orange">Task 5</span>
+    <h2>Molecular weight of the neutral fat</h2>
+    <span class="task-score">5 points</span>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="task-inner">
+      <div class="condition">
+        A <em>1.21 g</em> sample of neutral fat was completely hydrolysed by boiling in <em>100 mL of 100 mM NaOH</em>. After hydrolysis, the concentration of unreacted NaOH was found by titration to be <em>55 mM</em>.
+        Calculate the molecular weight of the fat.
+      </div>
+
+      <div class="calc-section">
+        <div class="calc-title">Molecular weight calculation</div>
+        <div class="condition" style="margin-bottom:14px;font-size:11px">
+          <strong>Key concept:</strong> A neutral fat (triacylglycerol, TAG) reacts with <strong>3 mol NaOH</strong>:<br>
+          <span style="font-family:monospace;color:var(--blue2)">TAG + 3 NaOH → glycerol + 3 fatty acid Na⁺</span><br><br>
+          n(NaOH initial) = 100 mM × 0.1 L = 10 mmol<br>
+          n(NaOH remaining) = 55 mM × 0.1 L = 5.5 mmol<br>
+          n(NaOH consumed) = 10 − 5.5 = 4.5 mmol<br>
+          n(TAG) = n(NaOH) / 3 = 1.5 mmol = 0.0015 mol<br>
+          M = m / n = 1.21 g / 0.0015 mol = ?
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">n(NaOH consumed):</span>
+          <input class="calc-input" id="t5_nnaoh" type="number" step="0.1" placeholder="??">
+          <span class="calc-unit">mmol</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">n(TAG):</span>
+          <input class="calc-input" id="t5_ntag" type="number" step="0.01" placeholder="??">
+          <span class="calc-unit">mmol</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label" style="color:var(--blue2);font-weight:700">Molecular weight of TAG:</span>
+          <input class="calc-input" id="t5_mw" type="number" step="1" placeholder="???">
+          <span class="calc-unit">g/mol</span>
+        </div>
+        <button class="btn-check" onclick="checkT5()">✓ Check</button>
+        <button class="btn-reveal" onclick="toggleExpl('expl_t5')">Explanation</button>
+        <div class="expl" id="expl_t5">
+          n(NaOH initial) = 0.1 L × 0.1 mol/L = 0.01 mol = <strong>10 mmol</strong><br>
+          n(NaOH remaining) = 0.1 L × 0.055 mol/L = 5.5 mmol<br>
+          n(NaOH consumed) = 10 − 5.5 = <strong>4.5 mmol</strong><br>
+          n(TAG) = 4.5 / 3 = <strong>1.5 mmol = 0.0015 mol</strong><br>
+          <span class="f">M = 1.21 g / 0.0015 mol = 807 g/mol</span><br><br>
+          For comparison: triolein (C₅₇H₁₀₄O₆) M = 885 g/mol; tripalmitin (C₅₁H₉₈O₆) M = 807 g/mol ✓
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<footer class="site-footer">
+  <p>All rights to olympiad problem statements belong to their respective copyright holders.<br>Materials are used for educational and informational purposes only.</p>
+  <p style="margin-top:6px"><strong>Limbic KZ</strong> · <a href="index.html">Home</a></p>
+</footer>
+
+<div class="score-bar">✓ <span class="score-num" id="scoreNum">0</span> / <span id="scoreTotal">4</span> correct</div>
+
+<script>
+function toggleTask(head){const body=head.nextElementSibling;const arr=head.querySelector('.task-arr');body.classList.toggle('open');arr.classList.toggle('open');}
+function toggleExpl(id){document.getElementById(id).classList.toggle('open');}
+let correctSet=new Set();
+function markOk(k){correctSet.add(k);document.getElementById('scoreNum').textContent=correctSet.size;}
+function setInput(id,ok){const el=document.getElementById(id);if(!el)return;el.className='calc-input '+(ok?'ok':'err');}
+function checkNear(val,correct,pct){return Math.abs(val-correct)/Math.abs(correct)<=pct;}
+
+const bsaX=[0,100,200,300,400,500];
+const odY=[0.060,0.135,0.210,0.285,0.360,0.435];
+const ctx=document.getElementById('calibChart').getContext('2d');
+new Chart(ctx,{type:'scatter',data:{datasets:[
+  {label:'BSA standard',data:bsaX.map((x,i)=>({x,y:odY[i]})),borderColor:'#3b7fff',backgroundColor:'rgba(59,127,255,.3)',pointRadius:6,showLine:true,tension:0},
+  {label:'A7 (25 µL E)',data:[{x:177,y:0.193}],borderColor:'#22c55e',backgroundColor:'#22c55e',pointRadius:8,showLine:false,pointStyle:'triangle'},
+  {label:'A8 (50 µL E)',data:[{x:355,y:0.326}],borderColor:'#f59e0b',backgroundColor:'#f59e0b',pointRadius:8,showLine:false,pointStyle:'triangle'},
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#7a7a9a',font:{size:10}}},tooltip:{callbacks:{label:c=>`OD=${c.raw.y}, BSA=${c.raw.x} µg`}}},scales:{x:{title:{display:true,text:'Protein content (µg)',color:'#7a7a9a',font:{size:10}},grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#7a7a9a'}},y:{title:{display:true,text:'OD₅₄₀',color:'#7a7a9a',font:{size:10}},grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#7a7a9a'}}}}});
+
+function checkT2(){
+  const a7=parseFloat(document.getElementById('t2_a7').value);
+  const a8=parseFloat(document.getElementById('t2_a8').value);
+  const co=parseFloat(document.getElementById('t2_conc').value);
+  setInput('t2_a7',checkNear(a7,177,0.08));setInput('t2_a8',checkNear(a8,355,0.08));
+  const concOk=checkNear(co,7.1,0.12);setInput('t2_conc',concOk);if(concOk)markOk('t2');
+}
+function calcT3(){
+  const p1a=parseFloat(document.getElementById('t3_p1a').value)||0;const p1b=parseFloat(document.getElementById('t3_p1b').value)||0;
+  const p2a=parseFloat(document.getElementById('t3_p2a').value)||0;const p2b=parseFloat(document.getElementById('t3_p2b').value)||0;
+  if(p1a&&p1b){const avg1=((p1a+p1b)/2).toFixed(1);const c1=(5*parseFloat(avg1)/1.0).toFixed(1);document.getElementById('t3_p1avg').textContent=avg1;document.getElementById('t3_p1conc').textContent=c1+' mM';window._c1=parseFloat(c1);}
+  if(p2a&&p2b){const avg2=((p2a+p2b)/2).toFixed(1);const c2=(5*parseFloat(avg2)/1.0).toFixed(1);document.getElementById('t3_p2avg').textContent=avg2;document.getElementById('t3_p2conc').textContent=c2+' mM';window._c2=parseFloat(c2);markOk('t3');}
+}
+function checkT4(){
+  const c1=window._c1||21.0,c2=window._c2||37.5;const dc=c2-c1;const dn=dc*0.001*1000;const dn500=dn*500;const rate=dn500/5;const mass=7.1*0.25;const act=rate/mass;
+  setInput('t4_dn',checkNear(parseFloat(document.getElementById('t4_dn').value),dn,0.1));
+  setInput('t4_dn500',checkNear(parseFloat(document.getElementById('t4_dn500').value),dn500,0.1));
+  setInput('t4_rate',checkNear(parseFloat(document.getElementById('t4_rate').value),rate,0.1));
+  setInput('t4_mass',checkNear(parseFloat(document.getElementById('t4_mass').value),mass,0.1));
+  const actOk=checkNear(parseFloat(document.getElementById('t4_act').value),act,0.12);setInput('t4_act',actOk);if(actOk)markOk('t4');
+}
+function checkT5(){
+  const nn=parseFloat(document.getElementById('t5_nnaoh').value);const nt=parseFloat(document.getElementById('t5_ntag').value);const mw=parseFloat(document.getElementById('t5_mw').value);
+  setInput('t5_nnaoh',checkNear(nn,4.5,0.05));setInput('t5_ntag',checkNear(nt,1.5,0.05));
+  const mwOk=checkNear(mw,807,0.05);setInput('t5_mw',mwOk);if(mwOk)markOk('t5');
+}
+document.querySelector('.task-head').click();
+</script>
+</body>
+</html>

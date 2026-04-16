@@ -186,9 +186,9 @@
     </div>
   </div>
   <div class="sidebar-section">
-    <div class="sidebar-section-title" onclick="toggleSec(this)"><span data-i18n="sideBiochem">🌻 Ботаника</span> <span class="arr">▶</span></div>
+    <div class="sidebar-section-title" onclick="toggleSec(this)"><span data-i18n="sideBotany">🌻 Ботаника</span> <span class="arr">▶</span></div>
     <div class="sidebar-subtopics">
-      <div class="sidebar-subtopic" onclick="window.location.href='pam_tasks.html'"><span data-i18n="subPam">PAM-флуорометрия</span> <span class="sidebar-count">4</span></div>
+      <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'pam_tasks_en.html':'pam_tasks.html')"><span data-i18n="subPam">PAM-флуорометрия</span> <span class="sidebar-count">4</span></div>
     </div>
   </div>
 </aside>
@@ -257,7 +257,7 @@ let currentSection = null, currentSubtopic = null;
 const T = {
   ru:{
     navHome:'Главная',navGenetics:'Генетика',navStats:'Статистика',navBiochem:'Биохимия',
-    sideGenetics:'🧬 Генетика',sideStats:'📊 Статистика',sideBiochem:'🧬 Биохимия',
+    sideGenetics:'🧬 Генетика',sideStats:'📊 Статистика',sideBiochem:'🧬 Биохимия',sideBotany: '🌻 Ботаника',
     subHW:'Харди-Вайнберг',subMut:'Мутации',subSel:'Естественный отбор',
     subMig:'Миграция',subHet:'Гетерозис',subInb:'Инбридинг',subDrift:'Дрейф генов',
     subChi:'Критерий χ²',subTtest:'t-тест',subBayes:'Байес',
@@ -301,7 +301,7 @@ const T = {
   },
   en:{
     navHome:'Home',navGenetics:'Genetics',navStats:'Statistics',navBiochem:'Biochemistry',
-    sideGenetics:'🧬 Genetics',sideStats:'📊 Statistics',sideBiochem:'🧬 Biochemistry',
+    sideGenetics:'🧬 Genetics',sideStats:'📊 Statistics',sideBiochem:'🧬 Biochemistry',sideBotany: '🌻 Botany',
     subHW:'Hardy-Weinberg',subMut:'Mutations',subSel:'Natural Selection',
     subMig:'Migration',subHet:'Heterosis',subInb:'Inbreeding',subDrift:'Genetic Drift',
     subChi:'χ² Test',subTtest:'t-test',subBayes:'Bayes',
@@ -1444,7 +1444,7 @@ function openSubtopic(sectionKey, subKey) {
 
   // Better: use section label from T
   const secDisplayLabel = LANG === 'en' ? 
-    (sectionKey === 'genetics' ? 'Population Genetics' : sectionKey === 'stats' ? 'Statistics' : sectionKey === 'olympiad2026' ? 'Republican Olympiad 2026' : 'Biochemistry') :
+    (sectionKey === 'genetics' ? 'Population Genetics' : sectionKey === 'stats' ? 'Statistics' : sectionKey === 'olympiad2026' ? 'Republican Olympiad 2026' : sectionKey === 'botany' ? 'Botany' : 'Biochemistry') :
     sec.label;
 
   document.getElementById('bc-section').textContent = secDisplayLabel;

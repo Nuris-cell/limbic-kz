@@ -33,9 +33,9 @@ aside { width: 280px; min-width: 280px; background: #f8fafc; border-right: 1px s
 main { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; gap: 100px; }
 </style>
 </head>
-<body class="flex min-h-screen overflow-hidden">
+<body style="display:flex;height:100vh;overflow:hidden;background:#f8fafc;">
 
-    <aside class="w-80 bg-[#f8fafc] border-r border-slate-200 p-8 space-y-8 flex flex-col">
+  <aside style="width:280px;min-width:280px;background:#f8fafc;border-right:1px solid #e2e8f0;padding:24px;display:flex;flex-direction:column;gap:20px;overflow-y:auto;box-sizing:border-box;">
         <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b pb-3 mb-2">
             🧪 Task 3 — NaOH Titration<br>
             <span class="text-slate-300 normal-case font-normal mt-1 block">Add 1 mL sample to flask, ~20 mL water, 2–3 drops phenolphthalein, titrate with 5 mM NaOH</span>
@@ -92,13 +92,13 @@ main { flex: 1; position: relative; display: flex; align-items: center; justify-
         <a href="vsosh_biochem_2122_en.html" class="text-[10px] font-bold text-slate-400 hover:text-blue-500 transition-colors">← Back to tasks</a>
     </aside>
 
-    <main class="flex-1 relative flex items-center justify-center gap-32">
+ <main style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;gap:100px;">
         <div class="buret-container">
             <div class="buret-body">
                 <div id="buret-liquid" class="liquid" style="height: 0%">
                     <div class="meniscus"></div>
                 </div>
-                <div id="buret-scale" class="absolute inset-0 pointer-events-none"></div>
+                <div id="buret-scale" style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;"></div>
             </div>
             <div class="w-1.5 h-12 bg-slate-300"></div>
             <div class="tap-box" onclick="toggleTap()">

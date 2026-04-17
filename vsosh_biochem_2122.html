@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ВсОШ 2021–22 · Биохимия · 11 класс</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0a0a0f;--surface:#10101a;--s2:#161622;--border:#1e1e30;--b2:#28283e;--blue:#3b7fff;--blue2:#6fa3ff;--green:#22c55e;--green2:#4ade80;--red:#ef4444;--orange:#f59e0b;--purple:#a78bfa;--text:#c8ccd8;--text2:#7a7a9a;--text-bright:#eeeef8;--radius:14px;--font:'Segoe UI',system-ui,sans-serif}
@@ -246,10 +245,12 @@ a{color:var(--blue2);text-decoration:none}a:hover{text-decoration:underline}
         </tbody>
       </table>
 
-      <div class="chart-wrap">
-        <div class="chart-title">Калибровочный график: ОП₅₄₀ = f(мкг белка)</div>
-        <canvas id="calibChart" height="200"></canvas>
-      </div>
+      <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:12px;color:#f59e0b;line-height:1.8">
+  📐 <strong>Постройте калибровочный график самостоятельно на бумаге</strong> (или в тетради):<br>
+  Ось X — содержание белка (мкг): 0, 100, 200, 300, 400, 500<br>
+  Ось Y — оптическая плотность ОП₅₄₀: значения «Среднее» из таблицы выше<br>
+  Проведите прямую через точки. Затем по ОП = 0.193 (лунка А7) и ОП = 0.326 (А8) найдите соответствующие значения мкг белка.
+</div>
 
       <div class="calc-section">
         <div class="calc-title">Расчёт концентрации белка</div>
@@ -555,25 +556,7 @@ function setInput(id,ok){
 function checkNear(val,correct,pct){return Math.abs(val-correct)/Math.abs(correct)<=pct;}
 
 /* ── Calibration chart ── */
-const bsaX=[0,100,200,300,400,500];
-const odY=[0.060,0.135,0.210,0.285,0.360,0.435];
-const ctx=document.getElementById('calibChart').getContext('2d');
-new Chart(ctx,{
-  type:'scatter',
-  data:{datasets:[
-    {label:'Стандарт БСА',data:bsaX.map((x,i)=>({x,y:odY[i]})),borderColor:'#3b7fff',backgroundColor:'rgba(59,127,255,.3)',pointRadius:6,showLine:true,tension:0},
-    {label:'А7 (25 мкл Ф)',data:[{x:177,y:0.193}],borderColor:'#22c55e',backgroundColor:'#22c55e',pointRadius:8,showLine:false,pointStyle:'triangle'},
-    {label:'А8 (50 мкл Ф)',data:[{x:355,y:0.326}],borderColor:'#f59e0b',backgroundColor:'#f59e0b',pointRadius:8,showLine:false,pointStyle:'triangle'},
-  ]},
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{labels:{color:'#7a7a9a',font:{size:10}}},tooltip:{callbacks:{label:c=>`ОП=${c.raw.y}, БСА=${c.raw.x} мкг`}}},
-    scales:{
-      x:{min:0,max:550,title:{display:true,text:'Содержание белка (мкг)',color:'#7a7a9a',font:{size:10}},grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#7a7a9a'}},
-      y:{min:0,max:0.5,title:{display:true,text:'ОП₅₄₀',color:'#7a7a9a',font:{size:10}},grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#7a7a9a'}},
-    }
-  }
-});
+
 
 /* ── Task 2 check ── */
 function checkT2(){

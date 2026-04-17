@@ -33,10 +33,10 @@ aside { width: 280px; min-width: 280px; background: #f8fafc; border-right: 1px s
 main { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; gap: 100px; }
 </style>
 </head>
-<body class="flex min-h-screen overflow-hidden">
+<body style="display:flex;height:100vh;overflow:hidden;background:#f8fafc;">
 
     <!-- Левая панель -->
-    <aside class="w-80 bg-[#f8fafc] border-r border-slate-200 p-8 space-y-8 flex flex-col">
+    <aside style="width:280px;min-width:280px;background:#f8fafc;border-right:1px solid #e2e8f0;padding:24px;display:flex;flex-direction:column;gap:20px;overflow-y:auto;box-sizing:border-box;">
         
         <div>
             <span class="label-header">Основные реактивы</span>
@@ -88,7 +88,7 @@ main { flex: 1; position: relative; display: flex; align-items: center; justify-
     </aside>
 
     <!-- Основная сцена -->
-    <main class="flex-1 relative flex items-center justify-center gap-32">
+<main style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;gap:100px;">
         
         <!-- Бюретка -->
         <div class="buret-container">
@@ -96,7 +96,7 @@ main { flex: 1; position: relative; display: flex; align-items: center; justify-
                 <div id="buret-liquid" class="liquid" style="height: 0%">
                     <div class="meniscus"></div>
                 </div>
-                <div id="buret-scale" class="absolute inset-0 pointer-events-none"></div>
+               <div id="buret-scale" style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;"></div>
             </div>
             <div class="w-1.5 h-12 bg-slate-300"></div>
             <div class="tap-box" onclick="toggleTap()">

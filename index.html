@@ -1174,6 +1174,19 @@ function rollTitrationInstance() {
   const avg = (intensity(nCO2[0]) + intensity(nCO2[1]) + intensity(nCO2[2])) / 3;
   window.__limbicTitration = { nCO2, nBA_INIT, expectedRounded: Math.round(avg*100)/100, avgExact: avg };
 }
+  function titrationLabIframeSrc() {
+  if (!window.__limbicTitration) rollTitrationInstance();
+  try {
+    return 'titration_lab.html#' + encodeURIComponent(btoa(JSON.stringify({ v: 1, nCO2: window.__limbicTitration.nCO2 })));
+  } catch (e) { return 'titration_lab.html'; }
+}
+
+function lipaseLabIframeSrc() {
+  if (!window.__limbicLipase) rollLipaseInstance();
+  try {
+    return 'lipase_lab.html#' + encodeURIComponent(btoa(JSON.stringify({ v: 1, targets: window.__limbicLipase.targets })));
+  } catch (e) { return 'lipase_lab.html'; }
+}
 
 function buildTitrationLabHTML(lang) {
   if (!window.__limbicTitration) rollTitrationInstance();
@@ -1482,11 +1495,11 @@ function renderTask(task, sectionKey, subKey, idx) {
   let conditionHtml = applied.condition;
   if (sectionKey === 'biochemistry' && subKey === 'titration' && idx === 0) {
     if (!window.__limbicTitration) rollTitrationInstance();
-    conditionHtml = conditionHtml.replace(/<iframe[^>]*src="titration_lab\.html"[^>]*><\/iframe>/g, buildTitrationLabHTML(LANG));
+    conditionHtml = conditionHtml.replace('src="titration_lab.html"', 'src="' + titrationLabIframeSrc() + '"');
   }
   if (sectionKey === 'biochemistry' && subKey === 'lipase' && idx === 0) {
     if (!window.__limbicLipase) rollLipaseInstance();
-    conditionHtml = conditionHtml.replace(/<iframe[^>]*src="lipase_lab\.html"[^>]*><\/iframe>/g, buildLipaseLabHTML(LANG));
+    conditionHtml = conditionHtml.replace('src="lipase_lab.html"', 'src="' + lipaseLabIframeSrc() + '"');
   }
 
   return `

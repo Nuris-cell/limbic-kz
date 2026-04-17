@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RBO 2021–22 · Biochemistry · Grade 11</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -259,10 +258,12 @@ a{color:var(--blue2);text-decoration:none}a:hover{text-decoration:underline}
         </tbody>
       </table>
 
-      <div class="chart-wrap">
-        <div class="chart-title">Calibration curve: OD₅₄₀ = f(µg protein per well)</div>
-        <canvas id="calibChart" height="200"></canvas>
-      </div>
+      <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:12px;color:#f59e0b;line-height:1.8">
+  📐 <strong>Draw the calibration curve yourself on paper</strong>:<br>
+  X-axis — protein content (µg): 0, 100, 200, 300, 400, 500<br>
+  Y-axis — absorbance OD₅₄₀: use the Mean values from the table above<br>
+  Draw a best-fit line. Then read off µg protein for OD = 0.193 (well A7) and OD = 0.326 (A8).
+</div>
 
       <div class="calc-section">
         <div class="calc-title">Protein concentration calculation</div>
@@ -712,69 +713,8 @@ function resetPlate(){
 /* ═══════════════════════════════════════════════
    CALIBRATION CHART (Task 2)
 ═══════════════════════════════════════════════ */
-function buildCalibChart(){
-  const ctx=document.getElementById('calibChart');
-  if(!ctx)return;
-  const bsaX=[0,100,200,300,400,500];
-  const odY=[0.060,0.135,0.210,0.285,0.360,0.435];
-  new Chart(ctx,{
-    type:'scatter',
-    data:{datasets:[
-      {
-        label:'BSA standard (mean OD)',
-        data:bsaX.map((x,i)=>({x,y:odY[i]})),
-        borderColor:'#3b7fff',
-        backgroundColor:'rgba(59,127,255,.3)',
-        pointRadius:6,showLine:true,tension:0
-      },
-      {
-        label:'A7 — 25 µL lipase (OD 0.193)',
-        data:[{x:177,y:0.193}],
-        borderColor:'#22c55e',backgroundColor:'#22c55e',
-        pointRadius:9,showLine:false,pointStyle:'triangle'
-      },
-      {
-        label:'A8 — 50 µL lipase (OD 0.326)',
-        data:[{x:355,y:0.326}],
-        borderColor:'#f59e0b',backgroundColor:'#f59e0b',
-        pointRadius:9,showLine:false,pointStyle:'triangle'
-      }
-    ]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      animation:{duration:600},
-      plugins:{
-        legend:{labels:{color:'#7a7a9a',font:{size:10}}},
-        tooltip:{callbacks:{label:c=>`OD=${c.raw.y}, µg protein=${c.raw.x}`}}
-      },
-      scales:{
-        x:{
-          min:0,max:550,
-          title:{display:true,text:'Protein per well (µg)',color:'#7a7a9a',font:{size:10}},
-          grid:{color:'rgba(255,255,255,.04)'},
-          ticks:{color:'#7a7a9a'}
-        },
-        y:{
-          min:0,max:0.5,
-          title:{display:true,text:'OD₅₄₀',color:'#7a7a9a',font:{size:10}},
-          grid:{color:'rgba(255,255,255,.04)'},
-          ticks:{color:'#7a7a9a'}
-        }
-      }
-    }
-  });
-}
 
-function checkT2(){
-  const a7=parseFloat(document.getElementById('t2_a7').value);
-  const a8=parseFloat(document.getElementById('t2_a8').value);
-  const co=parseFloat(document.getElementById('t2_conc').value);
-  setInput('t2_a7', near(a7,177,0.1));
-  setInput('t2_a8', near(a8,355,0.1));
-  const ok=near(co,7.1,0.1);
-  setInput('t2_conc', ok);
-  if(ok) markOk('t2');
-}
+ 
 
 /* ═══════════════════════════════════════════════
    TITRATION LAB (Task 3)

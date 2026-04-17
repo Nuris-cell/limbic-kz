@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ВсОШ 2021–22 · Биохимия · 11 класс</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--surface:#10101a;--s2:#161622;--border:#1e1e30;--b2:#28283e;--blue:#3b7fff;--blue2:#6fa3ff;--green:#22c55e;--green2:#4ade80;--red:#ef4444;--orange:#f59e0b;--purple:#a78bfa;--text:#c8ccd8;--text2:#7a7a9a;--text-bright:#eeeef8;--radius:14px;--font:'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;padding:0}
+a{color:var(--blue2);text-decoration:none}a:hover{text-decoration:underline}
+
+/* TOP BAR */
+.topbar{background:rgba(10,10,20,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-logo{font-size:13px;font-weight:700;color:var(--text-bright);letter-spacing:-.01em}
+.topbar-sep{color:var(--border);font-size:16px}
+.topbar-title{font-size:11px;color:var(--text2);font-weight:500}
+.topbar-links{display:flex;gap:10px;font-size:11px}
+.topbar-links a{color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:4px 10px;transition:all .15s}
+.topbar-links a:hover{color:var(--blue2);border-color:var(--blue);text-decoration:none}
+.lang-badge{background:var(--s2);border:1px solid var(--b2);color:var(--text2);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.05em}
+
+/* HERO */
+.hero{padding:48px 32px 36px;max-width:900px;margin:0 auto}
+.hero-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);background:rgba(59,127,255,.12);border:1px solid rgba(59,127,255,.25);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:16px}
+.hero h1{font-size:clamp(22px,4vw,36px);font-weight:800;color:var(--text-bright);letter-spacing:-.03em;line-height:1.1;margin-bottom:10px}
+.hero-sub{font-size:13px;color:var(--text2);line-height:1.7;max-width:680px;margin-bottom:24px}
+.hero-meta{display:flex;gap:12px;flex-wrap:wrap}
+.meta-chip{font-size:10px;font-weight:600;background:var(--s2);border:1px solid var(--border);padding:4px 10px;border-radius:6px;color:var(--text2)}
+
+/* CONTENT */
+.content{max-width:900px;margin:0 auto;padding:0 32px 80px}
+
+/* TASK CARD */
+.task-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
+.task-head{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none;transition:background .15s}
+.task-head:hover{background:var(--s2)}
+.task-badge{font-size:10px;font-weight:800;letter-spacing:.07em;background:rgba(59,127,255,.15);border:1px solid rgba(59,127,255,.3);color:var(--blue2);padding:3px 10px;border-radius:6px;white-space:nowrap}
+.task-badge.green{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.25);color:var(--green2)}
+.task-badge.orange{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.25);color:var(--orange)}
+.task-head h2{font-size:14px;font-weight:600;color:#c0c4d8;flex:1;letter-spacing:-.01em}
+.task-score{font-size:10px;color:var(--text2);white-space:nowrap}
+.task-arr{font-size:11px;color:var(--b2);transition:transform .2s}
+.task-arr.open{transform:rotate(180deg);color:var(--blue2)}
+.task-body{display:none;border-top:1px solid var(--border)}
+.task-body.open{display:block}
+.task-inner{padding:20px 20px 24px}
+
+/* CONDITION BOX */
+.condition{background:rgba(10,10,20,.6);border:1px solid var(--b2);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:20px;font-size:12px;color:var(--text2);line-height:1.8}
+.condition strong{color:var(--text-bright)}
+.condition em{color:var(--blue2);font-style:normal}
+
+/* DATA TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:12px;margin:14px 0}
+.data-table th{background:rgba(10,10,20,.8);color:var(--text2);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;text-align:center;border:1px solid var(--border)}
+.data-table td{padding:7px 10px;border:1px solid var(--border);text-align:center;font-family:'Courier New',monospace;font-size:12px;color:#a0a8c0}
+.data-table td.label{text-align:left;color:var(--text2);font-family:inherit;font-size:11px}
+.data-table tr:hover td{background:rgba(59,127,255,.04)}
+
+/* LAB LINK */
+.lab-link{display:inline-flex;align-items:center;gap:8px;background:rgba(59,127,255,.1);border:1px solid rgba(59,127,255,.25);color:var(--blue2);font-size:12px;font-weight:600;padding:10px 18px;border-radius:10px;margin:12px 0;transition:all .15s}
+.lab-link:hover{background:rgba(59,127,255,.2);border-color:var(--blue);text-decoration:none}
+.lab-link .icon{font-size:16px}
+
+/* CALC SECTION */
+.calc-section{background:rgba(59,127,255,.04);border:1px solid rgba(59,127,255,.15);border-radius:10px;padding:16px;margin-top:16px}
+.calc-title{font-size:10px;font-weight:700;color:var(--blue2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+.calc-row{display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap}
+.calc-label{font-size:11px;color:var(--text2);min-width:200px}
+.calc-input{background:rgba(10,10,20,.8);border:1px solid var(--b2);border-radius:7px;padding:7px 10px;font-size:13px;font-family:'Courier New',monospace;color:var(--text-bright);width:110px;outline:none;transition:all .15s}
+.calc-input:focus{border-color:var(--blue)}
+.calc-input.ok{border-color:var(--green);color:var(--green2)}
+.calc-input.err{border-color:var(--red);color:var(--red)}
+.calc-unit{font-size:11px;color:var(--border);font-family:'Courier New',monospace}
+.btn-check{background:rgba(59,127,255,.15);border:1px solid rgba(59,127,255,.3);color:var(--blue2);font-size:11px;font-weight:700;padding:7px 16px;border-radius:8px;cursor:pointer;letter-spacing:.03em;transition:all .15s;font-family:inherit;margin-top:6px}
+.btn-check:hover{background:rgba(59,127,255,.25)}
+.btn-reveal{background:none;border:1px solid var(--border);color:var(--text2);font-size:11px;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:inherit;margin-top:6px;margin-left:6px;transition:all .15s}
+.btn-reveal:hover{border-color:var(--b2);color:var(--text)}
+.expl{display:none;background:rgba(5,5,15,.8);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-top:10px;font-size:11px;color:var(--text2);line-height:1.85}
+.expl.open{display:block}
+.expl strong{color:#7eb8a4}
+.expl .f{font-family:'Courier New',monospace;background:rgba(59,127,255,.1);border:1px solid rgba(59,127,255,.2);border-radius:4px;padding:2px 7px;color:var(--blue2);font-size:11px}
+
+/* CHART */
+.chart-wrap{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:16px;margin:16px 0}
+.chart-title{font-size:10px;color:var(--text2);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+
+/* SCORE */
+.score-bar{position:fixed;bottom:16px;right:20px;background:var(--surface);border:1px solid var(--b2);border-radius:10px;padding:8px 16px;font-size:11px;color:var(--text2);display:flex;align-items:center;gap:8px;z-index:100}
+.score-num{font-size:15px;font-weight:700;font-family:'Courier New',monospace;color:var(--green2)}
+
+/* FOOTER */
+.site-footer{border-top:1px solid var(--border);padding:20px 32px;text-align:center;font-size:10px;color:var(--text2);line-height:1.8;max-width:900px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-logo">Limbic KZ</span>
+    <span class="topbar-sep">›</span>
+    <span class="topbar-title">ВсОШ 2021–22 · Биохимия 11 класс</span>
+  </div>
+  <div class="topbar-links">
+    <a href="index.html">← Главная</a>
+    <a href="vsosh_biochem_2122_en.html">EN</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">🏆 ВсОШ — Практический тур</div>
+  <h1>Определение активности липазы<br>в препарате фермента</h1>
+  <p class="hero-sub">XXXVIII Всероссийская олимпиада школьников по биологии, 2021–22 уч. год, 11 класс. Биохимия, 50 баллов.</p>
+  <div class="hero-meta">
+    <span class="meta-chip">📋 5 заданий</span>
+    <span class="meta-chip">⚗️ Биуретовый метод</span>
+    <span class="meta-chip">🧫 Титрование NaOH</span>
+    <span class="meta-chip">🔢 50 баллов</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ════ ЗАДАНИЕ 1 ════ -->
+<div class="task-card">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-badge">Задание 1</span>
+    <h2>Биуретовый метод — заполнение 96-луночного планшета</h2>
+    <span class="task-score">15 баллов</span>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="task-inner">
+      <div class="condition">
+        Объем пробы белка в лунке <strong>перед добавлением биуретового реактива</strong> должен составлять <em>50 мкл</em>. В лунки А1–А6 и В1–В6 вносится БСА (стандарт 10 мг/мл). В лунки А7, В7 — липаза 25 мкл; А8, В8 — липаза 50 мкл. Во все лунки добавляется 200 мкл биуретового реактива.
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Лунки</th><th>А1,В1</th><th>А2,В2</th><th>А3,В3</th><th>А4,В4</th><th>А5,В5</th><th>А6,В6</th><th>А7,В7</th><th>А8,В8</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="label">БСА, мкг</td><td>0</td><td>100</td><td>200</td><td>300</td><td>400</td><td>500</td><td>—</td><td>—</td></tr>
+          <tr><td class="label">БСА, мкл</td><td style="color:var(--green2)">0</td><td style="color:var(--green2)">10</td><td style="color:var(--green2)">20</td><td style="color:var(--green2)">30</td><td style="color:var(--green2)">40</td><td style="color:var(--green2)">50</td><td>—</td><td>—</td></tr>
+          <tr><td class="label">Вода, мкл</td><td style="color:var(--green2)">50</td><td style="color:var(--green2)">40</td><td style="color:var(--green2)">30</td><td style="color:var(--green2)">20</td><td style="color:var(--green2)">10</td><td style="color:var(--green2)">0</td><td style="color:var(--green2)">25</td><td style="color:var(--green2)">0</td></tr>
+          <tr><td class="label">Липаза (Ф), мкл</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>25</td><td>50</td></tr>
+          <tr><td class="label">Биурет, мкл</td><td>200</td><td>200</td><td>200</td><td>200</td><td>200</td><td>200</td><td>200</td><td>200</td></tr>
+        </tbody>
+      </table>
+
+      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue2);margin:12px 0 4px">🔬 Виртуальная лаборатория — биуретовый метод</div>
+      <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;ru&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+    <title>Лаборатория: Биуретовый метод</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <script src=&quot;https://unpkg.com/lucide@latest&quot;></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&amp;family=JetBrains+Mono&amp;display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #e2e8f0; }
+        
+        .plate-container {
+            background: linear-gradient(145deg, #ffffff, #f1f5f9);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 50px -12px rgba(0,0,0,0.15), inset 0 0 2px 1px rgba(255,255,255,0.8);
+            border: 1px solid #cbd5e1;
+        }
+
+        .plate-inner {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 20px;
+            box-shadow: inset 2px 2px 10px rgba(0,0,0,0.05);
+            /* Ограничиваем высоту строго под 8 рядов */
+            display: inline-block;
+            width: 100%;
+        }
+
+        .well-wrapper {
+            position: relative;
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .well {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e2e8f0 100%);
+            border: 1px solid #cbd5e1;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .well.active {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2), inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .well-liquid {
+            position: absolute;
+            width: 88%;
+            height: 88%;
+            border-radius: 50%;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+            transform: scale(0.4);
+            box-shadow: inset 0 -4px 8px rgba(0,0,0,0.1), inset 0 4px 8px rgba(255,255,255,0.3);
+        }
+
+        .row-label { font-size: 11px; font-weight: 900; color: #94a3b8; height: 46px; display: flex; align-items: center; justify-content: center; width: 20px; }
+        .col-label { font-size: 11px; font-weight: 900; color: #94a3b8; text-align: center; }
+
+        .btn-reagent {
+            @apply flex flex-col items-center justify-center p-3 bg-white border-2 border-slate-200 rounded-xl hover:border-blue-500 transition-all text-center;
+        }
+        .btn-reagent.selected { @apply border-blue-600 bg-blue-50 ring-4 ring-blue-100; }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Стилизация скроллбара для модалки */
+        #results-container::-webkit-scrollbar { width: 6px; }
+        #results-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class=&quot;p-4 md:p-8&quot;>
+
+    <div class=&quot;max-w-7xl mx-auto flex flex-col gap-6&quot;>
+        
+        <header class=&quot;bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex justify-between items-center&quot;>
+            <div class=&quot;flex items-center gap-4&quot;>
+                <div class=&quot;p-3 bg-blue-600 rounded-2xl text-white shadow-lg shadow-blue-200&quot;>
+                    <i data-lucide=&quot;microscope&quot; class=&quot;w-6 h-6&quot;></i>
+                </div>
+                <div>
+                    <h1 class=&quot;text-xl font-black uppercase tracking-tighter text-slate-800&quot;>Биохимический практикум</h1>
+                    <p class=&quot;text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]&quot;>Задание 1: Биуретовый метод | Определение активности липазы</p>
+                </div>
+            </div>
+            <div class=&quot;flex gap-4&quot;>
+                <div class=&quot;px-6 py-2 bg-slate-50 rounded-2xl border border-slate-200 text-center&quot;>
+                    <span class=&quot;block text-[8px] font-black text-slate-400 uppercase&quot;>Реагент</span>
+                    <span id=&quot;active-reagent-name&quot; class=&quot;text-xs font-black uppercase text-blue-600&quot;>Выбор...</span>
+                </div>
+                <button onclick=&quot;location.reload()&quot; class=&quot;p-4 bg-white border border-slate-200 rounded-2xl hover:bg-red-50 hover:text-red-600 transition-all shadow-sm&quot;>
+                    <i data-lucide=&quot;rotate-ccw&quot; class=&quot;w-5 h-5&quot;></i>
+                </button>
+            </div>
+        </header>
+
+        <div class=&quot;grid grid-cols-12 gap-8&quot;>
+            
+            <aside class=&quot;col-span-3 space-y-4&quot;>
+                <div class=&quot;bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm&quot;>
+                    <h3 class=&quot;text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest border-b pb-2&quot;>Штатив с реагентами</h3>
+                    <div class=&quot;grid grid-cols-1 gap-3&quot;>
+                        <button onclick=&quot;selectReagent('BSA', '#3b82f6', 'БСА (10 мг/мл)')&quot; id=&quot;btn-BSA&quot; class=&quot;btn-reagent&quot;>
+                            <span class=&quot;text-[10px] font-black uppercase&quot;>БСА (10 мг/мл)</span>
+                        </button>
+                        <button onclick=&quot;selectReagent('Lipase', '#10b981', 'Липаза (Ф)')&quot; id=&quot;btn-Lipase&quot; class=&quot;btn-reagent&quot;>
+                            <span class=&quot;text-[10px] font-black uppercase&quot;>Липаза (Ф)</span>
+                        </button>
+                        <button onclick=&quot;selectReagent('H2O', '#bae6fd', 'H₂O дистиллированная')&quot; id=&quot;btn-H2O&quot; class=&quot;btn-reagent&quot;>
+                            <span class=&quot;text-[10px] font-black uppercase text-sky-400&quot;>Дист. вода</span>
+                        </button>
+                        <button onclick=&quot;selectReagent('Biuret', '#a855f7', 'Биуретовый реактив')&quot; id=&quot;btn-Biuret&quot; class=&quot;btn-reagent&quot;>
+                            <span class=&quot;text-[10px] font-black uppercase text-purple-600&quot;>Биуретовый р-тив</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class=&quot;bg-slate-900 p-6 rounded-[2rem] text-white shadow-xl&quot;>
+                    <h3 class=&quot;text-[10px] font-black text-slate-500 uppercase mb-4 tracking-widest&quot;>Автодозатор</h3>
+                    <div class=&quot;space-y-4&quot;>
+                        <div class=&quot;relative&quot;>
+                            <input id=&quot;vol-input&quot; type=&quot;number&quot; value=&quot;25&quot; class=&quot;w-full text-4xl font-black bg-white/5 p-4 rounded-2xl border-2 border-white/10 focus:border-blue-500 focus:bg-white/10 transition-all outline-none text-white&quot;>
+                            <span class=&quot;absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 uppercase&quot;>мкл</span>
+                        </div>
+                        <div class=&quot;grid grid-cols-3 gap-2&quot;>
+                            <button onclick=&quot;setVol(10)&quot; class=&quot;py-2 bg-white/5 rounded-xl text-[10px] font-bold hover:bg-white/10&quot;>10</button>
+                            <button onclick=&quot;setVol(25)&quot; class=&quot;py-2 bg-white/5 rounded-xl text-[10px] font-bold hover:bg-white/10&quot;>25</button>
+                            <button onclick=&quot;setVol(200)&quot; class=&quot;py-2 bg-white/5 rounded-xl text-[10px] font-bold hover:bg-white/10&quot;>200</button>
+                        </div>
+                        <button onclick=&quot;applyToWell()&quot; class=&quot;w-full py-5 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-blue-500 shadow-lg shadow-blue-900/20 transition-all active:scale-95&quot;>Внести в лунку</button>
+                    </div>
+                </div>
+            </aside>
+
+            <main class=&quot;col-span-9&quot;>
+                <div class=&quot;plate-container&quot;>
+                    <div class=&quot;flex&quot;>
+                        <!-- Буквы (только до H) -->
+                        <div class=&quot;flex flex-col pt-[36px] mr-2&quot;>
+                            <script>
+                                ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].forEach(l => document.write(`<div class=&quot;row-label&quot;>${l}</div>`));
+                            </script>
+                        </div>
+                        
+                        <div class=&quot;flex-1&quot;>
+                            <div class=&quot;grid grid-cols-12 gap-2 mb-2&quot;>
+                                <script>
+                                    for(let i=1; i<=12; i++) document.write(`<div class=&quot;col-label&quot;>${i}</div>`);
+                                </script>
+                            </div>
+                            <div class=&quot;plate-inner&quot;>
+                                <!-- Сетка 8x12 -->
+                                <div class=&quot;grid grid-cols-12 gap-x-2 gap-y-0&quot; id=&quot;plate-grid&quot;></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=&quot;mt-8 flex justify-between items-end border-t border-slate-200 pt-6&quot;>
+                        <div class=&quot;space-y-2 text-[9px] font-bold text-slate-400 uppercase tracking-[0.3em]&quot;>
+                            Costar® 96-Well Flat Bottom Plate (A-H)
+                        </div>
+                        <button onclick=&quot;showAnalysis()&quot; class=&quot;px-10 py-5 bg-emerald-600 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition-all flex items-center gap-3&quot;>
+                            <i data-lucide=&quot;scan-line&quot; class=&quot;w-5 h-5&quot;></i>
+                            Измерить все активные лунки
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Модалка результатов -->
+    <div id=&quot;modal&quot; class=&quot;fixed inset-0 bg-slate-900/95 backdrop-blur-xl hidden z-50 flex items-center justify-center p-6&quot;>
+        <div class=&quot;bg-white max-w-5xl w-full rounded-[3rem] p-12 shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]&quot;>
+            <div class=&quot;absolute top-0 left-0 w-full h-2 bg-emerald-500&quot;></div>
+            
+            <div class=&quot;flex justify-between items-start mb-6&quot;>
+                <div>
+                    <h2 class=&quot;text-4xl font-black uppercase tracking-tighter text-slate-900 italic&quot;>Спектрофотометрия</h2>
+                    <p class=&quot;text-xs font-bold text-slate-400 uppercase tracking-widest mt-1&quot;>Оптическая плотность (OD 540nm) для всех заполненных лунок</p>
+                </div>
+                <button onclick=&quot;closeModal()&quot; class=&quot;p-3 bg-slate-100 hover:bg-slate-200 rounded-full transition-all&quot;>
+                    <i data-lucide=&quot;x&quot; class=&quot;w-6 h-6&quot;></i>
+                </button>
+            </div>
+            
+            <div id=&quot;results-container&quot; class=&quot;flex-1 overflow-y-auto pr-4 space-y-8&quot;>
+                <!-- Сюда будут динамически добавляться ряды -->
+                <div id=&quot;dynamic-results-list&quot; class=&quot;space-y-6&quot;></div>
+            </div>
+
+            <div class=&quot;mt-8 pt-6 border-t border-slate-100 flex justify-between items-center&quot;>
+                <p class=&quot;text-[10px] text-slate-400 font-bold uppercase tracking-widest italic&quot;>
+                    * Рассчитано на основе концентрации белка и объема биуретового реактива
+                </p>
+                <button onclick=&quot;closeModal()&quot; class=&quot;px-8 py-3 bg-slate-900 text-white rounded-2xl font-bold uppercase text-[10px] tracking-widest&quot;>Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        let selectedReagentId = null;
+        let selectedWellId = null;
+        let plateData = {};
+
+        const PROTEIN_FACTOR = 0.00075; 
+        const BASE_OD = 0.060;        
+
+        const grid = document.getElementById('plate-grid');
+        const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        
+        // Генерация сетки строго 8x12
+        rows.forEach(row => {
+            for(let col=1; col<=12; col++) {
+                const id = `${row}${col}`;
+                const wellWrapper = document.createElement('div');
+                wellWrapper.className = 'well-wrapper';
+                wellWrapper.innerHTML = `
+                    <div onclick=&quot;selectWell('${id}')&quot; id=&quot;well-${id}&quot; class=&quot;well&quot;>
+                        <div id=&quot;fill-${id}&quot; class=&quot;well-liquid&quot;></div>
+                        <span class=&quot;well-label text-[7px] font-black text-slate-300 absolute pointer-events-none&quot;>${id}</span>
+                    </div>
+                `;
+                grid.appendChild(wellWrapper);
+            }
+        });
+
+        function selectReagent(id, color, name) {
+            selectedReagentId = id;
+            window.reagentColor = color;
+            document.querySelectorAll('.btn-reagent').forEach(b => b.classList.remove('selected'));
+            document.getElementById(`btn-${id}`).classList.add('selected');
+            document.getElementById('active-reagent-name').innerText = name;
+        }
+
+        function setVol(v) { document.getElementById('vol-input').value = v; }
+
+        function selectWell(id) {
+            selectedWellId = id;
+            document.querySelectorAll('.well').forEach(w => w.classList.remove('active'));
+            document.getElementById(`well-${id}`).classList.add('active');
+        }
+
+        function applyToWell() {
+            const vol = parseFloat(document.getElementById('vol-input').value);
+            if (!selectedWellId || !selectedReagentId || isNaN(vol) || vol <= 0) return;
+
+            if (!plateData[selectedWellId]) {
+                plateData[selectedWellId] = { BSA: 0, Lipase: 0, H2O: 0, Biuret: 0, total: 0 };
+            }
+
+            plateData[selectedWellId][selectedReagentId] += vol;
+            plateData[selectedWellId].total += vol;
+
+            updateWellVisuals(selectedWellId);
+        }
+
+        function updateWellVisuals(id) {
+            const data = plateData[id];
+            const fill = document.getElementById(`fill-${id}`);
+            const proteinContent = (data.BSA * 10) + (data.Lipase * 6.5);
+            
+            fill.style.opacity = Math.min(data.total / 300, 1);
+            fill.style.transform = `scale(${Math.min(0.5 + (data.total / 500), 1)})`;
+            
+            if (data.Biuret > 0) {
+                const purpleIntensity = Math.min(proteinContent / 500, 1); 
+                const r = Math.round(168 - (60 * purpleIntensity));
+                const g = Math.round(85 - (85 * purpleIntensity));
+                const b = Math.round(247 - (100 * purpleIntensity));
+                fill.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+            } else {
+                fill.style.backgroundColor = window.reagentColor || '#bae6fd';
+            }
+        }
+
+        function showAnalysis() {
+            const listCont = document.getElementById('dynamic-results-list');
+            listCont.innerHTML = '';
+            
+            let hasAnyData = false;
+
+            rows.forEach(rowChar => {
+                // Проверяем, есть ли данные в этом ряду
+                const rowWells = [];
+                for(let i=1; i<=12; i++) {
+                    const id = `${rowChar}${i}`;
+                    if(plateData[id] &amp;&amp; plateData[id].total > 0) {
+                        rowWells.push(id);
+                    }
+                }
+
+                if(rowWells.length > 0) {
+                    hasAnyData = true;
+                    const rowSection = document.createElement('div');
+                    rowSection.innerHTML = `
+                        <h4 class=&quot;text-[10px] font-black text-slate-400 uppercase mb-3 tracking-[0.2em] flex items-center gap-2&quot;>
+                            Ряд ${rowChar} <span class=&quot;h-px bg-slate-100 flex-1&quot;></span>
+                        </h4>
+                        <div class=&quot;grid grid-cols-6 md:grid-cols-12 gap-2&quot; id=&quot;results-row-${rowChar}&quot;></div>
+                    `;
+                    listCont.appendChild(rowSection);
+                    
+                    const rowGrid = document.getElementById(`results-row-${rowChar}`);
+                    
+                    // Показываем все 12 лунок ряда, если в ряду есть хоть одна активная
+                    for(let i=1; i<=12; i++) {
+                        const id = `${rowChar}${i}`;
+                        const data = plateData[id];
+                        let odDisplay = &quot;---&quot;;
+                        let statusColor = &quot;text-slate-200&quot;;
+
+                        if(data &amp;&amp; data.total > 0) {
+                            const protein_mcg = (data.BSA * 10) + (data.Lipase * 6.5);
+                            const noise = (Math.random() - 0.5) * 0.004;
+                            const dilutionEffect = data.Biuret > 0 ? (data.Biuret / 200) : 0.1;
+                            
+                            const odValue = (BASE_OD + (protein_mcg * PROTEIN_FACTOR)) * dilutionEffect + noise;
+                            odDisplay = Math.max(0.04, odValue).toFixed(3);
+                            
+                            statusColor = protein_mcg > 0 ? &quot;text-purple-600&quot; : &quot;text-blue-400&quot;;
+                            if (data.Biuret === 0) statusColor = &quot;text-slate-400&quot;;
+                        }
+
+                        rowGrid.innerHTML += `
+                            <div class=&quot;bg-white p-2 rounded-xl border border-slate-100 text-center shadow-sm&quot;>
+                                <div class=&quot;text-[7px] font-bold text-slate-400 uppercase&quot;>${id}</div>
+                                <div class=&quot;mono text-[11px] font-black ${statusColor}&quot;>${odDisplay}</div>
+                            </div>
+                        `;
+                    }
+                }
+            });
+
+            if(!hasAnyData) {
+                listCont.innerHTML = `
+                    <div class=&quot;py-20 text-center&quot;>
+                        <i data-lucide=&quot;info&quot; class=&quot;w-12 h-12 text-slate-200 mx-auto mb-4&quot;></i>
+                        <p class=&quot;text-slate-400 font-bold uppercase text-xs&quot;>Планшет пуст. Добавьте реагенты в лунки.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+    </script>
+</body>
+</html>" style="width:100%;height:520px;border:none;border-radius:10px;margin-top:12px;display:block;" frameborder="0"></iframe>
+
+      <div class="expl open" style="margin-top:8px">
+        <strong>Ключ к таблице:</strong> БСА (10 мг/мл), поэтому 100 мкг = 10 мкл, 500 мкг = 50 мкл. Объём воды = 50 − V(БСА). Для А7: 25 мкл липазы + 25 мкл воды = 50 мкл. Для А8: 50 мкл липазы + 0 воды = 50 мкл.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ ЗАДАНИЕ 2 ════ -->
+<div class="task-card">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-badge green">Задание 2</span>
+    <h2>Калибровочный график и концентрация белка</h2>
+    <span class="task-score">15 баллов</span>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="task-inner">
+      <div class="condition">
+        По результатам спектрофотометрии при 540 нм постройте калибровочный график (ОП vs мкг белка), определите концентрацию белка в препарате липазы.
+        <br><strong>Данные ридера (вариант А):</strong>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>Лунка</th><th>А1</th><th>А2</th><th>А3</th><th>А4</th><th>А5</th><th>А6</th><th>А7</th><th>А8</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="label">БСА, мкг</td><td>0</td><td>100</td><td>200</td><td>300</td><td>400</td><td>500</td><td>—</td><td>—</td></tr>
+          <tr><td class="label">ОП (ряд А)</td><td>0.059</td><td>0.134</td><td>0.212</td><td>0.284</td><td>0.362</td><td>0.438</td><td>0.192</td><td>0.329</td></tr>
+          <tr><td class="label">ОП (ряд В)</td><td>0.061</td><td>0.136</td><td>0.208</td><td>0.286</td><td>0.358</td><td>0.432</td><td>0.194</td><td>0.323</td></tr>
+          <tr><td class="label" style="color:var(--blue2)">Среднее</td><td style="color:var(--blue2)">0.060</td><td style="color:var(--blue2)">0.135</td><td style="color:var(--blue2)">0.210</td><td style="color:var(--blue2)">0.285</td><td style="color:var(--blue2)">0.360</td><td style="color:var(--blue2)">0.435</td><td style="color:var(--blue2)">0.193</td><td style="color:var(--blue2)">0.326</td></tr>
+        </tbody>
+      </table>
+
+      <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:12px;color:#f59e0b;line-height:1.8">
+  📐 <strong>Постройте калибровочный график самостоятельно на бумаге</strong> (или в тетради):<br>
+  Ось X — содержание белка (мкг): 0, 100, 200, 300, 400, 500<br>
+  Ось Y — оптическая плотность ОП₅₄₀: значения «Среднее» из таблицы выше<br>
+  Проведите прямую через точки. Затем по ОП = 0.193 (лунка А7) и ОП = 0.326 (А8) найдите соответствующие значения мкг белка.
+</div>
+
+      <div class="calc-section">
+        <div class="calc-title">Расчёт концентрации белка</div>
+        <p style="font-size:11px;color:var(--text2);margin-bottom:10px">Из уравнения прямой (y = kx + b) найдите x при ОП = 0.193 (А7, 25 мкл липазы) и ОП = 0.326 (А8, 50 мкл).</p>
+        <div class="calc-row">
+          <span class="calc-label">Конц. белка (из А7, 25 мкл):</span>
+          <input class="calc-input" id="t2_a7" type="number" step="0.1" placeholder="??">
+          <span class="calc-unit">мкг / 25 мкл</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">Конц. белка (из А8, 50 мкл):</span>
+          <input class="calc-input" id="t2_a8" type="number" step="0.1" placeholder="??">
+          <span class="calc-unit">мкг / 50 мкл</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">Концентрация в препарате:</span>
+          <input class="calc-input" id="t2_conc" type="number" step="0.1" placeholder="??">
+          <span class="calc-unit">мг/мл</span>
+        </div>
+        <button class="btn-check" onclick="checkT2()">✓ Проверить</button>
+        <button class="btn-reveal" onclick="toggleExpl('expl_t2')">Объяснение</button>
+        <div class="expl" id="expl_t2">
+          Уравнение прямой: <span class="f">ОП = 0.00075 × мкг + 0.060</span><br>
+          Из А7 (ОП = 0.193): <span class="f">мкг = (0.193 − 0.060) / 0.00075 = 177 мкг</span> в 25 мкл → <strong>7.1 мг/мл</strong><br>
+          Из А8 (ОП = 0.326): <span class="f">мкг = (0.326 − 0.060) / 0.00075 = 355 мкг</span> в 50 мкл → <strong>7.1 мг/мл</strong><br>
+          <strong>Концентрация белка ≈ 7.1 мг/мл</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ ЗАДАНИЕ 3 ════ -->
+<div class="task-card">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-badge">Задание 3</span>
+    <h2>Титрование — определение концентрации кислоты</h2>
+    <span class="task-score">10 баллов</span>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="task-inner">
+      <div class="condition">
+        В 2 колбы внесите по <em>1 мл Пробы 1 (П1)</em>, в ещё 2 — по <em>1 мл Пробы 2 (П2)</em>. Добавьте ~20 мл воды и 2–3 капли фенолфталеина. Оттитруйте <em>5 мМ NaOH</em>. Запишите объём щелочи, рассчитайте концентрацию кислоты.
+      </div>
+
+      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue2);margin:12px 0 4px">⚗️ Виртуальная лаборатория — титрование NaOH</div>
+      <iframe srcdoc="<!DOCTYPE html>
+<html lang=&quot;ru&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+    <title>Виртуальная лаборатория: Активность липазы</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <script src=&quot;https://unpkg.com/lucide@latest&quot;></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;family=JetBrains+Mono&amp;display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
+
+        /* Стили бюретки */
+        .buret-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .buret-body {
+            width: 38px;
+            height: 700px;
+            background: #f0f4f8;
+            border: 1px solid #b2becd;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            position: relative;
+            box-shadow: inset 2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #d1e9ff;
+            transition: height 0.1s linear;
+        }
+
+        .meniscus {
+            position: absolute;
+            top: -8px;
+            left: 0;
+            width: 100%;
+            height: 16px;
+            background: #f8fafc;
+            border-bottom: 2px solid #3b82f6;
+            border-radius: 0 0 50% 50%;
+        }
+
+        /* Шкала */
+        .scale-mark {
+            position: absolute;
+            right: 0;
+            height: 1px;
+            background: #64748b;
+            width: 10px;
+        }
+        .scale-mark.major { width: 18px; height: 2px; background: #1e293b; }
+        .scale-label {
+            position: absolute;
+            left: 5px;
+            font-family: 'JetBrains Mono';
+            font-size: 11px;
+            font-weight: 700;
+            color: #1e293b;
+            transform: translateY(-50%);
+        }
+
+        /* Кран */
+        .tap-box {
+            width: 70px;
+            height: 45px;
+            background: #cbd5e1;
+            border: 1px solid #94a3b8;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tap-handle {
+            width: 12px;
+            height: 100%;
+            background: #0f172a;
+            border-radius: 4px;
+            transition: transform 0.3s;
+        }
+        .tap-open { transform: rotate(90deg); }
+
+        /* Колбы */
+        .flask {
+            position: relative;
+            width: 130px;
+            height: 160px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .flask:not(.active) { opacity: 0.4; }
+        .flask-svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05)); }
+        
+        /* UI блоки */
+        .ui-card { @apply bg-white rounded-2xl border border-slate-100 shadow-sm p-4; }
+        .label-header { @apply text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4; }
+        .btn-blue { @apply bg-[#3b82f6] text-white px-4 py-2 rounded-lg font-bold text-xs uppercase hover:bg-blue-600 transition-all; }
+        .btn-pink { @apply bg-[#ed4899] text-white px-4 py-2 rounded-lg font-bold text-xs uppercase hover:bg-pink-600 transition-all; }
+        .input-box { @apply w-16 bg-[#f1f5f9] border-none rounded-lg p-2 text-center font-bold text-slate-700 outline-none; }
+
+        .drop {
+            position: absolute;
+            width: 4px;
+            height: 8px;
+            background: #3b82f6;
+            border-radius: 40%;
+            animation: dripFall 0.5s linear infinite;
+        }
+        @keyframes dripFall {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(200px); opacity: 0; }
+        }
+    </style>
+</head>
+<body class=&quot;flex min-h-screen overflow-hidden&quot;>
+
+    <!-- Левая панель -->
+    <aside class=&quot;w-80 bg-[#f8fafc] border-r border-slate-200 p-8 space-y-8 flex flex-col&quot;>
+        
+        <div>
+            <span class=&quot;label-header&quot;>Основные реактивы</span>
+            <div class=&quot;grid grid-cols-2 gap-4&quot;>
+                <button onclick=&quot;fillBuret()&quot; class=&quot;flex flex-col items-center gap-2 group&quot;>
+                    <div class=&quot;p-4 bg-white rounded-xl shadow-sm border border-slate-50 group-hover:bg-blue-50 transition-colors&quot;>
+                        <i data-lucide=&quot;arrow-up&quot; class=&quot;text-blue-500 w-5 h-5&quot;></i>
+                    </div>
+                    <span class=&quot;text-[11px] font-bold text-slate-600 text-center&quot;>NaOH в бюретку</span>
+                </button>
+                <button onclick=&quot;addNaOHToFlask()&quot; class=&quot;flex flex-col items-center gap-2 group&quot;>
+                    <div class=&quot;p-4 bg-white rounded-xl shadow-sm border border-slate-50 group-hover:bg-blue-50 transition-colors&quot;>
+                        <i data-lucide=&quot;arrow-down&quot; class=&quot;text-blue-500 w-5 h-5&quot;></i>
+                    </div>
+                    <span class=&quot;text-[11px] font-bold text-slate-600 text-center&quot;>NaOH в колбу</span>
+                </button>
+                <button onclick=&quot;addSample(1)&quot; class=&quot;flex flex-col items-center gap-2 group&quot;>
+                    <div class=&quot;p-4 bg-white rounded-xl shadow-sm border border-slate-50 group-hover:bg-emerald-50 transition-colors&quot;>
+                        <i data-lucide=&quot;edit-3&quot; class=&quot;text-emerald-500 w-5 h-5&quot;></i>
+                    </div>
+                    <span class=&quot;text-[11px] font-bold text-slate-600 text-center&quot;>Проба 1 в колбу</span>
+                </button>
+                <button onclick=&quot;addSample(2)&quot; class=&quot;flex flex-col items-center gap-2 group&quot;>
+                    <div class=&quot;p-4 bg-white rounded-xl shadow-sm border border-slate-50 group-hover:bg-emerald-50 transition-colors&quot;>
+                        <i data-lucide=&quot;edit-3&quot; class=&quot;text-emerald-500 w-5 h-5&quot;></i>
+                    </div>
+                    <span class=&quot;text-[11px] font-bold text-slate-600 text-center&quot;>Проба 2 в колбу</span>
+                </button>
+            </div>
+        </div>
+
+        <div class=&quot;space-y-4&quot;>
+            <span class=&quot;label-header&quot;>Растворитель и индикатор</span>
+            <div class=&quot;ui-card&quot;>
+                <span class=&quot;text-[10px] font-bold text-slate-400 uppercase mb-3 block&quot;>Объем воды (мл)</span>
+                <div class=&quot;flex gap-2&quot;>
+                    <input type=&quot;number&quot; id=&quot;water-val&quot; value=&quot;0&quot; class=&quot;input-box&quot;>
+                    <button onclick=&quot;addWater()&quot; class=&quot;btn-blue flex-1&quot;>Добавить</button>
+                </div>
+            </div>
+            <div class=&quot;ui-card&quot;>
+                <span class=&quot;text-[10px] font-bold text-slate-400 uppercase mb-3 block&quot;>Индикатор (капли)</span>
+                <div class=&quot;flex gap-2&quot;>
+                    <input type=&quot;number&quot; id=&quot;ind-val&quot; value=&quot;0&quot; class=&quot;input-box&quot;>
+                    <button onclick=&quot;addIndicator()&quot; class=&quot;btn-pink flex-1&quot;>Капнуть</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Основная сцена -->
+    <main class=&quot;flex-1 relative flex items-center justify-center gap-32&quot;>
+        
+        <!-- Бюретка -->
+        <div class=&quot;buret-container&quot;>
+            <div class=&quot;buret-body&quot;>
+                <div id=&quot;buret-liquid&quot; class=&quot;liquid&quot; style=&quot;height: 0%&quot;>
+                    <div class=&quot;meniscus&quot;></div>
+                </div>
+                <div id=&quot;buret-scale&quot; class=&quot;absolute inset-0 pointer-events-none&quot;></div>
+            </div>
+            <div class=&quot;w-1.5 h-12 bg-slate-300&quot;></div>
+            <div class=&quot;tap-box&quot; onclick=&quot;toggleTap()&quot;>
+                <div id=&quot;tap-handle&quot; class=&quot;tap-handle&quot;></div>
+                <div id=&quot;drop-point&quot; class=&quot;absolute top-full mt-4&quot;></div>
+            </div>
+            <div class=&quot;w-1.5 h-16 bg-slate-300 rounded-b-full&quot;></div>
+            <span class=&quot;text-[10px] font-black text-slate-400 mt-2 uppercase&quot;>Кран бюретки</span>
+        </div>
+
+        <!-- Колбы -->
+        <div class=&quot;grid grid-cols-2 gap-x-20 gap-y-24 mt-32&quot;>
+            <div onclick=&quot;selectFlask(0)&quot; id=&quot;flask-0&quot; class=&quot;flask active&quot;>
+                <svg class=&quot;flask-svg&quot; viewBox=&quot;0 0 100 100&quot; preserveAspectRatio=&quot;none&quot;>
+                    <path d=&quot;M35 0 L65 0 L100 100 L0 100 Z&quot; fill=&quot;white&quot; stroke=&quot;#94a3b8&quot; stroke-width=&quot;1.5&quot; />
+                    <path id=&quot;liq-0&quot; d=&quot;M0 100 L100 100 L100 100 L0 100 Z&quot; fill=&quot;#e2f1ff&quot; stroke=&quot;#3b82f6&quot; stroke-width=&quot;0.5&quot; class=&quot;transition-all duration-300&quot;/>
+                </svg>
+                <div class=&quot;text-center mt-2 text-[10px] font-bold text-slate-400 uppercase&quot;>Колба 1</div>
+            </div>
+            <div onclick=&quot;selectFlask(1)&quot; id=&quot;flask-1&quot; class=&quot;flask&quot;>
+                <svg class=&quot;flask-svg&quot; viewBox=&quot;0 0 100 100&quot; preserveAspectRatio=&quot;none&quot;>
+                    <path d=&quot;M35 0 L65 0 L100 100 L0 100 Z&quot; fill=&quot;white&quot; stroke=&quot;#94a3b8&quot; stroke-width=&quot;1.5&quot; />
+                    <path id=&quot;liq-1&quot; d=&quot;M0 100 L100 100 L100 100 L0 100 Z&quot; fill=&quot;#e2f1ff&quot; stroke=&quot;#3b82f6&quot; stroke-width=&quot;0.5&quot; class=&quot;transition-all duration-300&quot;/>
+                </svg>
+                <div class=&quot;text-center mt-2 text-[10px] font-bold text-slate-400 uppercase&quot;>Колба 2</div>
+            </div>
+            <div onclick=&quot;selectFlask(2)&quot; id=&quot;flask-2&quot; class=&quot;flask&quot;>
+                <svg class=&quot;flask-svg&quot; viewBox=&quot;0 0 100 100&quot; preserveAspectRatio=&quot;none&quot;>
+                    <path d=&quot;M35 0 L65 0 L100 100 L0 100 Z&quot; fill=&quot;white&quot; stroke=&quot;#94a3b8&quot; stroke-width=&quot;1.5&quot; />
+                    <path id=&quot;liq-2&quot; d=&quot;M0 100 L100 100 L100 100 L0 100 Z&quot; fill=&quot;#e2f1ff&quot; stroke=&quot;#3b82f6&quot; stroke-width=&quot;0.5&quot; class=&quot;transition-all duration-300&quot;/>
+                </svg>
+                <div class=&quot;text-center mt-2 text-[10px] font-bold text-slate-400 uppercase&quot;>Колба 3</div>
+            </div>
+            <div onclick=&quot;selectFlask(3)&quot; id=&quot;flask-3&quot; class=&quot;flask&quot;>
+                <svg class=&quot;flask-svg&quot; viewBox=&quot;0 0 100 100&quot; preserveAspectRatio=&quot;none&quot;>
+                    <path d=&quot;M35 0 L65 0 L100 100 L0 100 Z&quot; fill=&quot;white&quot; stroke=&quot;#94a3b8&quot; stroke-width=&quot;1.5&quot; />
+                    <path id=&quot;liq-3&quot; d=&quot;M0 100 L100 100 L100 100 L0 100 Z&quot; fill=&quot;#e2f1ff&quot; stroke=&quot;#3b82f6&quot; stroke-width=&quot;0.5&quot; class=&quot;transition-all duration-300&quot;/>
+                </svg>
+                <div class=&quot;text-center mt-2 text-[10px] font-bold text-slate-400 uppercase&quot;>Колба 4</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        let buretVol = 0;
+        let activeFlaskIdx = 0;
+        let isTapOpen = false;
+        let dripInt = null;
+
+        const flasks = Array(4).fill(null).map(() => ({
+            sample: null,
+            naoh: 0,
+            water: 0,
+            indicator: 0,
+            spent: 0,
+            target: 0
+        }));
+
+        // Шкала бюретки
+        const scale = document.getElementById('buret-scale');
+        for (let i = 0; i <= 250; i++) {
+            const mark = document.createElement('div');
+            const pos = (i / 250) * 100;
+            const isMajor = i % 10 === 0;
+            mark.className = `scale-mark ${isMajor ? 'major' : ''}`;
+            mark.style.top = `${pos}%`;
+            scale.appendChild(mark);
+            if (isMajor) {
+                const lbl = document.createElement('div');
+                lbl.className = 'scale-label';
+                lbl.style.top = `${pos}%`;
+                lbl.innerText = i / 10;
+                scale.appendChild(lbl);
+            }
+        }
+
+        function fillBuret() {
+            buretVol = 25;
+            updateBuret();
+        }
+
+        function selectFlask(i) {
+            activeFlaskIdx = i;
+            document.querySelectorAll('.flask').forEach((f, idx) => f.classList.toggle('active', i === idx));
+        }
+
+        function addNaOHToFlask() {
+            const f = flasks[activeFlaskIdx];
+            f.naoh += 2;
+            updateFlask(activeFlaskIdx);
+        }
+
+        function addSample(type) {
+            const f = flasks[activeFlaskIdx];
+            if (f.sample) return;
+            f.sample = type;
+            
+            // Логика вариации значений
+            if (type === 1) {
+                // Проба 1: диапазон 4.0 - 4.5
+                f.target = 4.0 + (Math.random() * 0.5);
+            } else if (type === 2) {
+                // Проба 2: диапазон 7.3 - 7.7
+                f.target = 7.3 + (Math.random() * 0.4);
+            }
+            
+            updateFlask(activeFlaskIdx);
+        }
+
+        function addWater() {
+            flasks[activeFlaskIdx].water += parseFloat(document.getElementById('water-val').value) || 0;
+            updateFlask(activeFlaskIdx);
+        }
+
+        function addIndicator() {
+            flasks[activeFlaskIdx].indicator += parseInt(document.getElementById('ind-val').value) || 0;
+            updateFlask(activeFlaskIdx);
+        }
+
+        function toggleTap() {
+            if (buretVol <= 0) return;
+            isTapOpen = !isTapOpen;
+            document.getElementById('tap-handle').classList.toggle('tap-open', isTapOpen);
+            if (isTapOpen) {
+                document.getElementById('drop-point').innerHTML = '<div class=&quot;drop&quot;></div>';
+                dripInt = setInterval(() => {
+                    if (buretVol <= 0) { toggleTap(); return; }
+                    buretVol -= 0.02;
+                    flasks[activeFlaskIdx].spent += 0.02;
+                    updateBuret();
+                    updateFlask(activeFlaskIdx);
+                }, 50);
+            } else {
+                clearInterval(dripInt);
+                document.getElementById('drop-point').innerHTML = '';
+            }
+        }
+
+        function updateBuret() {
+            document.getElementById('buret-liquid').style.height = `${(buretVol / 25) * 100}%`;
+        }
+
+        function updateFlask(idx) {
+            const f = flasks[idx];
+            const liq = document.getElementById(`liq-${idx}`);
+            const total = (f.sample ? 5 : 0) + f.naoh + (f.water / 2) + f.spent;
+            const height = Math.min((total / 40) * 100, 100);
+            
+            if (total === 0) {
+                liq.setAttribute('d', `M0 100 L100 100 L100 100 L0 100 Z`);
+                return;
+            }
+
+            const y = 100 - height;
+            const widthTop = 100 - (height * 0.35); 
+            const offset = (100 - widthTop) / 2;
+            
+            liq.setAttribute('d', `M${offset} ${y} L${100 - offset} ${y} L100 100 L0 100 Z`);
+
+            if (f.indicator >= 1) {
+                const diff = f.spent - f.target;
+                if (diff > 0.4) liq.setAttribute('fill', '#ed4899');
+                else if (diff > 0) liq.setAttribute('fill', '#fbcfe8');
+                else liq.setAttribute('fill', '#e2f1ff');
+            } else {
+                liq.setAttribute('fill', '#e2f1ff');
+            }
+        }
+    </script>
+</body>
+</html>" style="width:100%;height:520px;border:none;border-radius:10px;margin-top:12px;display:block;" frameborder="0"></iframe>
+      <div class="calc-section">
+        <div class="calc-title">Результаты титрования</div>
+        <table class="data-table" style="margin-bottom:14px">
+          <thead><tr><th>Проба</th><th>V(NaOH), мл · повтор 1</th><th>V(NaOH), мл · повтор 2</th><th>Среднее, мл</th><th>Конц. кислоты, мМ</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="label">Проба 1 (5 мин)</td>
+              <td><input class="calc-input" style="width:80px" id="t3_p1a" type="number" step="0.1" placeholder="?"></td>
+              <td><input class="calc-input" style="width:80px" id="t3_p1b" type="number" step="0.1" placeholder="?"></td>
+              <td id="t3_p1avg" style="color:var(--blue2);font-family:monospace">—</td>
+              <td id="t3_p1conc" style="color:var(--green2);font-family:monospace">—</td>
+            </tr>
+            <tr>
+              <td class="label">Проба 2 (10 мин)</td>
+              <td><input class="calc-input" style="width:80px" id="t3_p2a" type="number" step="0.1" placeholder="?"></td>
+              <td><input class="calc-input" style="width:80px" id="t3_p2b" type="number" step="0.1" placeholder="?"></td>
+              <td id="t3_p2avg" style="color:var(--blue2);font-family:monospace">—</td>
+              <td id="t3_p2conc" style="color:var(--green2);font-family:monospace">—</td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn-check" onclick="calcT3()">⟳ Рассчитать</button>
+        <button class="btn-reveal" onclick="toggleExpl('expl_t3')">Объяснение</button>
+        <div class="expl" id="expl_t3">
+          Формула: <span class="f">c(кислоты) = c(NaOH) × V(NaOH) / V(пробы)</span><br>
+          Пример: V(NaOH)ср = 4.2 мл → <span class="f">c = 5 мМ × 4.2 мл / 1.0 мл = 21.0 мМ</span><br>
+          В пробе 1 концентрация кислоты ниже (5 мин), в пробе 2 — выше (10 мин), т.к. больше жира гидролизовалось.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ ЗАДАНИЕ 4 ════ -->
+<div class="task-card">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-badge orange">Задание 4</span>
+    <h2>Активность липазы в препарате фермента</h2>
+    <span class="task-score">5 баллов</span>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="task-inner">
+      <div class="condition">
+        Рассчитайте активность липазы в <em>мкмолях нейтрального жира / мин / мг белка</em>, используя данные из заданий 2 и 3.
+        <br><br>
+        <strong>Исходные данные:</strong> к 500 мл эмульсии добавлено 250 мкл препарата липазы. Аликвоты — 1 мл каждая.
+      </div>
+
+      <div class="calc-section">
+        <div class="calc-title">Расчёт активности</div>
+        <div class="condition" style="margin-bottom:14px;font-size:11px">
+          <strong>Алгоритм (используем только Пробу 1 — 5 мин, т.к. к 10 мин наступает плато):</strong><br>
+          1. c(СЖК) = c(Пробы 1) из задания 3, например 21.0 мМ<br>
+          2. n(СЖК) в 500 мл = c × 0.5 л × 1000 = c × 500 [мкмоль]<br>
+          3. n(TAG) = n(СЖК) / 3 — каждый триацилглицерид даёт 3 жирных кислоты<br>
+          4. Скорость = n(TAG) / 5 мин [мкмоль ТАГ / мин]<br>
+          5. m(белка) = c(белка) × 0.25 мл = 7 × 0.25 = 1.75 мг<br>
+          6. Уд. активность = Скорость / m(белка) ≈ <strong>400 мкмоль/мин/мг</strong>
+        </div>
+
+        <div class="calc-row">
+          <span class="calc-label">n(СЖК) в 500 мл = c(П1) × 500:</span>
+          <input class="calc-input" id="t4_dn500" type="number" step="1" placeholder="??">
+          <span class="calc-unit">мкмоль</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">n(TAG) = n(СЖК) / 3:</span>
+          <input class="calc-input" id="t4_ntag" type="number" step="1" placeholder="??">
+          <span class="calc-unit">мкмоль</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">Скорость = n(TAG) / 5 мин:</span>
+          <input class="calc-input" id="t4_rate" type="number" step="1" placeholder="??">
+          <span class="calc-unit">мкмоль ТАГ/мин</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">Масса белка (7 мг/мл × 0.25 мл):</span>
+          <input class="calc-input" id="t4_mass" type="number" step="0.01" placeholder="??">
+          <span class="calc-unit">мг</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label" style="color:var(--blue2);font-weight:700">Удельная активность:</span>
+          <input class="calc-input" id="t4_act" type="number" step="1" placeholder="??">
+          <span class="calc-unit">мкмоль ТАГ / мин / мг белка</span>
+        </div>
+        <button class="btn-check" onclick="checkT4()">✓ Проверить</button>
+        <button class="btn-reveal" onclick="toggleExpl('expl_t4')">Объяснение</button>
+        <div class="expl" id="expl_t4">
+          При c(П1) = 21.0 мМ (из задания 3):<br>
+          n(СЖК) = 21.0 × 500 = <span class="f">10 500 мкмоль</span><br>
+          n(TAG) = 10 500 / 3 = <span class="f">3 500 мкмоль</span><br>
+          Скорость = 3 500 / 5 = <span class="f">700 мкмоль ТАГ/мин</span><br>
+          m(белка) = 7 мг/мл × 0.25 мл = <span class="f">1.75 мг</span><br>
+          <strong>Уд. активность = 700 / 1.75 = 400 мкмоль ТАГ/мин/мг</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ ЗАДАНИЕ 5 ════ -->
+<div class="task-card">
+  <div class="task-head" onclick="toggleTask(this)">
+    <span class="task-badge orange">Задание 5</span>
+    <h2>Молекулярная масса нейтрального жира</h2>
+    <span class="task-score">5 баллов</span>
+    <span class="task-arr">▼</span>
+  </div>
+  <div class="task-body">
+    <div class="task-inner">
+      <div class="condition">
+        Навеску жира массой <em>1.21 г</em> подвергли полному щелочному гидролизу в <em>100 мл 100 мМ NaOH</em>. После гидролиза концентрация непрореагировавшего NaOH = <em>55 мМ</em>.
+        Рассчитайте молекулярную массу нейтрального жира.
+      </div>
+
+      <div class="calc-section">
+        <div class="calc-title">Расчёт молекулярной массы</div>
+        <div class="condition" style="margin-bottom:14px;font-size:11px">
+          <strong>Ход рассуждений:</strong><br>
+          Нейтральный жир (триацилглицерид) реагирует с 3 молями NaOH:<br>
+          <span class="f">TAG + 3 NaOH → глицерол + 3 карбоксилат Na⁺</span><br><br>
+          n(NaOH исходное) = c × V = 100 мМ × 0.1 л = 10 ммоль<br>
+          n(NaOH после) = 55 мМ × 0.1 л = 5.5 ммоль<br>
+          n(NaOH прореагировало) = 10 − 5.5 = 4.5 ммоль<br>
+          n(TAG) = n(NaOH) / 3 = 1.5 ммоль = 0.0015 моль<br>
+          M = m / n = 1.21 г / 0.0015 моль = ?
+        </div>
+
+        <div class="calc-row">
+          <span class="calc-label">n(NaOH исходное) = 0.1 л × 100 мМ:</span>
+          <input class="calc-input" id="t5_n0" type="number" step="0.1" placeholder="??">
+          <span class="calc-unit">ммоль</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">n(NaOH после) = 0.1 л × 55 мМ:</span>
+          <input class="calc-input" id="t5_nr" type="number" step="0.1" placeholder="??">
+          <span class="calc-unit">ммоль</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">n(NaOH прореагировало):</span>
+          <input class="calc-input" id="t5_nnaoh" type="number" step="0.1" placeholder="??">
+          <span class="calc-unit">ммоль</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">n(TAG):</span>
+          <input class="calc-input" id="t5_ntag" type="number" step="0.01" placeholder="??">
+          <span class="calc-unit">ммоль</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label" style="color:var(--blue2);font-weight:700">Молекулярная масса TAG:</span>
+          <input class="calc-input" id="t5_mw" type="number" step="1" placeholder="???">
+          <span class="calc-unit">г/моль</span>
+        </div>
+        <button class="btn-check" onclick="checkT5()">✓ Проверить</button>
+        <button class="btn-reveal" onclick="toggleExpl('expl_t5')">Объяснение</button>
+        <div class="expl" id="expl_t5">
+          n(NaOH₀) = 0.1 л × 0.1 моль/л = 0.01 моль = <strong>10 ммоль</strong><br>
+          n(NaOH после) = 0.1 л × 0.055 моль/л = 0.0055 моль = 5.5 ммоль<br>
+          n(NaOH потрачено) = 10 − 5.5 = <strong>4.5 ммоль</strong><br>
+          n(TAG) = 4.5 / 3 = <strong>1.5 ммоль = 0.0015 моль</strong><br>
+          <span class="f">M = 1.21 г / 0.0015 моль = 807 г/моль</span><br><br>
+          Для сравнения: триолеин (C₅₇H₁₀₄O₆) M = 885 г/моль; трипальмитин (C₅₁H₉₈O₆) M = 807 г/моль ✓
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<footer class="site-footer">
+  <p>Все права на условия олимпиадных задач принадлежат их законным правообладателям.<br>Материалы используются в ознакомительных и образовательных целях.</p>
+  <p style="margin-top:6px"><strong>Limbic KZ</strong> · <a href="index.html">Главная</a></p>
+</footer>
+
+<div class="score-bar">✓ <span class="score-num" id="scoreNum">0</span> / <span id="scoreTotal">5</span> верно</div>
+
+<script>
+/* ── open/close tasks ── */
+function toggleTask(head){
+  const body=head.nextElementSibling;
+  const arr=head.querySelector('.task-arr');
+  body.classList.toggle('open');
+  arr.classList.toggle('open');
+}
+
+function toggleExpl(id){document.getElementById(id).classList.toggle('open');}
+
+/* ── score ── */
+let correctSet=new Set();
+function markOk(k){correctSet.add(k);document.getElementById('scoreNum').textContent=correctSet.size;}
+function setInput(id,ok){
+  const el=document.getElementById(id);if(!el)return;
+  el.className='calc-input '+(ok?'ok':'err');
+}
+function checkNear(val,correct,pct){return Math.abs(val-correct)/Math.abs(correct)<=pct;}
+
+/* ── Calibration chart ── */
+
+
+/* ── Task 2 check ── */
+function checkT2(){
+  const a7=parseFloat(document.getElementById('t2_a7').value);
+  const a8=parseFloat(document.getElementById('t2_a8').value);
+  const co=parseFloat(document.getElementById('t2_conc').value);
+  setInput('t2_a7',checkNear(a7,177,0.08));
+  setInput('t2_a8',checkNear(a8,355,0.08));
+  const concOk=checkNear(co,7.1,0.12);
+  setInput('t2_conc',concOk);
+  if(concOk)markOk('t2');
+}
+
+/* ── Task 3 calc ── */
+function calcT3(){
+  const p1a=parseFloat(document.getElementById('t3_p1a').value)||0;
+  const p1b=parseFloat(document.getElementById('t3_p1b').value)||0;
+  const p2a=parseFloat(document.getElementById('t3_p2a').value)||0;
+  const p2b=parseFloat(document.getElementById('t3_p2b').value)||0;
+  if(p1a&&p1b){
+    const avg1=((p1a+p1b)/2).toFixed(1);
+    const c1=(5*parseFloat(avg1)/1.0).toFixed(1);
+    document.getElementById('t3_p1avg').textContent=avg1;
+    document.getElementById('t3_p1conc').textContent=c1+' мМ';
+    window._c1=parseFloat(c1);
+  }
+  if(p2a&&p2b){
+    const avg2=((p2a+p2b)/2).toFixed(1);
+    const c2=(5*parseFloat(avg2)/1.0).toFixed(1);
+    document.getElementById('t3_p2avg').textContent=avg2;
+    document.getElementById('t3_p2conc').textContent=c2+' мМ';
+    window._c2=parseFloat(c2);
+    markOk('t3');
+  }
+}
+
+/* ── Task 4 check ── */
+function checkT4(){
+  const c1=window._c1||21.0;
+  const dn500=c1*500;           // n(СЖК) в 500 мл, мкмоль
+  const ntag=dn500/3;           // n(TAG), мкмоль
+  const rate=ntag/5;            // скорость, мкмоль ТАГ/мин
+  const mass=7*0.25;            // масса белка, мг
+  const act=rate/mass;          // ≈400
+
+  setInput('t4_dn500',checkNear(parseFloat(document.getElementById('t4_dn500').value),dn500,0.1));
+  setInput('t4_ntag',checkNear(parseFloat(document.getElementById('t4_ntag').value),ntag,0.1));
+  setInput('t4_rate',checkNear(parseFloat(document.getElementById('t4_rate').value),rate,0.1));
+  setInput('t4_mass',checkNear(parseFloat(document.getElementById('t4_mass').value),mass,0.05));
+  const actOk=checkNear(parseFloat(document.getElementById('t4_act').value),act,0.10);
+  setInput('t4_act',actOk);
+  if(actOk)markOk('t4');
+}
+
+/* ── Task 5 check ── */
+function checkT5(){
+  const n0=parseFloat(document.getElementById('t5_n0').value);
+  const nr=parseFloat(document.getElementById('t5_nr').value);
+  const nn=parseFloat(document.getElementById('t5_nnaoh').value);
+  const nt=parseFloat(document.getElementById('t5_ntag').value);
+  const mw=parseFloat(document.getElementById('t5_mw').value);
+  setInput('t5_n0',checkNear(n0,10,0.05));
+  setInput('t5_nr',checkNear(nr,5.5,0.05));
+  setInput('t5_nnaoh',checkNear(nn,4.5,0.05));
+  setInput('t5_ntag',checkNear(nt,1.5,0.05));
+  const mwOk=checkNear(mw,807,0.02);
+  setInput('t5_mw',mwOk);
+  if(mwOk)markOk('t5');
+}
+
+/* open first task */
+document.querySelector('.task-head').click();
+</script>
+</body>
+</html>

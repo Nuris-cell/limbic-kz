@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Функция почек: клиренс и ХБП · Limbic KZ</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--surface:#10101a;--s2:#161622;--border:#1e1e30;--b2:#28283e;--blue:#3b7fff;--blue2:#6fa3ff;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;--purple:#a78bfa;--text:#c8ccd8;--text2:#7a7a9a;--text-bright:#eeeef8;--radius:14px;--font:'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+a{color:var(--blue2);text-decoration:none}
+.topbar{background:rgba(10,10,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.logo{font-size:13px;font-weight:700;color:var(--text-bright)}
+.sep{color:var(--border);font-size:16px}
+.title-small{font-size:11px;color:var(--text2);font-weight:500}
+.back-link{font-size:11px;color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;background:none;transition:all .15s}
+.back-link:hover{color:var(--blue2);border-color:var(--blue)}
+.hero{padding:40px 32px 28px;max-width:960px;margin:0 auto}
+.hero-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);background:rgba(59,127,255,.12);border:1px solid rgba(59,127,255,.25);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.hero h1{font-size:clamp(20px,3.5vw,32px);font-weight:800;color:var(--text-bright);letter-spacing:-.03em;line-height:1.15;margin-bottom:8px}
+.hero-sub{font-size:13px;color:var(--text2);line-height:1.7;max-width:700px;margin-bottom:18px}
+.meta-row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-size:10px;font-weight:600;background:var(--s2);border:1px solid var(--border);padding:4px 10px;border-radius:6px;color:var(--text2)}
+.content{max-width:960px;margin:0 auto;padding:0 32px 80px}
+.section-title{font-size:18px;font-weight:700;color:var(--text-bright);margin:32px 0 12px;display:flex;align-items:center;gap:8px}
+.section-title span{font-size:13px;color:var(--text2);font-weight:400}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th{background:var(--s2);padding:8px 12px;text-align:left;font-size:11px;letter-spacing:.05em;color:var(--text2);font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+input[type=number],input[type=text],select{background:var(--s2);border:1px solid var(--b2);color:var(--text-bright);border-radius:8px;padding:8px 12px;font-size:14px;outline:none;transition:border .15s;font-family:var(--font);width:100%}
+input:focus,select:focus{border-color:var(--blue)}
+label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-weight:500}
+.btn{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.btn:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:7px}
+.btn-outline{background:transparent;border:1px solid var(--b2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue2)}
+.btn-green{background:var(--green)}
+.btn-green:hover{background:#16a34a}
+.result-box{background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:14px 18px;margin-top:10px;display:none}
+.result-box.show{display:block}
+.result-correct{border-color:var(--green);background:rgba(34,197,94,.07)}
+.result-wrong{border-color:var(--red);background:rgba(239,68,68,.07)}
+.result-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
+.result-label.ok{color:var(--green)}
+.result-label.err{color:var(--red)}
+.result-value{font-size:22px;font-weight:800;color:var(--text-bright);font-family:monospace;margin-bottom:4px}
+.result-explain{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px}
+.formula-box{background:rgba(59,127,255,.06);border:1px solid rgba(59,127,255,.2);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:13px;color:var(--blue2);margin:8px 0;line-height:1.6}
+.hint-toggle{font-size:12px;color:var(--blue2);cursor:pointer;background:none;border:none;padding:4px 0;font-family:var(--font);opacity:.8;margin-top:6px;display:block}
+.hint-toggle:hover{opacity:1}
+.hint-box{background:rgba(59,127,255,.06);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:6px;display:none}
+.hint-box.open{display:block}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-num{width:24px;height:24px;border-radius:50%;background:rgba(59,127,255,.2);color:var(--blue2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{font-size:13px;color:var(--text);line-height:1.6}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin:16px 0}
+.progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s}
+.badge-ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.badge-ibo{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.graph-container{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin:10px 0;position:relative}
+.slider-row{display:flex;align-items:center;gap:12px;margin:8px 0}
+.slider-row input[type=range]{flex:1;accent-color:var(--blue);height:4px}
+.slider-val{font-size:14px;font-weight:700;color:var(--blue2);min-width:60px;text-align:right;font-family:monospace}
+.norm-indicator{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+.norm-ok{background:rgba(34,197,94,.1);color:var(--green)}
+.norm-high{background:rgba(239,68,68,.1);color:var(--red)}
+.norm-low{background:rgba(245,158,11,.1);color:var(--orange)}
+@media(max-width:600px){.hero,.content{padding-left:16px;padding-right:16px}.row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="logo">🧠 Limbic KZ</span>
+    <span class="sep">|</span>
+    <span class="title-small">🫘 Функция почек: клиренс и ХБП</span>
+  </div>
+  <button class="back-link" onclick="history.back()">← Назад</button>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">🔬 Виртуальный практикум</div>
+  <h1>🫘 Функция почек: клиренс и ХБП</h1>
+  <div class="hero-sub">Расчёт СКФ методом клиренса инулина. Канальцевая секреция и реабсорбция. Стадии ХБП. Свободная вода. Несахарный диабет.</div>
+  <div class="meta-row"><div class="chip">IBO-уровень</div><div class="chip">Нефрология</div><div class="chip">5 заданий</div><div class="chip">СКФ / ХБП</div></div>
+</div>
+
+<div class="content">
+
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div style="font-size:12px;color:var(--text2);margin-bottom:24px" id="prog-label">Прогресс: 0 / 5 заданий</div>
+<div class="section-title">📖 Теория</div>
+<div class="card">
+  <div class="card-title">Почечный клиренс — принципы и расчёты</div>
+  <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Клиренс вещества X</strong> = объём плазмы, полностью очищаемый от X за 1 мин: C_X = (U_X × V) / P_X.</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><strong>СКФ по инулину</strong>: инулин фильтруется свободно, не реабсорбируется, не секретируется → C_инулин = СКФ. Норма: 90–130 мл/мин.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Если C_X > СКФ</strong> → канальцевая секреция. Если C_X < СКФ → реабсорбция. ПАГ (C_ПАГ ≈ 600 мл/мин) = почечный плазмоток.</div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><strong>CKD стадии</strong>: G1 (≥90), G2 (60–89), G3а (45–59), G3б (30–44), G4 (15–29), G5 (&lt;15 мл/мин).</div></div>
+  <div class="formula-box">СКФ = (U_инулин × V_мочи) / P_инулин (мл/мин)<br>
+Фракция фильтрации = СКФ / Почечный плазмоток<br>
+Клиренс осмоляльности: C_osm = (U_osm × V) / P_osm<br>
+Свободная вода: CH₂O = V − C_osm</div>
+</div>
+<div class="section-title">🧪 Задание 1 <span>— СКФ по инулину</span></div>
+<div class="card">
+  <div class="card-title">P_инулин=0.5 мг/мл, U_инулин=30 мг/мл, диурез=2 мл/мин</div>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>СКФ (мл/мин):</label><input type="number" id="q1" placeholder="мл/мин (целое)"></div>
+    <button class="btn" onclick="checkQ1()">Проверить</button>
+  </div>
+  <div class="result-box" id="r1"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+<div class="section-title">🧪 Задание 2 <span>— секреция или реабсорбция?</span></div>
+<div class="card">
+  <div class="card-title">СКФ=120 мл/мин. Для 3 веществ рассчитайте клиренс и определите механизм переноса.</div>
+  <table>
+    <tr><th>Вещество</th><th>U (мг/мл)</th><th>P (мг/мл)</th><th>V (мл/мин)</th><th>Клиренс?</th><th>Механизм?</th></tr>
+    <tr><td>Креатинин</td><td>12</td><td>0.1</td><td>1.5</td><td><input type="number" id="c1" placeholder="мл/мин" style="width:80px"></td><td><select id="m1" style="width:120px"><option value="">—</option><option>Фильтрация</option><option>+ Секреция</option><option>+ Реабсорбция</option></select></td></tr>
+    <tr><td>Глюкоза (норм.)</td><td>0</td><td>1.0</td><td>1.5</td><td><input type="number" id="c2" placeholder="мл/мин" style="width:80px"></td><td><select id="m2" style="width:120px"><option value="">—</option><option>Фильтрация</option><option>+ Секреция</option><option>+ Реабсорбция</option></select></td></tr>
+    <tr><td>ПАГ</td><td>300</td><td>0.75</td><td>1.5</td><td><input type="number" id="c3" placeholder="мл/мин" style="width:80px"></td><td><select id="m3" style="width:120px"><option value="">—</option><option>Фильтрация</option><option>+ Секреция</option><option>+ Реабсорбция</option></select></td></tr>
+  </table>
+  <button class="btn" style="margin-top:12px" onclick="checkQ2()">Проверить</button>
+  <div class="result-box" id="r2"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+<div class="section-title">🧪 Задание 3 <span>— интерактивный расчёт ХБП</span></div>
+<div class="card">
+  <div class="card-title">Изменяйте данные — следите за стадией ХБП</div>
+  <div style="display:grid;gap:10px;margin-bottom:14px">
+    <div><label>U_инулин (мг/мл): <span id="u-val" style="color:var(--blue2);font-weight:700">30</span></label>
+    <input type="range" min="1" max="60" value="30" oninput="updateGFR()" id="sl-u" style="width:100%;accent-color:var(--blue)"></div>
+    <div><label>P_инулин (мг/мл): <span id="p-val" style="color:var(--blue2);font-weight:700">0.5</span></label>
+    <input type="range" min="0.1" max="3" value="0.5" step="0.1" oninput="updateGFR()" id="sl-p" style="width:100%;accent-color:var(--blue)"></div>
+    <div><label>Диурез (мл/мин): <span id="v-val" style="color:var(--blue2);font-weight:700">2.0</span></label>
+    <input type="range" min="0.3" max="6" value="2" step="0.1" oninput="updateGFR()" id="sl-v" style="width:100%;accent-color:var(--blue)"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">СКФ (мл/мин)</div><div id="out-gfr" style="font-size:28px;font-weight:800;font-family:monospace;color:var(--blue2)">120</div></div>
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">Стадия ХБП</div><div id="out-ckd" style="font-size:20px;font-weight:800;color:var(--green);margin-top:4px">G1 (норма)</div></div>
+  </div>
+</div>
+<div class="section-title">🧪 Задание 4 <span>— свободная вода (CH₂O)</span></div>
+<div class="card">
+  <div class="card-title">V=2 мл/мин, U_osm=600 мОсм/кг, P_osm=300 мОсм/кг</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Рассчитайте C_osm и CH₂O. Что означает отрицательный CH₂O?</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>C_osm (мл/мин):</label><input type="number" id="q4a" placeholder="мл/мин (целое)"></div>
+    <div style="flex:1"><label>CH₂O (мл/мин):</label><input type="number" id="q4b" placeholder="мл/мин (со знаком)"></div>
+    <button class="btn" onclick="checkQ4()">Проверить</button>
+  </div>
+  <div class="result-box" id="r4"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+<div class="section-title">🧪 Задание 5 <span>— несахарный диабет (IBO)</span></div>
+<div class="card">
+  <div class="card-title">Пациент: P_osm=310, V=8 мл/мин, U_osm=120 мОсм/кг. Рассчитайте CH₂O. Каков диагноз?</div>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>C_osm (мл/мин):</label><input type="number" step="0.1" id="q5a" placeholder="мл/мин (до десятых)"></div>
+    <div style="flex:1"><label>CH₂O (мл/мин):</label><input type="number" step="0.1" id="q5b" placeholder="мл/мин (до десятых)"></div>
+    <button class="btn" onclick="checkQ5()">Проверить</button>
+  </div>
+  <div class="result-box" id="r5"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+</div>
+
+<script>
+function toggleHint(id){
+  var el=document.getElementById(id);
+  el.classList.toggle('open');
+}
+function showResult(id, correct, value, explain){
+  var box=document.getElementById(id);
+  box.classList.add('show');
+  if(correct){box.classList.add('result-correct');box.querySelector('.result-label').className='result-label ok';box.querySelector('.result-label').textContent='✅ Верно';}
+  else{box.classList.add('result-wrong');box.querySelector('.result-label').className='result-label err';box.querySelector('.result-label').textContent='❌ Попробуйте ещё';}
+  box.querySelector('.result-value').textContent=value;
+  box.querySelector('.result-explain').innerHTML=explain;
+}
+
+var score=0,total=5;
+function updateProg(){document.getElementById('prog').style.width=(score/total*100)+'%';document.getElementById('prog-label').textContent='Прогресс: '+score+' / '+total+' заданий';}
+function checkQ1(){
+  var v=parseFloat(document.getElementById('q1').value);
+  var ok=Math.abs(v-120)<=2;
+  if(ok){score++;updateProg();}
+  showResult('r1',ok,ok?'120 мл/мин ✓':'СКФ = (30×2)/0.5 = 120 мл/мин',
+    'Норма СКФ: 90–130 мл/мин. Клиренс инулина = эталон. Клиренс креатинина завышает СКФ на 10–15% из-за канальцевой секреции. Формула CKD-EPI заменила MDRD — точнее у лиц >60 лет.');
+}
+function checkQ2(){
+  var c1=parseFloat(document.getElementById('c1').value);
+  var c2=parseFloat(document.getElementById('c2').value);
+  var c3=parseFloat(document.getElementById('c3').value);
+  var m1=document.getElementById('m1').value;
+  var m2=document.getElementById('m2').value;
+  var m3=document.getElementById('m3').value;
+  var ok=Math.abs(c1-180)<=10 && c2===0 && Math.abs(c3-600)<=30 &&
+         m1==='+ Секреция' && m2==='+ Реабсорбция' && m3==='+ Секреция';
+  if(ok){score++;updateProg();}
+  showResult('r2',ok,ok?'Креатинин=180 (секреция); Глюкоза=0 (реабсорбция); ПАГ=600 (секреция) ✓':'Кр=(12×1.5)/0.1=180>120→секреция. Глюкоза=0<120→полная реабсорбция. ПАГ=(300×1.5)/0.75=600>120→секреция.',
+    'Клиренс ПАГ ≈ почечный плазмоток (RPF). СКФ/RPF = фракция фильтрации ≈ 20%. Глюкозурия появляется при глюкозе плазмы > 10 ммоль/л (транспортный максимум SGLT2 переполнен).');
+}
+function updateGFR(){
+  var u=+document.getElementById('sl-u').value;
+  var p=+document.getElementById('sl-p').value;
+  var v=+document.getElementById('sl-v').value;
+  document.getElementById('u-val').textContent=u;
+  document.getElementById('p-val').textContent=p.toFixed(1);
+  document.getElementById('v-val').textContent=v.toFixed(1);
+  var gfr=+(u*v/p).toFixed(0);
+  document.getElementById('out-gfr').textContent=gfr;
+  var stage='',col='';
+  if(gfr>=90){stage='G1 — норма';col='var(--green)';}
+  else if(gfr>=60){stage='G2 — лёгкое';col='var(--green)';}
+  else if(gfr>=45){stage='G3а — умеренное';col='var(--orange)';}
+  else if(gfr>=30){stage='G3б — значительное';col='var(--orange)';}
+  else if(gfr>=15){stage='G4 — тяжёлое';col='var(--red)';}
+  else{stage='G5 — диализ';col='var(--red)';}
+  document.getElementById('out-ckd').textContent=stage;
+  document.getElementById('out-ckd').style.color=col;
+}
+function checkQ4(){
+  var a=parseFloat(document.getElementById('q4a').value);
+  var b=parseFloat(document.getElementById('q4b').value);
+  var ok=Math.abs(a-4)<=0.1 && Math.abs(b-(-2))<=0.1;
+  if(ok){score++;updateProg();}
+  showResult('r4',ok,ok?'C_osm=4 мл/мин; CH₂O=−2 мл/мин ✓':'C_osm=(600×2)/300=4. CH₂O=2−4=−2 мл/мин.',
+    'CH₂O = −2 мл/мин: почки реабсорбируют 2 мл «чистой» воды в минуту (АДГ активен, моча концентрированная). При несахарном диабете CH₂O >> 0 — вода теряется, моча разбавленная.');
+}
+function checkQ5(){
+  var a=parseFloat(document.getElementById('q5a').value);
+  var b=parseFloat(document.getElementById('q5b').value);
+  var ok=Math.abs(a-3.1)<=0.2 && Math.abs(b-4.9)<=0.2;
+  if(ok){score++;updateProg();}
+  showResult('r5',ok,ok?'C_osm≈3.1; CH₂O≈+4.9 мл/мин ✓':'C_osm=(120×8)/310≈3.1. CH₂O=8−3.1=4.9 мл/мин.',
+    '<b>Диагноз: несахарный диабет центрального типа.</b> CH₂O = +4.9 мл/мин → почки теряют 4.9 мл свободной воды в минуту (= 7 л/сутки!). P_osm=310 > нормы → гиперосмия. Причина: дефицит АДГ (центральный) или резистентность к нему (нефрогенный). Тест: введение десмопрессина — если моча концентрируется → центральный.');
+}
+
+</script>
+</body>
+</html>

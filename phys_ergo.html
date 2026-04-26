@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Эргоспирометрия: VO₂ и RER · Limbic KZ</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--surface:#10101a;--s2:#161622;--border:#1e1e30;--b2:#28283e;--blue:#3b7fff;--blue2:#6fa3ff;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;--purple:#a78bfa;--text:#c8ccd8;--text2:#7a7a9a;--text-bright:#eeeef8;--radius:14px;--font:'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+a{color:var(--blue2);text-decoration:none}
+.topbar{background:rgba(10,10,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.logo{font-size:13px;font-weight:700;color:var(--text-bright)}
+.sep{color:var(--border);font-size:16px}
+.title-small{font-size:11px;color:var(--text2);font-weight:500}
+.back-link{font-size:11px;color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;background:none;transition:all .15s}
+.back-link:hover{color:var(--blue2);border-color:var(--blue)}
+.hero{padding:40px 32px 28px;max-width:960px;margin:0 auto}
+.hero-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);background:rgba(59,127,255,.12);border:1px solid rgba(59,127,255,.25);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.hero h1{font-size:clamp(20px,3.5vw,32px);font-weight:800;color:var(--text-bright);letter-spacing:-.03em;line-height:1.15;margin-bottom:8px}
+.hero-sub{font-size:13px;color:var(--text2);line-height:1.7;max-width:700px;margin-bottom:18px}
+.meta-row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-size:10px;font-weight:600;background:var(--s2);border:1px solid var(--border);padding:4px 10px;border-radius:6px;color:var(--text2)}
+.content{max-width:960px;margin:0 auto;padding:0 32px 80px}
+.section-title{font-size:18px;font-weight:700;color:var(--text-bright);margin:32px 0 12px;display:flex;align-items:center;gap:8px}
+.section-title span{font-size:13px;color:var(--text2);font-weight:400}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th{background:var(--s2);padding:8px 12px;text-align:left;font-size:11px;letter-spacing:.05em;color:var(--text2);font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+input[type=number],input[type=text],select{background:var(--s2);border:1px solid var(--b2);color:var(--text-bright);border-radius:8px;padding:8px 12px;font-size:14px;outline:none;transition:border .15s;font-family:var(--font);width:100%}
+input:focus,select:focus{border-color:var(--blue)}
+label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-weight:500}
+.btn{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.btn:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:7px}
+.btn-outline{background:transparent;border:1px solid var(--b2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue2)}
+.btn-green{background:var(--green)}
+.btn-green:hover{background:#16a34a}
+.result-box{background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:14px 18px;margin-top:10px;display:none}
+.result-box.show{display:block}
+.result-correct{border-color:var(--green);background:rgba(34,197,94,.07)}
+.result-wrong{border-color:var(--red);background:rgba(239,68,68,.07)}
+.result-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
+.result-label.ok{color:var(--green)}
+.result-label.err{color:var(--red)}
+.result-value{font-size:22px;font-weight:800;color:var(--text-bright);font-family:monospace;margin-bottom:4px}
+.result-explain{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px}
+.formula-box{background:rgba(59,127,255,.06);border:1px solid rgba(59,127,255,.2);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:13px;color:var(--blue2);margin:8px 0;line-height:1.6}
+.hint-toggle{font-size:12px;color:var(--blue2);cursor:pointer;background:none;border:none;padding:4px 0;font-family:var(--font);opacity:.8;margin-top:6px;display:block}
+.hint-toggle:hover{opacity:1}
+.hint-box{background:rgba(59,127,255,.06);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:6px;display:none}
+.hint-box.open{display:block}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-num{width:24px;height:24px;border-radius:50%;background:rgba(59,127,255,.2);color:var(--blue2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{font-size:13px;color:var(--text);line-height:1.6}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin:16px 0}
+.progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s}
+.badge-ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.badge-ibo{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.graph-container{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin:10px 0;position:relative}
+.slider-row{display:flex;align-items:center;gap:12px;margin:8px 0}
+.slider-row input[type=range]{flex:1;accent-color:var(--blue);height:4px}
+.slider-val{font-size:14px;font-weight:700;color:var(--blue2);min-width:60px;text-align:right;font-family:monospace}
+.norm-indicator{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+.norm-ok{background:rgba(34,197,94,.1);color:var(--green)}
+.norm-high{background:rgba(239,68,68,.1);color:var(--red)}
+.norm-low{background:rgba(245,158,11,.1);color:var(--orange)}
+@media(max-width:600px){.hero,.content{padding-left:16px;padding-right:16px}.row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="logo">🧠 Limbic KZ</span>
+    <span class="sep">|</span>
+    <span class="title-small">🚴 Эргоспирометрия: VO₂ и RER</span>
+  </div>
+  <button class="back-link" onclick="history.back()">← Назад</button>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">🔬 Виртуальный практикум</div>
+  <h1>🚴 Эргоспирометрия: VO₂ и RER</h1>
+  <div class="hero-sub">Полный виртуальный практикум по эргоспирометрии. Анаэробный порог, VO₂max, энергетика мышечного сокращения, клинические случаи сердечной недостаточности.</div>
+  <div class="meta-row"><div class="chip">IBO-уровень</div><div class="chip">Физиология нагрузки</div><div class="chip">5 заданий</div><div class="chip">VO₂max</div></div>
+</div>
+
+<div class="content">
+
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div style="font-size:12px;color:var(--text2);margin-bottom:24px" id="prog-label">Прогресс: 0 / 5 заданий</div>
+
+<div class="section-title">📖 Теория</div>
+<div class="card">
+  <div class="card-title">Эргоспирометрия — оценка энергетики при нагрузке</div>
+  <div class="step"><div class="step-num">1</div><div class="step-body"><strong>RER (Respiratory Exchange Ratio)</strong> = VCO₂/VO₂. Отражает субстрат окисления. RER=0.7 → жиры; RER=1.0 → углеводы; RER>1 → буферирование лактата.</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Анаэробный порог (AT)</strong> — мощность, при которой лактат накапливается быстрее, чем утилизируется. RER начинает расти выше 1.0. VO₂ при AT у элиты — 80–90% от VO₂max.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><strong>VO₂max</strong> — максимальное потребление O₂. Норма: 35–45 мл/кг/мин у нетренированных; 60–85 у велосипедистов-профессионалов.</div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><strong>КПД мышц ≈ 25%</strong>: из всей химической энергии только 25% идёт на механическую работу, 75% — тепло.</div></div>
+  <div class="formula-box">RER = VCO₂ / VO₂<br>
+Энергозатраты = VO₂ × Калорический эквивалент (ккал/мин)<br>
+Механическая мощность = Полная мощность × КПД<br>
+VO₂max (мл/кг/мин) = VO₂max (л/мин) × 1000 / масса тела</div>
+</div>
+
+<div class="section-title">🧪 Задание 1 <span>— расчёт RER при 150 Вт</span></div>
+<div class="card">
+  <div class="card-title">Велоэргометр — нагрузка 150 Вт</div>
+  <table>
+    <tr><th>Нагрузка</th><th>VO₂ (л/мин)</th><th>VCO₂ (л/мин)</th></tr>
+    <tr><td>50 Вт</td><td>1.02</td><td>0.82</td></tr>
+    <tr><td>100 Вт</td><td>1.78</td><td>1.60</td></tr>
+    <tr><td>150 Вт</td><td>2.50</td><td>2.25</td></tr>
+    <tr><td>200 Вт</td><td>3.41</td><td>3.55</td></tr>
+  </table>
+  <p style="font-size:13px;color:var(--text2);margin:12px 0">При какой нагрузке пересечён анаэробный порог (RER > 1.0)? Рассчитайте RER для всех ступеней и введите значение при 150 Вт.</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>RER при 150 Вт:</label><input type="number" step="0.01" id="q1" placeholder="0.ХХ (до сотых)"></div>
+    <div style="flex:1"><label>Нагрузка AT (Вт):</label><select id="q1b"><option value="">Выберите...</option><option>50</option><option>100</option><option>150</option><option>200</option></select></div>
+    <button class="btn" onclick="checkQ1()">Проверить</button>
+  </div>
+  <div class="result-box" id="r1"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<div class="section-title">🧪 Задание 2 <span>— энергозатраты и КПД</span></div>
+<div class="card">
+  <div class="card-title">При 150 Вт: VO₂ = 2.5 л/мин, Калорический эквивалент при RER=0.9 = 4.95 ккал/л</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Рассчитайте: 1) общие энергозатраты (ккал/мин); 2) механическую мощность (Вт) при КПД=25%; 3) теплопродукцию (Вт).</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>Энергозатраты (ккал/мин):</label><input type="number" step="0.1" id="q2a" placeholder="ккал/мин (до десятых)"></div>
+    <div style="flex:1"><label>Мех. мощность (Вт):</label><input type="number" id="q2b" placeholder="Вт (целое число)"></div>
+    <div style="flex:1"><label>Теплопродукция (Вт):</label><input type="number" id="q2c" placeholder="Вт (целое число)"></div>
+    <button class="btn" onclick="checkQ2()">Проверить</button>
+  </div>
+  <button class="hint-toggle" onclick="toggleHint('h2')">💡 Подсказка</button>
+  <div class="hint-box" id="h2">1 ккал/мин = 69.8 Вт. Общая мощность = 12.375 × 69.8 = 864 Вт. Мех = 864 × 0.25. Тепло = 864 × 0.75.</div>
+  <div class="result-box" id="r2"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<div class="section-title">🧪 Задание 3 <span>— интерактивный эргометр</span></div>
+<div class="card">
+  <div class="card-title">Выберите нагрузку — система рассчитывает параметры</div>
+  <div class="slider-row">
+    <label style="min-width:80px;margin:0">Нагрузка:</label>
+    <input type="range" min="0" max="300" value="150" step="10" oninput="updateErgo(this.value)" id="erg-sl">
+    <span class="slider-val" id="erg-w">150 Вт</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px">
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">VO₂ (л/мин)</div><div id="e-vo2" style="font-size:22px;font-weight:800;color:var(--blue2);font-family:monospace">2.50</div></div>
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">VCO₂ (л/мин)</div><div id="e-vco2" style="font-size:22px;font-weight:800;color:var(--blue2);font-family:monospace">2.25</div></div>
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">RER</div><div id="e-rer" style="font-size:22px;font-weight:800;font-family:monospace">0.90</div></div>
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">Энергия (ккал/мин)</div><div id="e-kcal" style="font-size:22px;font-weight:800;color:var(--orange);font-family:monospace">12.4</div></div>
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">Субстрат</div><div id="e-subs" style="font-size:14px;font-weight:700;color:var(--green);margin-top:8px">Углеводы+жиры</div></div>
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">Тепло (Вт)</div><div id="e-heat" style="font-size:22px;font-weight:800;color:var(--red);font-family:monospace">648</div></div>
+  </div>
+</div>
+
+<div class="section-title">🧪 Задание 4 <span>— VO₂max и классификация</span></div>
+<div class="card">
+  <div class="card-title">Спортсмен (75 кг). При максимальной нагрузке VO₂ = 5.1 л/мин.</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Рассчитайте VO₂max в мл/кг/мин. К какой категории относится спортсмен? (Норма нетренированных: 35–45; хорошая форма: 45–55; элита: >65 мл/кг/мин)</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>VO₂max (мл/кг/мин):</label><input type="number" step="0.1" id="q4" placeholder="мл/кг/мин (до десятых)"></div>
+    <button class="btn" onclick="checkQ4()">Проверить</button>
+  </div>
+  <div class="result-box" id="r4"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<div class="section-title">🧪 Задание 5 <span>— клинический случай: сердечная недостаточность</span></div>
+<div class="card">
+  <div class="card-title">Пациент С., 62 года. ХСН II ФК (NYHA). Тест с нагрузкой:</div>
+  <table>
+    <tr><th>Параметр</th><th>Пациент С.</th><th>Норма (его возраст)</th></tr>
+    <tr><td>VO₂max</td><td>14.2 мл/кг/мин</td><td>>20 мл/кг/мин</td></tr>
+    <tr><td>RER при AT</td><td>0.98</td><td>—</td></tr>
+    <tr><td>Нагрузка при AT</td><td>50 Вт</td><td>>75 Вт</td></tr>
+  </table>
+  <p style="font-size:13px;color:var(--text2);margin:12px 0">Пиковый VO₂ < 14 мл/кг/мин — порог для рассмотрения трансплантации сердца (критерий Mancini). Рассчитайте, на сколько % VO₂max пациента ниже нижней границы нормы для его возраста?</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>Снижение VO₂max (%): </label><input type="number" step="0.1" id="q5" placeholder="% (целое число)"></div>
+    <button class="btn" onclick="checkQ5()">Проверить</button>
+  </div>
+  <div class="result-box" id="r5"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+</div>
+
+<script>
+function toggleHint(id){
+  var el=document.getElementById(id);
+  el.classList.toggle('open');
+}
+function showResult(id, correct, value, explain){
+  var box=document.getElementById(id);
+  box.classList.add('show');
+  if(correct){box.classList.add('result-correct');box.querySelector('.result-label').className='result-label ok';box.querySelector('.result-label').textContent='✅ Верно';}
+  else{box.classList.add('result-wrong');box.querySelector('.result-label').className='result-label err';box.querySelector('.result-label').textContent='❌ Попробуйте ещё';}
+  box.querySelector('.result-value').textContent=value;
+  box.querySelector('.result-explain').innerHTML=explain;
+}
+
+var score=0,total=5;
+function updateProg(){document.getElementById('prog').style.width=(score/total*100)+'%';document.getElementById('prog-label').textContent='Прогресс: '+score+' / '+total+' заданий';}
+function checkQ1(){
+  var v=parseFloat(document.getElementById('q1').value);
+  var at=document.getElementById('q1b').value;
+  var ok=Math.abs(v-0.9)<=0.02 && at==='200';
+  if(ok){score++;updateProg();}
+  showResult('r1',ok,ok?'RER=0.90 при 150 Вт; AT пересечён при 200 Вт ✓':'RER 50Вт=0.80, 100Вт=0.90, 150Вт=0.90, 200Вт=1.04',
+    'При 200 Вт RER=3.55/3.41=1.04>1.0 — анаэробный порог пересечён. CO₂ выделяется больше из-за буферирования лактата: лактат + HCO₃⁻ → CO₂ + лактат Na.');
+}
+function checkQ2(){
+  var a=parseFloat(document.getElementById('q2a').value);
+  var b=parseFloat(document.getElementById('q2b').value);
+  var c=parseFloat(document.getElementById('q2c').value);
+  var ok=Math.abs(a-12.375)<=0.3 && Math.abs(b-216)<=20 && Math.abs(c-648)<=30;
+  if(ok){score++;updateProg();}
+  showResult('r2',ok,ok?'12.4 ккал/мин | 216 Вт | 648 Вт тепла ✓':'Энергия=2.5×4.95=12.375 ккал/мин = 864 Вт. Мех=864×0.25=216 Вт. Тепло=864×0.75=648 Вт.',
+    'Потери тепла 648 Вт — огромны! При марафоне (2–3 часа) потоотделение критично. Обезвоживание на 2% снижает VO₂max на 6%.');
+}
+function updateErgo(w){
+  w=+w;
+  document.getElementById('erg-w').textContent=w+' Вт';
+  var vo2=Math.max(0.25,(0.012*w+0.35)).toFixed(2);
+  var rer=w<180?(0.78+w/1000).toFixed(2):(0.78+w/1000+(w-180)*0.003).toFixed(2);
+  var vco2=(vo2*rer).toFixed(2);
+  var kcal=(vo2*4.9).toFixed(1);
+  var heat=((vo2*4.9*4184/60)*0.75).toFixed(0);
+  var subs=rer<0.75?'Жиры':rer<0.85?'Жиры+углеводы':rer<1.0?'Углеводы+жиры':rer<1.1?'Углеводы':rer<1.2?'Углеводы + анаэроб':'Максимум (лактат)';
+  var col=rer>=1.0?'var(--red)':rer>=0.85?'var(--orange)':'var(--green)';
+  document.getElementById('e-vo2').textContent=vo2;
+  document.getElementById('e-vco2').textContent=vco2;
+  document.getElementById('e-rer').textContent=rer;
+  document.getElementById('e-rer').style.color=col;
+  document.getElementById('e-kcal').textContent=kcal;
+  document.getElementById('e-subs').textContent=subs;
+  document.getElementById('e-subs').style.color=col;
+  document.getElementById('e-heat').textContent=heat;
+}
+function checkQ4(){
+  var v=parseFloat(document.getElementById('q4').value);
+  var ok=Math.abs(v-68)<=2;
+  if(ok){score++;updateProg();}
+  showResult('r4',ok,ok?'68 мл/кг/мин ✓ — элитный уровень':'5100 мл/мин / 75 кг = 68 мл/кг/мин',
+    'VO₂max = 68 мл/кг/мин — уровень профессионального велосипедиста. Грег ЛеМон (Tour de France): 92.5 мл/кг/мин. Нетренированный мужчина 40 лет: ~35 мл/кг/мин.');
+}
+function checkQ5(){
+  var v=parseFloat(document.getElementById('q5').value);
+  var ok=Math.abs(v-29)<=3;
+  if(ok){score++;updateProg();}
+  showResult('r5',ok,ok?'–29% ниже нормы ✓':'(20–14.2)/20 × 100% = 29%',
+    'VO₂max = 14.2 мл/кг/мин. Снижение на 29% от нижней границы нормы. Порог Mancini: VO₂max < 14 мл/кг/мин → рассмотреть трансплантацию. Кардиореабилитация может повысить VO₂max на 15–20%.');
+}
+
+</script>
+</body>
+</html>

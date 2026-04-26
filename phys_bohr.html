@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Метод Бора: мёртвое пространство · Limbic KZ</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--surface:#10101a;--s2:#161622;--border:#1e1e30;--b2:#28283e;--blue:#3b7fff;--blue2:#6fa3ff;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;--purple:#a78bfa;--text:#c8ccd8;--text2:#7a7a9a;--text-bright:#eeeef8;--radius:14px;--font:'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+a{color:var(--blue2);text-decoration:none}
+.topbar{background:rgba(10,10,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.logo{font-size:13px;font-weight:700;color:var(--text-bright)}
+.sep{color:var(--border);font-size:16px}
+.title-small{font-size:11px;color:var(--text2);font-weight:500}
+.back-link{font-size:11px;color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;background:none;transition:all .15s}
+.back-link:hover{color:var(--blue2);border-color:var(--blue)}
+.hero{padding:40px 32px 28px;max-width:960px;margin:0 auto}
+.hero-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);background:rgba(59,127,255,.12);border:1px solid rgba(59,127,255,.25);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.hero h1{font-size:clamp(20px,3.5vw,32px);font-weight:800;color:var(--text-bright);letter-spacing:-.03em;line-height:1.15;margin-bottom:8px}
+.hero-sub{font-size:13px;color:var(--text2);line-height:1.7;max-width:700px;margin-bottom:18px}
+.meta-row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-size:10px;font-weight:600;background:var(--s2);border:1px solid var(--border);padding:4px 10px;border-radius:6px;color:var(--text2)}
+.content{max-width:960px;margin:0 auto;padding:0 32px 80px}
+.section-title{font-size:18px;font-weight:700;color:var(--text-bright);margin:32px 0 12px;display:flex;align-items:center;gap:8px}
+.section-title span{font-size:13px;color:var(--text2);font-weight:400}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th{background:var(--s2);padding:8px 12px;text-align:left;font-size:11px;letter-spacing:.05em;color:var(--text2);font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+input[type=number],input[type=text],select{background:var(--s2);border:1px solid var(--b2);color:var(--text-bright);border-radius:8px;padding:8px 12px;font-size:14px;outline:none;transition:border .15s;font-family:var(--font);width:100%}
+input:focus,select:focus{border-color:var(--blue)}
+label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-weight:500}
+.btn{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.btn:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:7px}
+.btn-outline{background:transparent;border:1px solid var(--b2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue2)}
+.btn-green{background:var(--green)}
+.btn-green:hover{background:#16a34a}
+.result-box{background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:14px 18px;margin-top:10px;display:none}
+.result-box.show{display:block}
+.result-correct{border-color:var(--green);background:rgba(34,197,94,.07)}
+.result-wrong{border-color:var(--red);background:rgba(239,68,68,.07)}
+.result-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
+.result-label.ok{color:var(--green)}
+.result-label.err{color:var(--red)}
+.result-value{font-size:22px;font-weight:800;color:var(--text-bright);font-family:monospace;margin-bottom:4px}
+.result-explain{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px}
+.formula-box{background:rgba(59,127,255,.06);border:1px solid rgba(59,127,255,.2);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:13px;color:var(--blue2);margin:8px 0;line-height:1.6}
+.hint-toggle{font-size:12px;color:var(--blue2);cursor:pointer;background:none;border:none;padding:4px 0;font-family:var(--font);opacity:.8;margin-top:6px;display:block}
+.hint-toggle:hover{opacity:1}
+.hint-box{background:rgba(59,127,255,.06);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:6px;display:none}
+.hint-box.open{display:block}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-num{width:24px;height:24px;border-radius:50%;background:rgba(59,127,255,.2);color:var(--blue2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{font-size:13px;color:var(--text);line-height:1.6}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin:16px 0}
+.progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s}
+.badge-ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.badge-ibo{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.graph-container{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin:10px 0;position:relative}
+.slider-row{display:flex;align-items:center;gap:12px;margin:8px 0}
+.slider-row input[type=range]{flex:1;accent-color:var(--blue);height:4px}
+.slider-val{font-size:14px;font-weight:700;color:var(--blue2);min-width:60px;text-align:right;font-family:monospace}
+.norm-indicator{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+.norm-ok{background:rgba(34,197,94,.1);color:var(--green)}
+.norm-high{background:rgba(239,68,68,.1);color:var(--red)}
+.norm-low{background:rgba(245,158,11,.1);color:var(--orange)}
+@media(max-width:600px){.hero,.content{padding-left:16px;padding-right:16px}.row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="logo">🧠 Limbic KZ</span>
+    <span class="sep">|</span>
+    <span class="title-small">🫁 Метод Бора: мёртвое пространство</span>
+  </div>
+  <button class="back-link" onclick="history.back()">← Назад</button>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">🔬 Виртуальный практикум</div>
+  <h1>🫁 Метод Бора: мёртвое пространство</h1>
+  <div class="hero-sub">Виртуальный практикум по спирометрии. Измерение анатомического и физиологического мёртвого пространства методом Бора. Клинические применения при ХОБЛ и ТЭЛА.</div>
+  <div class="meta-row"><div class="chip">IBO-уровень</div><div class="chip">Физиология дыхания</div><div class="chip">5 заданий</div><div class="chip">Формула Бора</div></div>
+</div>
+
+<div class="content">
+
+<!-- Progress -->
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div style="font-size:12px;color:var(--text2);margin-bottom:24px" id="prog-label">Прогресс: 0 / 5 заданий</div>
+
+<!-- THEORY -->
+<div class="section-title">📖 Теория <span>— прочитайте перед началом</span></div>
+<div class="card">
+  <div class="card-title">Метод Бора — измерение мёртвого пространства</div>
+  <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Анатомическое мёртвое пространство (VD)</strong> — объём воздухопроводящих путей (нос, трахея, бронхи до уровня альвеол), где газообмен не происходит. В норме ≈ 150 мл или ~2 мл/кг.</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Идея метода:</strong> CO₂ в выдыхаемом воздухе разбавлен мёртвым пространством. Чем больше VD, тем ниже средняя PECO₂. По разнице PaCO₂ (артериальный = альвеолярный) и PECO₂ (смешанный выдыхаемый) можно вычислить долю VD.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Формула Бора:</strong> <code>VD/VT = (PaCO₂ − PECO₂) / PaCO₂</code></div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Клиническое значение:</strong> При ХОБЛ, ТЭЛА VD/VT растёт (>40%). При поверхностном дыхании (тахипноэ) каждый вдох почти полностью заполняет мёртвое пространство — вентиляция неэффективна.</div></div>
+  <div class="formula-box">VD = VT × (PaCO₂ − PECO₂) / PaCO₂<br>
+Альвеолярная вентиляция: VA = (VT − VD) × ЧД (л/мин)</div>
+</div>
+
+<!-- EXPERIMENT 1 -->
+<div class="section-title">🧪 Задание 1 <span>— базовый расчёт VD</span></div>
+<div class="card">
+  <div class="card-title">Виртуальный пациент в покое</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Пациент М., 24 года, здоров. Анализатор CO₂ на выдохе и артериальный катетер дали следующие данные:</p>
+  <table>
+    <tr><th>Параметр</th><th>Значение</th><th>Единицы</th></tr>
+    <tr><td>Дыхательный объём (VT)</td><td><strong>500</strong></td><td>мл</td></tr>
+    <tr><td>pCO₂ смешанного выдоха (PECO₂)</td><td><strong>28</strong></td><td>мм рт.ст.</td></tr>
+    <tr><td>pCO₂ артериальной крови (PaCO₂)</td><td><strong>40</strong></td><td>мм рт.ст.</td></tr>
+    <tr><td>Частота дыхания (ЧД)</td><td><strong>16</strong></td><td>мин⁻¹</td></tr>
+  </table>
+  <div class="row" style="margin-top:14px;align-items:flex-end">
+    <div style="flex:1"><label>Ваш ответ VD (мл):</label><input type="number" id="q1" placeholder="Введите мл"></div>
+    <button class="btn" onclick="checkQ1()">Проверить</button>
+  </div>
+  <button class="hint-toggle" onclick="toggleHint('h1')">💡 Подсказка</button>
+  <div class="hint-box" id="h1">VD/VT = (40−28)/40 = 0.30. Затем VD = 500 × 0.30 = ?</div>
+  <div class="result-box" id="r1"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<!-- EXPERIMENT 2 -->
+<div class="section-title">🧪 Задание 2 <span>— альвеолярная вентиляция</span></div>
+<div class="card">
+  <div class="card-title">Рассчитайте альвеолярную вентиляцию пациента М.</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Используйте VD = 150 мл (из задания 1) и данные ЧД = 16 мин⁻¹, VT = 500 мл.</p>
+  <div class="formula-box">VA = (VT − VD) × ЧД</div>
+  <div class="row" style="margin-top:12px;align-items:flex-end">
+    <div style="flex:1"><label>VA (л/мин):</label><input type="number" step="0.1" id="q2" placeholder="Введите л/мин"></div>
+    <button class="btn" onclick="checkQ2()">Проверить</button>
+  </div>
+  <div class="result-box" id="r2"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<!-- EXPERIMENT 3: interactive slider -->
+<div class="section-title">🧪 Задание 3 <span>— гипервентиляция (интерактив)</span></div>
+<div class="card">
+  <div class="card-title">Эффект изменения параметров дыхания на VD/VT</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Переместите ползунки и наблюдайте, как меняется VD/VT и альвеолярная вентиляция. Затем ответьте на вопросы ниже.</p>
+  <div style="display:grid;gap:14px;margin-bottom:16px">
+    <div>
+      <label>VT (мл): <span id="vt-val" style="color:var(--blue2);font-weight:700">500</span></label>
+      <input type="range" min="200" max="1200" value="500" oninput="updateBohr()" id="sl-vt" style="width:100%;accent-color:var(--blue);margin-top:6px">
+    </div>
+    <div>
+      <label>PECO₂ (мм рт.ст.): <span id="pe-val" style="color:var(--blue2);font-weight:700">28</span></label>
+      <input type="range" min="10" max="38" value="28" oninput="updateBohr()" id="sl-pe" style="width:100%;accent-color:var(--blue);margin-top:6px">
+    </div>
+    <div>
+      <label>ЧД (мин⁻¹): <span id="rr-val" style="color:var(--blue2);font-weight:700">16</span></label>
+      <input type="range" min="8" max="40" value="16" oninput="updateBohr()" id="sl-rr" style="width:100%;accent-color:var(--blue);margin-top:6px">
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center">
+    <div class="card" style="padding:12px">
+      <div style="font-size:11px;color:var(--text2)">VD (мл)</div>
+      <div id="out-vd" style="font-size:24px;font-weight:800;color:var(--blue2);font-family:monospace">150</div>
+    </div>
+    <div class="card" style="padding:12px">
+      <div style="font-size:11px;color:var(--text2)">VD/VT</div>
+      <div id="out-ratio" style="font-size:24px;font-weight:800;color:var(--orange);font-family:monospace">0.30</div>
+    </div>
+    <div class="card" style="padding:12px">
+      <div style="font-size:11px;color:var(--text2)">VA (л/мин)</div>
+      <div id="out-va" style="font-size:24px;font-weight:800;color:var(--green);font-family:monospace">5.6</div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIMENT 4 -->
+<div class="section-title">🧪 Задание 4 <span>— гипервентиляция (расчёт)</span></div>
+<div class="card">
+  <div class="card-title">После гипервентиляции: VT = 800 мл, ЧД = 30 мин⁻¹, PECO₂ = 18 мм рт.ст., PaCO₂ = 26 мм рт.ст.</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Рассчитайте VA при гипервентиляции и сравните с покоем (5.6 л/мин). Во сколько раз изменилась VA?</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>VD при гипервентиляции (мл):</label><input type="number" id="q4a" placeholder="VD в мл"></div>
+    <div style="flex:1"><label>VA (л/мин):</label><input type="number" step="0.1" id="q4b" placeholder="VA в л/мин"></div>
+    <button class="btn" onclick="checkQ4()">Проверить</button>
+  </div>
+  <button class="hint-toggle" onclick="toggleHint('h4')">💡 Подсказка</button>
+  <div class="hint-box" id="h4">VD = 800 × (26−18)/26. VA = (800 − VD) × 30 / 1000</div>
+  <div class="result-box" id="r4"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<!-- EXPERIMENT 5: clinical case -->
+<div class="section-title">🧪 Задание 5 <span>— клинический случай (IBO-уровень)</span></div>
+<div class="card">
+  <div class="card-title">ТЭЛА (тромбоэмболия лёгочной артерии)</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Пациентка Б., 58 лет. После операции на бедре — одышка, гипоксемия. Данные:</p>
+  <table>
+    <tr><th>Параметр</th><th>Пациентка Б.</th><th>Норма</th></tr>
+    <tr><td>VT</td><td>450 мл</td><td>400–600 мл</td></tr>
+    <tr><td>ЧД</td><td>28 мин⁻¹</td><td>12–18 мин⁻¹</td></tr>
+    <tr><td>PaCO₂</td><td>32 мм рт.ст.</td><td>35–45 мм рт.ст.</td></tr>
+    <tr><td>PECO₂</td><td>15 мм рт.ст.</td><td>~28 мм рт.ст.</td></tr>
+    <tr><td>PaO₂</td><td>58 мм рт.ст.</td><td>80–100 мм рт.ст.</td></tr>
+  </table>
+  <p style="font-size:13px;color:var(--text2);margin:12px 0">Рассчитайте VD/VT. При ТЭЛА физиологическое мёртвое пространство увеличивается из-за вентилируемых, но не перфузируемых альвеол.</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>VD/VT (до сотых):</label><input type="number" step="0.01" id="q5a" placeholder="0.ХХ (до сотых)"></div>
+    <div style="flex:1"><label>VD (мл):</label><input type="number" id="q5b" placeholder="Введите мл"></div>
+    <button class="btn" onclick="checkQ5()">Проверить</button>
+  </div>
+  <button class="hint-toggle" onclick="toggleHint('h5')">💡 Подсказка</button>
+  <div class="hint-box" id="h5">VD/VT = (PaCO₂ − PECO₂) / PaCO₂ = (32−15)/32 ≈ 0.53. Норма ≤ 0.35. При ТЭЛА >0.5 — критически высокое мёртвое пространство.</div>
+  <div class="result-box" id="r5"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+</div>
+
+<script>
+function toggleHint(id){
+  var el=document.getElementById(id);
+  el.classList.toggle('open');
+}
+function showResult(id, correct, value, explain){
+  var box=document.getElementById(id);
+  box.classList.add('show');
+  if(correct){box.classList.add('result-correct');box.querySelector('.result-label').className='result-label ok';box.querySelector('.result-label').textContent='✅ Верно';}
+  else{box.classList.add('result-wrong');box.querySelector('.result-label').className='result-label err';box.querySelector('.result-label').textContent='❌ Попробуйте ещё';}
+  box.querySelector('.result-value').textContent=value;
+  box.querySelector('.result-explain').innerHTML=explain;
+}
+
+var score = 0, total = 5;
+function updateProg() {
+  document.getElementById('prog').style.width = (score/total*100) + '%';
+  document.getElementById('prog-label').textContent = 'Прогресс: ' + score + ' / ' + total + ' заданий';
+}
+function checkQ1() {
+  var v = parseFloat(document.getElementById('q1').value);
+  var ok = Math.abs(v - 150) <= 2;
+  if(ok) { score++; updateProg(); }
+  showResult('r1', ok, ok ? '150 мл ✓' : 'Ответ: 150 мл',
+    ok ? 'VD/VT = (40−28)/40 = 0.30. VD = 500 × 0.30 = 150 мл. Норма ~150 мл (30% от VT). Вентилируются 350 мл из каждых 500 мл вдоха.' :
+    'VD/VT = (PaCO₂ − PECO₂)/PaCO₂ = (40−28)/40 = 0.30. VD = VT × 0.30 = 500 × 0.30 = 150 мл.');
+}
+function checkQ2() {
+  var v = parseFloat(document.getElementById('q2').value);
+  var ok = Math.abs(v - 5.6) <= 0.15;
+  if(ok) { score++; updateProg(); }
+  showResult('r2', ok, ok ? '5.6 л/мин ✓' : 'Ответ: 5.6 л/мин',
+    ok ? 'VA = (500 − 150) × 16 / 1000 = 350 × 16 / 1000 = 5.6 л/мин. При поверхностном тахипноэ (VT↓, ЧД↑) VD/VT растёт → VA падает.' :
+    'VA = (VT − VD) × ЧД = (500 − 150) × 16 = 5600 мл/мин = 5.6 л/мин.');
+}
+function updateBohr() {
+  var vt = +document.getElementById('sl-vt').value;
+  var pe = +document.getElementById('sl-pe').value;
+  var rr = +document.getElementById('sl-rr').value;
+  var paco2 = 40;
+  document.getElementById('vt-val').textContent = vt;
+  document.getElementById('pe-val').textContent = pe;
+  document.getElementById('rr-val').textContent = rr;
+  var ratio = (paco2 - pe) / paco2;
+  var vd = vt * ratio;
+  var va = (vt - vd) * rr / 1000;
+  document.getElementById('out-vd').textContent = Math.round(vd);
+  document.getElementById('out-ratio').textContent = ratio.toFixed(2);
+  document.getElementById('out-va').textContent = va.toFixed(1);
+}
+function checkQ4() {
+  var vda = parseFloat(document.getElementById('q4a').value);
+  var vab = parseFloat(document.getElementById('q4b').value);
+  var vd_ok = Math.abs(vda - 246) <= 10;
+  var va_ok = Math.abs(vab - 16.6) <= 0.5;
+  var ok = vd_ok && va_ok;
+  if(ok) { score++; updateProg(); }
+  showResult('r4', ok, ok ? 'VD≈246 мл, VA≈16.6 л/мин ✓' : 'VD = 800×(26−18)/26 ≈ 246 мл; VA = (800−246)×30/1000 ≈ 16.6 л/мин',
+    'При гипервентиляции VA выросла с 5.6 до 16.6 л/мин — почти в 3 раза! Гипокапния (PaCO₂↓) вызывает вазоконстрикцию мозговых сосудов → головокружение, парестезии. Именно поэтому пациенты при панической атаке теряют сознание от гипервентиляции.');
+}
+function checkQ5() {
+  var ra = parseFloat(document.getElementById('q5a').value);
+  var rb = parseFloat(document.getElementById('q5b').value);
+  var ok = Math.abs(ra - 0.53) <= 0.03 && Math.abs(rb - 239) <= 20;
+  if(ok) { score++; updateProg(); }
+  showResult('r5', ok, ok ? 'VD/VT ≈ 0.53, VD ≈ 239 мл ✓' : 'VD/VT = (32−15)/32 = 0.531; VD = 450×0.531 ≈ 239 мл',
+    '<strong>ТЭЛА диагноз подтверждён!</strong> VD/VT = 0.53 >> 0.35 (нормы). Эмболы перекрыли кровоснабжение части альвеол — эти альвеолы вентилируются, но O₂ не поступает в кровь (физиологическое мёртвое пространство ↑). Гипоксемия + гипокапния (компенсаторная гипервентиляция). Лечение: антикоагулянты, тромболизис.');
+}
+
+</script>
+</body>
+</html>

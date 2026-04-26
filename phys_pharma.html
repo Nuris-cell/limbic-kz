@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Фармакология каналов: антиаритмики · Limbic KZ</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--surface:#10101a;--s2:#161622;--border:#1e1e30;--b2:#28283e;--blue:#3b7fff;--blue2:#6fa3ff;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;--purple:#a78bfa;--text:#c8ccd8;--text2:#7a7a9a;--text-bright:#eeeef8;--radius:14px;--font:'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+a{color:var(--blue2);text-decoration:none}
+.topbar{background:rgba(10,10,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.logo{font-size:13px;font-weight:700;color:var(--text-bright)}
+.sep{color:var(--border);font-size:16px}
+.title-small{font-size:11px;color:var(--text2);font-weight:500}
+.back-link{font-size:11px;color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;background:none;transition:all .15s}
+.back-link:hover{color:var(--blue2);border-color:var(--blue)}
+.hero{padding:40px 32px 28px;max-width:960px;margin:0 auto}
+.hero-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);background:rgba(59,127,255,.12);border:1px solid rgba(59,127,255,.25);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.hero h1{font-size:clamp(20px,3.5vw,32px);font-weight:800;color:var(--text-bright);letter-spacing:-.03em;line-height:1.15;margin-bottom:8px}
+.hero-sub{font-size:13px;color:var(--text2);line-height:1.7;max-width:700px;margin-bottom:18px}
+.meta-row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-size:10px;font-weight:600;background:var(--s2);border:1px solid var(--border);padding:4px 10px;border-radius:6px;color:var(--text2)}
+.content{max-width:960px;margin:0 auto;padding:0 32px 80px}
+.section-title{font-size:18px;font-weight:700;color:var(--text-bright);margin:32px 0 12px;display:flex;align-items:center;gap:8px}
+.section-title span{font-size:13px;color:var(--text2);font-weight:400}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th{background:var(--s2);padding:8px 12px;text-align:left;font-size:11px;letter-spacing:.05em;color:var(--text2);font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+input[type=number],input[type=text],select{background:var(--s2);border:1px solid var(--b2);color:var(--text-bright);border-radius:8px;padding:8px 12px;font-size:14px;outline:none;transition:border .15s;font-family:var(--font);width:100%}
+input:focus,select:focus{border-color:var(--blue)}
+label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-weight:500}
+.btn{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.btn:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:7px}
+.btn-outline{background:transparent;border:1px solid var(--b2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue2)}
+.btn-green{background:var(--green)}
+.btn-green:hover{background:#16a34a}
+.result-box{background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:14px 18px;margin-top:10px;display:none}
+.result-box.show{display:block}
+.result-correct{border-color:var(--green);background:rgba(34,197,94,.07)}
+.result-wrong{border-color:var(--red);background:rgba(239,68,68,.07)}
+.result-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
+.result-label.ok{color:var(--green)}
+.result-label.err{color:var(--red)}
+.result-value{font-size:22px;font-weight:800;color:var(--text-bright);font-family:monospace;margin-bottom:4px}
+.result-explain{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px}
+.formula-box{background:rgba(59,127,255,.06);border:1px solid rgba(59,127,255,.2);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:13px;color:var(--blue2);margin:8px 0;line-height:1.6}
+.hint-toggle{font-size:12px;color:var(--blue2);cursor:pointer;background:none;border:none;padding:4px 0;font-family:var(--font);opacity:.8;margin-top:6px;display:block}
+.hint-toggle:hover{opacity:1}
+.hint-box{background:rgba(59,127,255,.06);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:6px;display:none}
+.hint-box.open{display:block}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-num{width:24px;height:24px;border-radius:50%;background:rgba(59,127,255,.2);color:var(--blue2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{font-size:13px;color:var(--text);line-height:1.6}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin:16px 0}
+.progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s}
+.badge-ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.badge-ibo{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.graph-container{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin:10px 0;position:relative}
+.slider-row{display:flex;align-items:center;gap:12px;margin:8px 0}
+.slider-row input[type=range]{flex:1;accent-color:var(--blue);height:4px}
+.slider-val{font-size:14px;font-weight:700;color:var(--blue2);min-width:60px;text-align:right;font-family:monospace}
+.norm-indicator{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+.norm-ok{background:rgba(34,197,94,.1);color:var(--green)}
+.norm-high{background:rgba(239,68,68,.1);color:var(--red)}
+.norm-low{background:rgba(245,158,11,.1);color:var(--orange)}
+@media(max-width:600px){.hero,.content{padding-left:16px;padding-right:16px}.row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="logo">🧠 Limbic KZ</span>
+    <span class="sep">|</span>
+    <span class="title-small">💊 Фармакология каналов: антиаритмики</span>
+  </div>
+  <button class="back-link" onclick="history.back()">← Назад</button>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">🔬 Виртуальный практикум</div>
+  <h1>💊 Фармакология каналов: антиаритмики</h1>
+  <div class="hero-sub">Виртуальный осциллограф — TTX, TEA, верапамил, амиодарон. QT-удлинение, dV/dt, torsades de pointes. Клинический случай отравления тетродотоксином.</div>
+  <div class="meta-row"><div class="chip">IBO-уровень</div><div class="chip">Нейрофармакология</div><div class="chip">5 заданий</div><div class="chip">Антиаритмики</div></div>
+</div>
+
+<div class="content">
+
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div style="font-size:12px;color:var(--text2);margin-bottom:24px" id="prog-label">Прогресс: 0 / 5 заданий</div>
+<div class="section-title">📖 Теория</div>
+<div class="card">
+  <div class="card-title">Фармакология ионных каналов — антиаритмики и нейротоксины</div>
+  <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Классы антиаритмиков (Vaughan Williams):</strong> I — блокаторы Na⁺ (лидокаин, флекаинид); II — β-блокаторы; III — блокаторы K⁺ (амиодарон, соталол); IV — блокаторы Ca²⁺ (верапамил).</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Блокада Na⁺ (класс I)</strong>: ↓ амплитуда ПД, ↓ скорость нарастания (dV/dt). Применение: желудочковые тахикардии.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Блокада K⁺ (класс III)</strong>: ↑ длительность ПД → ↑ QT на ЭКГ → риск torsades de pointes при QT > 500 мс.</div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Тетродотоксин (ТТХ)</strong> — специфический блокатор Nav (фугу). <strong>TEA</strong> — блокатор Kv-каналов. Использованы как научные инструменты для изучения ионных токов.</div></div>
+  <div class="formula-box">dV/dt_макс ∝ количество открытых Na⁺-каналов<br>
+Длительность ПД ∝ 1/(скорость реполяризации K⁺-тока)<br>
+QT_корр = QT / √(RR_с) — формула Базетта</div>
+</div>
+<div class="section-title">🧪 Задание 1 <span>— блокада K⁺ (TEA): длительность ПД</span></div>
+<div class="card">
+  <div class="card-title">Кардиомиоцит. Контроль: амплитуда=120 мВ, длительность=200 мс. TEA замедляет реполяризацию в 1.75 раза.</div>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>Новая длительность ПД (мс):</label><input type="number" id="q1" placeholder="мс (целое число)"></div>
+    <button class="btn" onclick="checkQ1()">Проверить</button>
+  </div>
+  <div class="result-box" id="r1"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+<div class="section-title">🧪 Задание 2 <span>— интерактивный осциллограф</span></div>
+<div class="card">
+  <div class="card-title">Выберите препарат и наблюдайте изменение формы потенциала действия</div>
+  <div class="row" style="margin-bottom:12px">
+    <button class="btn btn-outline btn-sm" id="b-ctrl" onclick="setPD('ctrl')">Контроль</button>
+    <button class="btn btn-outline btn-sm" id="b-ttx" onclick="setPD('ttx')">+ TTX (Na⁺-блок)</button>
+    <button class="btn btn-outline btn-sm" id="b-tea" onclick="setPD('tea')">+ TEA (K⁺-блок)</button>
+    <button class="btn btn-outline btn-sm" id="b-vera" onclick="setPD('vera')">+ Верапамил (Ca²⁺-блок)</button>
+    <button class="btn btn-outline btn-sm" id="b-amio" onclick="setPD('amio')">+ Амиодарон</button>
+  </div>
+  <div class="graph-container">
+    <div style="font-size:11px;color:var(--text2);margin-bottom:6px" id="pd-label">Потенциал действия (контроль)</div>
+    <canvas id="pd-canvas" height="180"></canvas>
+  </div>
+  <div id="pd-info" style="font-size:12px;color:var(--text2);line-height:1.7;margin-top:8px"></div>
+</div>
+<div class="section-title">🧪 Задание 3 <span>— скорость деполяризации (dV/dt)</span></div>
+<div class="card">
+  <div class="card-title">Na⁺-канальный блокатор снизил дV/dt на 40%. Исходная dV/dt = 500 В/с.</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Рассчитайте новую dV/dt. Как это отражается на ЭКГ (скорость проведения по пучку Гиса)?</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>Новая dV/dt (В/с):</label><input type="number" id="q3" placeholder="В/с (целое число)"></div>
+    <button class="btn" onclick="checkQ3()">Проверить</button>
+  </div>
+  <div class="result-box" id="r3"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+<div class="section-title">🧪 Задание 4 <span>— корригированный QT</span></div>
+<div class="card">
+  <div class="card-title">ЭКГ пациента на амиодароне: QT = 480 мс, ЧСС = 60 уд/мин (RR = 1.0 с). Формула Базетта: QTc = QT / √RR_с.</div>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>QTc (мс):</label><input type="number" id="q4" placeholder="мс (целое число)"></div>
+    <button class="btn" onclick="checkQ4()">Проверить</button>
+  </div>
+  <p style="font-size:12px;color:var(--text2);margin-top:8px">Норма QTc: ≤440 мс (мужчины), ≤460 мс (женщины). Риск torsades: QTc > 500 мс. Как вы оцените данный случай?</p>
+  <div class="result-box" id="r4"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+<div class="section-title">🧪 Задание 5 <span>— клиника: отравление тетродотоксином (IBO)</span></div>
+<div class="card">
+  <div class="card-title">Пациент съел рыбу фугу. ТТХ блокирует Nav необратимо. Проявления: паралич, остановка дыхания. Исходная dV/dt = 400 В/с. ТТХ заблокировал 85% Na⁺-каналов.</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Рассчитайте оставшуюся dV/dt (В/с). Достаточно ли 60 В/с для нормального потенциала действия? Порог генерации ПД: dV/dt > 50 В/с.</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>Оставшаяся dV/dt (В/с):</label><input type="number" id="q5" placeholder="В/с (целое число)"></div>
+    <button class="btn" onclick="checkQ5()">Проверить</button>
+  </div>
+  <div class="result-box" id="r5"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+</div>
+
+<script>
+function toggleHint(id){
+  var el=document.getElementById(id);
+  el.classList.toggle('open');
+}
+function showResult(id, correct, value, explain){
+  var box=document.getElementById(id);
+  box.classList.add('show');
+  if(correct){box.classList.add('result-correct');box.querySelector('.result-label').className='result-label ok';box.querySelector('.result-label').textContent='✅ Верно';}
+  else{box.classList.add('result-wrong');box.querySelector('.result-label').className='result-label err';box.querySelector('.result-label').textContent='❌ Попробуйте ещё';}
+  box.querySelector('.result-value').textContent=value;
+  box.querySelector('.result-explain').innerHTML=explain;
+}
+
+var score=0,total=5;
+function updateProg(){document.getElementById('prog').style.width=(score/total*100)+'%';document.getElementById('prog-label').textContent='Прогресс: '+score+' / '+total+' заданий';}
+var pdChart=null;
+function setPD(type){
+  ['ctrl','ttx','tea','vera','amio'].forEach(x=>{document.getElementById('b-'+x).className='btn btn-outline btn-sm';});
+  document.getElementById('b-'+type).className='btn btn-sm';
+  var ctx=document.getElementById('pd-canvas').getContext('2d');
+  if(pdChart){pdChart.destroy();}
+  var t=[],v=[],label='',info='',color='#3b7fff';
+  if(type==='ctrl'){label='Контроль';color='#3b7fff';info='Нормальный ПД кардиомиоцита. Фаза 0: быстрая деполяризация (Na⁺). Фаза 1: ранняя реполяризация (Ito). Фаза 2: плато (Ca²⁺). Фаза 3: реполяризация (K⁺). Фаза 4: покой.';for(var i=0;i<=400;i++){t.push(i);if(i<50){v.push(-85);}else if(i<60){v.push(-85+(i-50)*12.5);}else if(i<70){v.push(40);}else if(i<90){v.push(40-(i-70)*2.5);}else if(i<200){v.push(-10);}else if(i<250){v.push(-10-(i-200)*1.5);}else{v.push(-85);}}}
+  else if(type==='ttx'){label='+ Тетродотоксин (блок Nav)';color='#ef4444';info='ТТХ блокирует Nav → фаза 0 замедлена, амплитуда ↓. Скорость проведения ↓. При полной блокаде Nav — ПД не генерируется.';for(var i=0;i<=400;i++){t.push(i);if(i<50){v.push(-85);}else if(i<80){v.push(-85+(i-50)*3);}else if(i<100){v.push(5);}else if(i<120){v.push(5-(i-100)*0.75);}else if(i<200){v.push(-10);}else if(i<260){v.push(-10-(i-200)*1.25);}else{v.push(-85);}}}
+  else if(type==='tea'){label='+ TEA (блок Kv)';color='#f59e0b';info='TEA блокирует Kv → фаза 3 замедлена → ПД удлинён до ~350 мс. Амплитуда не изменилась (Na⁺-каналы интактны). Клинический аналог: амиодарон → ↑QT.';for(var i=0;i<=600;i++){t.push(i);if(i<50){v.push(-85);}else if(i<60){v.push(-85+(i-50)*12.5);}else if(i<70){v.push(40);}else if(i<90){v.push(40-(i-70)*2.5);}else if(i<300){v.push(-10);}else if(i<400){v.push(-10-(i-300)*0.75);}else{v.push(-85);}}}
+  else if(type==='vera'){label='+ Верапамил (блок Cav)';color='#a78bfa';info='Верапамил блокирует L-тип Ca²⁺-каналов → фаза 2 (плато) укорочена, ПД немного короче. Снижает ЧСС (SA-узел зависит от Cav) и АД (вазодилатация).';for(var i=0;i<=400;i++){t.push(i);if(i<50){v.push(-85);}else if(i<60){v.push(-85+(i-50)*12.5);}else if(i<70){v.push(40);}else if(i<90){v.push(40-(i-70)*2.5);}else if(i<150){v.push(-10);}else if(i<200){v.push(-10-(i-150)*1.5);}else{v.push(-85);}}}
+  else if(type==='amio'){label='+ Амиодарон (блок Na⁺+K⁺+Ca²⁺)';color='#22c55e';info='Амиодарон — мультиканальный блокатор: ↓dV/dt (Na⁺), ↑длительность ПД (K⁺), ↓ЧСС (Ca²⁺). Наиболее эффективный антиаритмик, но токсичен при длительном применении (лёгкие, щитовидная железа).';for(var i=0;i<=600;i++){t.push(i);if(i<50){v.push(-85);}else if(i<65){v.push(-85+(i-50)*8.3);}else if(i<80){v.push(40-(i-65)*1.5);}else if(i<250){v.push(17);}else if(i<400){v.push(17-(i-250)*0.69);}else{v.push(-85);}}}
+  document.getElementById('pd-label').textContent=label;
+  document.getElementById('pd-info').innerHTML=info;
+  pdChart=new Chart(ctx,{type:'line',data:{labels:t,datasets:[{data:v,borderColor:color,borderWidth:2,pointRadius:0,fill:false,tension:0}]},options:{animation:{duration:400},plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'Время (мс)',color:'#7a7a9a'},ticks:{color:'#7a7a9a',maxTicksLimit:8},grid:{color:'#1e1e30'}},y:{title:{display:true,text:'мВ',color:'#7a7a9a'},ticks:{color:'#7a7a9a'},min:-100,max:60,grid:{color:'#1e1e30'}}}}});
+}
+window.onload=function(){setPD('ctrl');};
+function checkQ1(){var v=+document.getElementById('q1').value;var ok=Math.abs(v-350)<=5;if(ok){score++;updateProg();}showResult('r1',ok,ok?'350 мс ✓':'200 × 1.75 = 350 мс','Блокада K⁺-каналов → замедление фазы 3 (реполяризации) → ПД удлиняется. Это ↑QT на ЭКГ. При QT>500 мс: высокий риск torsades de pointes (полиморфная ЖТ).');}
+function checkQ3(){var v=+document.getElementById('q3').value;var ok=Math.abs(v-300)<=10;if(ok){score++;updateProg();}showResult('r3',ok,ok?'300 В/с ✓':'500 × (1−0.40) = 300 В/с','↓dV/dt → ↓скорость проведения → ↑продолжительность QRS на ЭКГ. Лидокаин (Na⁺-блокатор) удлиняет QRS. Широкий QRS > 120 мс — признак нарушения проведения.');}
+function checkQ4(){var v=+document.getElementById('q4').value;var ok=Math.abs(v-480)<=5;if(ok){score++;updateProg();}showResult('r4',ok,ok?'QTc = 480 мс ✓':'QTc = 480 / √1.0 = 480 мс','QTc = 480 мс > 460 (норма для женщин) и > 440 (для мужчин) — удлинён, но < 500 мс. Требует мониторинга. Добавление препаратов, удлиняющих QT (фторхинолоны, антигистаминные) опасно.');}
+function checkQ5(){var v=+document.getElementById('q5').value;var ok=Math.abs(v-60)<=5;if(ok){score++;updateProg();}showResult('r5',ok,ok?'60 В/с ✓ — критически низко!':'400 × (1−0.85) = 400 × 0.15 = 60 В/с','60 В/с > порога (50 В/с) — ПД ещё генерируется, но на грани. При 85% блокаде дыхательные мышцы работают с трудом. При 90% блокаде — остановка дыхания. Лечение: ИВЛ (антидота нет!). Ситуация с фугу — это именно такая картина.');}
+
+</script>
+</body>
+</html>

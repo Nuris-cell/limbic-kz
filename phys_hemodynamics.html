@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Гемодинамика: ОПСС, МОК, работа сердца · Limbic KZ</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--surface:#10101a;--s2:#161622;--border:#1e1e30;--b2:#28283e;--blue:#3b7fff;--blue2:#6fa3ff;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;--purple:#a78bfa;--text:#c8ccd8;--text2:#7a7a9a;--text-bright:#eeeef8;--radius:14px;--font:'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+a{color:var(--blue2);text-decoration:none}
+.topbar{background:rgba(10,10,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.logo{font-size:13px;font-weight:700;color:var(--text-bright)}
+.sep{color:var(--border);font-size:16px}
+.title-small{font-size:11px;color:var(--text2);font-weight:500}
+.back-link{font-size:11px;color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;background:none;transition:all .15s}
+.back-link:hover{color:var(--blue2);border-color:var(--blue)}
+.hero{padding:40px 32px 28px;max-width:960px;margin:0 auto}
+.hero-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);background:rgba(59,127,255,.12);border:1px solid rgba(59,127,255,.25);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.hero h1{font-size:clamp(20px,3.5vw,32px);font-weight:800;color:var(--text-bright);letter-spacing:-.03em;line-height:1.15;margin-bottom:8px}
+.hero-sub{font-size:13px;color:var(--text2);line-height:1.7;max-width:700px;margin-bottom:18px}
+.meta-row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-size:10px;font-weight:600;background:var(--s2);border:1px solid var(--border);padding:4px 10px;border-radius:6px;color:var(--text2)}
+.content{max-width:960px;margin:0 auto;padding:0 32px 80px}
+.section-title{font-size:18px;font-weight:700;color:var(--text-bright);margin:32px 0 12px;display:flex;align-items:center;gap:8px}
+.section-title span{font-size:13px;color:var(--text2);font-weight:400}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th{background:var(--s2);padding:8px 12px;text-align:left;font-size:11px;letter-spacing:.05em;color:var(--text2);font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+input[type=number],input[type=text],select{background:var(--s2);border:1px solid var(--b2);color:var(--text-bright);border-radius:8px;padding:8px 12px;font-size:14px;outline:none;transition:border .15s;font-family:var(--font);width:100%}
+input:focus,select:focus{border-color:var(--blue)}
+label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-weight:500}
+.btn{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.btn:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:7px}
+.btn-outline{background:transparent;border:1px solid var(--b2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue2)}
+.btn-green{background:var(--green)}
+.btn-green:hover{background:#16a34a}
+.result-box{background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:14px 18px;margin-top:10px;display:none}
+.result-box.show{display:block}
+.result-correct{border-color:var(--green);background:rgba(34,197,94,.07)}
+.result-wrong{border-color:var(--red);background:rgba(239,68,68,.07)}
+.result-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
+.result-label.ok{color:var(--green)}
+.result-label.err{color:var(--red)}
+.result-value{font-size:22px;font-weight:800;color:var(--text-bright);font-family:monospace;margin-bottom:4px}
+.result-explain{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px}
+.formula-box{background:rgba(59,127,255,.06);border:1px solid rgba(59,127,255,.2);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:13px;color:var(--blue2);margin:8px 0;line-height:1.6}
+.hint-toggle{font-size:12px;color:var(--blue2);cursor:pointer;background:none;border:none;padding:4px 0;font-family:var(--font);opacity:.8;margin-top:6px;display:block}
+.hint-toggle:hover{opacity:1}
+.hint-box{background:rgba(59,127,255,.06);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:6px;display:none}
+.hint-box.open{display:block}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-num{width:24px;height:24px;border-radius:50%;background:rgba(59,127,255,.2);color:var(--blue2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{font-size:13px;color:var(--text);line-height:1.6}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin:16px 0}
+.progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s}
+.badge-ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.badge-ibo{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.graph-container{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin:10px 0;position:relative}
+.slider-row{display:flex;align-items:center;gap:12px;margin:8px 0}
+.slider-row input[type=range]{flex:1;accent-color:var(--blue);height:4px}
+.slider-val{font-size:14px;font-weight:700;color:var(--blue2);min-width:60px;text-align:right;font-family:monospace}
+.norm-indicator{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+.norm-ok{background:rgba(34,197,94,.1);color:var(--green)}
+.norm-high{background:rgba(239,68,68,.1);color:var(--red)}
+.norm-low{background:rgba(245,158,11,.1);color:var(--orange)}
+@media(max-width:600px){.hero,.content{padding-left:16px;padding-right:16px}.row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="logo">🧠 Limbic KZ</span>
+    <span class="sep">|</span>
+    <span class="title-small">❤️ Гемодинамика: ОПСС, МОК, работа сердца</span>
+  </div>
+  <button class="back-link" onclick="history.back()">← Назад</button>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">🔬 Виртуальный практикум</div>
+  <h1>❤️ Гемодинамика: ОПСС, МОК, работа сердца</h1>
+  <div class="hero-sub">Виртуальный катетер Свана-Ганца. Расчёт ОПСС, метод Фика, работа и мощность левого желудочка. Клинические сценарии: допамин, шок, аортальная регургитация.</div>
+  <div class="meta-row"><div class="chip">IBO-уровень</div><div class="chip">Гемодинамика</div><div class="chip">5 заданий</div><div class="chip">Катетер Свана-Ганца</div></div>
+</div>
+
+<div class="content">
+
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div style="font-size:12px;color:var(--text2);margin-bottom:24px" id="prog-label">Прогресс: 0 / 5 заданий</div>
+<div class="section-title">📖 Теория</div>
+<div class="card">
+  <div class="card-title">Гемодинамика — давление, сопротивление, работа сердца</div>
+  <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Закон Пуазейля:</strong> Q = ΔP/R. МОК = (АД−ЦВД)/ОПСС. Как в электрической цепи: ток = напряжение / сопротивление.</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><strong>ОПСС</strong> (дин·с/см⁵) = (СрАД−ЦВД)×1333 / (МОК/60). Норма: 900–1500. Снижается при сепсисе, растёт при гипертензии.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Метод Фика</strong>: МОК = VO₂ / (CaO₂ − CvO₂). Позволяет рассчитать МОК без катетера.</div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Работа левого желудочка</strong> (Дж/уд) = СрАД × УО × 0.0133. Мощность = Работа × ЧСС / 60.</div></div>
+  <div class="formula-box">ОПСС = (СрАД − ЦВД) × 1333 / (МОК_в_мл/с)<br>
+МОК (Фик) = VO₂ / (CaO₂ − CvO₂)<br>
+СрАД ≈ АД_диаст + (АД_сист − АД_диаст) / 3<br>
+Работа ЛЖ (Дж/уд) = 0.0133 × СрАД × УО_мл</div>
+</div>
+
+<div class="section-title">🧪 Задание 1 <span>— расчёт ОПСС</span></div>
+<div class="card">
+  <div class="card-title">Катетер Свана-Ганца: СрАД=96, ЦВД=4 мм рт.ст., МОК=5 л/мин</div>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>ОПСС (дин·с/см⁵):</label><input type="number" id="q1" placeholder="дин·с/см⁵ (целое)"></div>
+    <button class="btn" onclick="checkQ1()">Проверить</button>
+  </div>
+  <button class="hint-toggle" onclick="toggleHint('h1')">💡 Подсказка</button>
+  <div class="hint-box" id="h1">МОК = 5000/60 = 83.3 мл/с. ОПСС = (96−4)×1333/83.3 = 92×1333/83.3</div>
+  <div class="result-box" id="r1"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<div class="section-title">🧪 Задание 2 <span>— интерактивный монитор</span></div>
+<div class="card">
+  <div class="card-title">Изменяйте параметры и следите за ОПСС и клиническим статусом</div>
+  <div style="display:grid;gap:12px;margin-bottom:14px">
+    <div><label>Систолическое АД: <span id="v-syst" style="color:var(--blue2);font-weight:700">120</span> мм рт.ст.</label>
+    <input type="range" min="70" max="220" value="120" oninput="updateHemo()" id="sl-syst" style="width:100%;accent-color:var(--blue);margin-top:4px"></div>
+    <div><label>Диастолическое АД: <span id="v-diast" style="color:var(--blue2);font-weight:700">80</span> мм рт.ст.</label>
+    <input type="range" min="40" max="140" value="80" oninput="updateHemo()" id="sl-diast" style="width:100%;accent-color:var(--blue);margin-top:4px"></div>
+    <div><label>МОК (л/мин): <span id="v-co" style="color:var(--blue2);font-weight:700">5.0</span></label>
+    <input type="range" min="1" max="20" value="5" step="0.5" oninput="updateHemo()" id="sl-co" style="width:100%;accent-color:var(--blue);margin-top:4px"></div>
+    <div><label>ЦВД (мм рт.ст.): <span id="v-cvp" style="color:var(--blue2);font-weight:700">4</span></label>
+    <input type="range" min="0" max="20" value="4" oninput="updateHemo()" id="sl-cvp" style="width:100%;accent-color:var(--blue);margin-top:4px"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">СрАД (мм рт.ст.)</div><div id="out-map" style="font-size:22px;font-weight:800;font-family:monospace;color:var(--blue2)">93</div></div>
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">ОПСС (дин·с/см⁵)</div><div id="out-svr" style="font-size:22px;font-weight:800;font-family:monospace">1479</div></div>
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">Статус</div><div id="out-status" style="font-size:11px;font-weight:700;color:var(--green);margin-top:8px">Норма</div></div>
+  </div>
+</div>
+
+<div class="section-title">🧪 Задание 3 <span>— метод Фика</span></div>
+<div class="card">
+  <div class="card-title">Потребление O₂ = 300 мл/мин, CaO₂ = 200 мл/л, CvO₂ = 150 мл/л</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Рассчитайте МОК методом Фика. Чем этот метод лучше термодилюционного при аортальной регургитации?</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>МОК (л/мин):</label><input type="number" step="0.1" id="q3" placeholder="л/мин (до десятых)"></div>
+    <button class="btn" onclick="checkQ3()">Проверить</button>
+  </div>
+  <div class="result-box" id="r3"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<div class="section-title">🧪 Задание 4 <span>— допамин: изменение ОПСС</span></div>
+<div class="card">
+  <div class="card-title">До допамина: МОК=3.0 л/мин, СрАД=85, ЦВД=8. После: МОК=5.0, СрАД=95, ЦВД=10.</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Рассчитайте ОПСС до и после. На сколько % снизилось ОПСС?</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>ОПСС до (дин·с/см⁵):</label><input type="number" id="q4a" placeholder="дин·с/см⁵ (целое)"></div>
+    <div style="flex:1"><label>ОПСС после:</label><input type="number" id="q4b" placeholder="дин·с/см⁵ (целое)"></div>
+    <div style="flex:1"><label>Снижение (%):</label><input type="number" id="q4c" placeholder="% (целое число)"></div>
+    <button class="btn" onclick="checkQ4()">Проверить</button>
+  </div>
+  <div class="result-box" id="r4"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<div class="section-title">🧪 Задание 5 <span>— работа и мощность левого желудочка (IBO)</span></div>
+<div class="card">
+  <div class="card-title">Нагрузочный тест. В покое: ЧСС=72, УО=70 мл, СрАД=93 мм рт.ст. При нагрузке: ЧСС=180, УО=140 мл, СрАД=120 мм рт.ст.</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Рассчитайте: 1) работу ЛЖ за удар в покое и при нагрузке (Дж); 2) мощность ЛЖ в обоих состояниях (Вт); 3) во сколько раз возросла мощность?</p>
+  <div class="row" style="align-items:flex-end">
+    <div><label>Работа ЛЖ в покое (Дж):</label><input type="number" step="0.01" id="q5a" placeholder="Дж (до сотых)"></div>
+    <div><label>Мощность покоя (Вт):</label><input type="number" step="0.01" id="q5b" placeholder="Дж (до сотых)"></div>
+    <div><label>Мощность нагрузки (Вт):</label><input type="number" step="0.1" id="q5c" placeholder="Вт (до десятых)"></div>
+    <div><label>Во сколько раз (разы):</label><input type="number" step="0.1" id="q5d" placeholder="разы (до десятых)"></div>
+    <button class="btn" onclick="checkQ5()">Проверить</button>
+  </div>
+  <button class="hint-toggle" onclick="toggleHint('h5')">💡 Подсказка</button>
+  <div class="hint-box" id="h5">Работа = 0.0133 × СрАД × УО_мл. Мощность = Работа_Дж × ЧСС / 60.</div>
+  <div class="result-box" id="r5"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+</div>
+
+<script>
+function toggleHint(id){
+  var el=document.getElementById(id);
+  el.classList.toggle('open');
+}
+function showResult(id, correct, value, explain){
+  var box=document.getElementById(id);
+  box.classList.add('show');
+  if(correct){box.classList.add('result-correct');box.querySelector('.result-label').className='result-label ok';box.querySelector('.result-label').textContent='✅ Верно';}
+  else{box.classList.add('result-wrong');box.querySelector('.result-label').className='result-label err';box.querySelector('.result-label').textContent='❌ Попробуйте ещё';}
+  box.querySelector('.result-value').textContent=value;
+  box.querySelector('.result-explain').innerHTML=explain;
+}
+
+var score=0,total=5;
+function updateProg(){document.getElementById('prog').style.width=(score/total*100)+'%';document.getElementById('prog-label').textContent='Прогресс: '+score+' / '+total+' заданий';}
+function checkQ1(){
+  var v=parseFloat(document.getElementById('q1').value);
+  var ok=Math.abs(v-1471)<=50;
+  if(ok){score++;updateProg();}
+  showResult('r1',ok,ok?'1471 дин·с/см⁵ ✓':'ОПСС = 92×1333/83.33 = 122636/83.33 ≈ 1471',
+    'ОПСС в норме (900–1500). При кардиогенном шоке ОПСС > 2000 (вазоспазм), при анафилактическом < 400 (вазодилатация). Добутамин снижает ОПСС, норадреналин — повышает.');
+}
+function updateHemo(){
+  var s=+document.getElementById('sl-syst').value;
+  var d=+document.getElementById('sl-diast').value;
+  var co=+document.getElementById('sl-co').value;
+  var cvp=+document.getElementById('sl-cvp').value;
+  document.getElementById('v-syst').textContent=s;
+  document.getElementById('v-diast').textContent=d;
+  document.getElementById('v-co').textContent=co.toFixed(1);
+  document.getElementById('v-cvp').textContent=cvp;
+  var map=Math.round(d+(s-d)/3);
+  var svr=Math.round((map-cvp)*1333/(co*1000/60));
+  document.getElementById('out-map').textContent=map;
+  document.getElementById('out-svr').textContent=svr;
+  var status='';var col='';
+  if(map<60){status='🔴 Шок (MAP<60)';col='var(--red)';}
+  else if(svr<600){status='🟡 Вазодилатация (сепсис?)';col='var(--orange)';}
+  else if(svr>1800){status='🔴 Вазоспазм';col='var(--red)';}
+  else if(map>110){status='🟡 Гипертензия';col='var(--orange)';}
+  else{status='🟢 Норма';col='var(--green)';}
+  var el=document.getElementById('out-status');
+  el.textContent=status;el.style.color=col;
+}
+function checkQ3(){
+  var v=parseFloat(document.getElementById('q3').value);
+  var ok=Math.abs(v-6.0)<=0.2;
+  if(ok){score++;updateProg();}
+  showResult('r3',ok,ok?'6.0 л/мин ✓':'МОК = 300/(200−150) = 300/50 = 6 л/мин',
+    'При аортальной регургитации кровь возвращается в ЛЖ → термодилюция занижает МОК. Метод Фика более точен: он использует системное потребление O₂, которое не зависит от регургитации.');
+}
+function checkQ4(){
+  var a=parseFloat(document.getElementById('q4a').value);
+  var b=parseFloat(document.getElementById('q4b').value);
+  var c=parseFloat(document.getElementById('q4c').value);
+  var ok=Math.abs(a-34177)<=1500 && Math.abs(b-22610)<=1000 && Math.abs(c-34)<=4;
+  if(ok){score++;updateProg();}
+  showResult('r4',ok,ok?'34177 → 22610 дин·с/см⁵, −34% ✓':'До: 77×1333/50=34177. После: 85×1333/83.3=22610. Δ=(34177−22610)/34177×100=33.8%',
+    'Допамин в высоких дозах (>10 мкг/кг/мин): стимулирует α₁-рецепторы → вазоконстрикция → ОПСС↑. В низких дозах (2–5 мкг/кг/мин): D₁-рецепторы почек → вазодилатация → ОПСС↓. Данный случай: ОПСС снизилось → допамин работал через β₁ (↑МОК) и D₁.');
+}
+function checkQ5(){
+  var a=parseFloat(document.getElementById('q5a').value);
+  var b=parseFloat(document.getElementById('q5b').value);
+  var c=parseFloat(document.getElementById('q5c').value);
+  var d=parseFloat(document.getElementById('q5d').value);
+  var W_rest=0.0133*93*70;
+  var P_rest=W_rest*72/60;
+  var W_ex=0.0133*120*140;
+  var P_ex=W_ex*180/60;
+  var ratio=P_ex/P_rest;
+  var ok=Math.abs(a-W_rest)<=0.5 && Math.abs(b-P_rest)<=0.3 && Math.abs(c-P_ex)<=3 && Math.abs(d-ratio)<=0.5;
+  if(ok){score++;updateProg();}
+  showResult('r5',ok,ok?`Работа покоя=${W_rest.toFixed(2)} Дж; Мощность покоя=${P_rest.toFixed(2)} Вт; Нагрузка=${P_ex.toFixed(1)} Вт; ×${ratio.toFixed(1)} ✓`:`Работа покоя=${W_rest.toFixed(2)} Дж, мощность=${P_rest.toFixed(2)} Вт. Нагрузка: ${W_ex.toFixed(2)} Дж/уд, ${P_ex.toFixed(1)} Вт. Рост ×${ratio.toFixed(1)}`,
+    'При нагрузке мощность ЛЖ возрастает примерно в 8 раз — огромная нагрузка на миокард! Именно поэтому при стенозе аорты или ИБС нагрузочные тесты могут спровоцировать ишемию.');
+}
+
+</script>
+</body>
+</html>

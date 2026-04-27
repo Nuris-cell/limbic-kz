@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Channel Pharmacology: Antiarrhythmics - Limbic KZ</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--surface:#10101a;--s2:#161622;--border:#1e1e30;--b2:#28283e;--blue:#3b7fff;--blue2:#6fa3ff;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;--purple:#a78bfa;--text:#c8ccd8;--text2:#7a7a9a;--text-bright:#eeeef8;--radius:14px;--font:'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+a{color:var(--blue2);text-decoration:none}
+.topbar{background:rgba(10,10,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.logo{font-size:13px;font-weight:700;color:var(--text-bright)}
+.sep{color:var(--border);font-size:16px}
+.title-small{font-size:11px;color:var(--text2);font-weight:500}
+.back-link{font-size:11px;color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;background:none;transition:all .15s}
+.back-link:hover{color:var(--blue2);border-color:var(--blue)}
+.hero{padding:40px 32px 28px;max-width:960px;margin:0 auto}
+.hero-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);background:rgba(59,127,255,.12);border:1px solid rgba(59,127,255,.25);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.hero h1{font-size:clamp(20px,3.5vw,32px);font-weight:800;color:var(--text-bright);letter-spacing:-.03em;line-height:1.15;margin-bottom:8px}
+.hero-sub{font-size:13px;color:var(--text2);line-height:1.7;max-width:700px;margin-bottom:18px}
+.meta-row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-size:10px;font-weight:600;background:var(--s2);border:1px solid var(--border);padding:4px 10px;border-radius:6px;color:var(--text2)}
+.content{max-width:960px;margin:0 auto;padding:0 32px 80px}
+.section-title{font-size:18px;font-weight:700;color:var(--text-bright);margin:32px 0 12px;display:flex;align-items:center;gap:8px}
+.section-title span{font-size:13px;color:var(--text2);font-weight:400}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th{background:var(--s2);padding:8px 12px;text-align:left;font-size:11px;letter-spacing:.05em;color:var(--text2);font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+input[type=number],input[type=text],select{background:var(--s2);border:1px solid var(--b2);color:var(--text-bright);border-radius:8px;padding:8px 12px;font-size:14px;outline:none;transition:border .15s;font-family:var(--font);width:100%}
+input:focus,select:focus{border-color:var(--blue)}
+label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-weight:500}
+.btn{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.btn:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:7px}
+.btn-outline{background:transparent;border:1px solid var(--b2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue2)}
+.btn-green{background:var(--green)}
+.btn-green:hover{background:#16a34a}
+.result-box{background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:14px 18px;margin-top:10px;display:none}
+.result-box.show{display:block}
+.result-correct{border-color:var(--green);background:rgba(34,197,94,.07)}
+.result-wrong{border-color:var(--red);background:rgba(239,68,68,.07)}
+.result-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
+.result-label.ok{color:var(--green)}
+.result-label.err{color:var(--red)}
+.result-value{font-size:22px;font-weight:800;color:var(--text-bright);font-family:monospace;margin-bottom:4px}
+.result-explain{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px}
+.formula-box{background:rgba(59,127,255,.06);border:1px solid rgba(59,127,255,.2);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:13px;color:var(--blue2);margin:8px 0;line-height:1.6}
+.hint-toggle{font-size:12px;color:var(--blue2);cursor:pointer;background:none;border:none;padding:4px 0;font-family:var(--font);opacity:.8;margin-top:6px;display:block}
+.hint-toggle:hover{opacity:1}
+.hint-box{background:rgba(59,127,255,.06);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:6px;display:none}
+.hint-box.open{display:block}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-num{width:24px;height:24px;border-radius:50%;background:rgba(59,127,255,.2);color:var(--blue2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{font-size:13px;color:var(--text);line-height:1.6}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin:16px 0}
+.progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s}
+.badge-ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.badge-ibo{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.graph-container{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin:10px 0;position:relative}
+.slider-row{display:flex;align-items:center;gap:12px;margin:8px 0}
+.slider-row input[type=range]{flex:1;accent-color:var(--blue);height:4px}
+.slider-val{font-size:14px;font-weight:700;color:var(--blue2);min-width:60px;text-align:right;font-family:monospace}
+.norm-indicator{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+.norm-ok{background:rgba(34,197,94,.1);color:var(--green)}
+.norm-high{background:rgba(239,68,68,.1);color:var(--red)}
+.norm-low{background:rgba(245,158,11,.1);color:var(--orange)}
+@media(max-width:600px){.hero,.content{padding-left:16px;padding-right:16px}.row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="logo">&#129504; Limbic KZ</span>
+    <span class="sep">|</span>
+    <span class="title-small">Channel Pharmacology</span>
+  </div>
+  <button class="back-link" onclick="history.back()">Back</button>
+</div>
+<div class="hero">
+  <div class="hero-tag">&#128300; Virtual Physiology Lab</div>
+  <h1>&#128138; Channel Pharmacology: Antiarrhythmics</h1>
+  <div class="hero-sub">Virtual oscilloscope: TTX, TEA, verapamil, amiodarone. QT prolongation, dV/dt, torsades de pointes. Tetrodotoxin poisoning case.</div>
+  <div class="meta-row"><div class="chip">IBO level</div><div class="chip">Neuropharmacology</div><div class="chip">5 tasks</div></div>
+</div>
+<div class="content">
+
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div style="font-size:12px;color:var(--text2);margin-bottom:24px" id="prog-label">Progress: 0 / 5 tasks</div>
+
+<div class="section-title">&#128214; Theory</div>
+<div class="card">
+  <div class="card-title">Ion Channel Pharmacology</div>
+  <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Vaughan Williams classes:</strong> Class I = Na+ blockers (lidocaine); Class II = beta-blockers; Class III = K+ blockers (amiodarone, sotalol); Class IV = Ca2+ blockers (verapamil).</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Na+ block (Class I):</strong> reduces AP amplitude and dV/dt, slows conduction velocity, widens QRS on ECG.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><strong>K+ block (Class III):</strong> prolongs AP duration, lengthens QT interval. Risk of torsades de pointes when QT exceeds 500 ms.</div></div>
+  <div class="formula-box">dV/dt_max is proportional to open Na+ channels<br>AP duration is proportional to 1/(K+ repolarisation rate)<br>QTc = QT / sqrt(RR_seconds) -- Bazett formula</div>
+</div>
+
+<div class="section-title">&#129514; Task 1 <span>-- K+ block (TEA): AP duration</span></div>
+<div class="card">
+  <div class="card-title">Cardiomyocyte. Control: amplitude=120 mV, duration=200 ms. TEA slows repolarisation 1.75x. Amplitude unchanged (Na+ channels unaffected). Calculate new duration.</div>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>New AP duration (ms):</label><input type="number" id="q1" placeholder="ms (whole number)"></div>
+    <button class="btn" id="btn1" onclick="checkQ1()">Check</button>
+  </div>
+  <div class="result-box" id="r1"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<div class="section-title">&#129514; Task 2 <span>-- interactive oscilloscope</span></div>
+<div class="card">
+  <div class="card-title">Click a drug to see its effect on the action potential</div>
+  <div class="row" style="margin-bottom:12px;flex-wrap:wrap;gap:6px">
+    <button class="btn btn-sm" id="b-ctrl">Control</button>
+    <button class="btn btn-outline btn-sm" id="b-ttx">+ TTX (Na+)</button>
+    <button class="btn btn-outline btn-sm" id="b-tea">+ TEA (K+)</button>
+    <button class="btn btn-outline btn-sm" id="b-vera">+ Verapamil</button>
+    <button class="btn btn-outline btn-sm" id="b-amio">+ Amiodarone</button>
+  </div>
+  <div class="graph-container">
+    <div style="font-size:11px;color:var(--text2);margin-bottom:6px" id="pd-label">Control action potential</div>
+    <canvas id="pd-canvas" height="180"></canvas>
+  </div>
+  <div id="pd-info" style="font-size:12px;color:var(--text2);line-height:1.7;margin-top:8px"></div>
+</div>
+
+<div class="section-title">&#129514; Task 3 <span>-- dV/dt after Na+ block</span></div>
+<div class="card">
+  <div class="card-title">Na+ channel blocker reduced dV/dt by 40%. Initial dV/dt = 500 V/s. Calculate the new dV/dt and explain the ECG change.</div>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>New dV/dt (V/s):</label><input type="number" id="q3" placeholder="V/s (whole number)"></div>
+    <button class="btn" onclick="checkQ3()">Check</button>
+  </div>
+  <div class="result-box" id="r3"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<div class="section-title">&#129514; Task 4 <span>-- corrected QT (Bazett)</span></div>
+<div class="card">
+  <div class="card-title">Patient on amiodarone: QT=480 ms, HR=60 bpm (RR=1.0 s). QTc = QT / sqrt(RR_s). Upper limits: 440 ms for men, 460 ms for women. Torsades risk threshold: 500 ms.</div>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>QTc (ms):</label><input type="number" id="q4" placeholder="ms (whole number)"></div>
+    <button class="btn" onclick="checkQ4()">Check</button>
+  </div>
+  <div class="result-box" id="r4"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+<div class="section-title">&#129514; Task 5 <span>-- tetrodotoxin poisoning (IBO)</span></div>
+<div class="card">
+  <div class="card-title">Patient ate pufferfish. TTX irreversibly blocks Nav. Initial dV/dt=400 V/s. TTX blocked 85% of Na+ channels. AP generation threshold: dV/dt above 50 V/s. Calculate remaining dV/dt.</div>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>Remaining dV/dt (V/s):</label><input type="number" id="q5" placeholder="V/s (whole number)"></div>
+    <button class="btn" onclick="checkQ5()">Check</button>
+  </div>
+  <div class="result-box" id="r5"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+</div><!-- end content -->
+
+<script>
+var score = 0;
+var total = 5;
+var pdChart = null;
+
+function updateProg() {
+  document.getElementById("prog").style.width = (score/total*100) + "%";
+  document.getElementById("prog-label").textContent = "Progress: " + score + " / " + total + " tasks";
+}
+
+function showResult(id, correct, value, explain) {
+  var box = document.getElementById(id);
+  box.classList.add("show");
+  var lbl = box.querySelector(".result-label");
+  var val = box.querySelector(".result-value");
+  var exp = box.querySelector(".result-explain");
+  if (correct) {
+    box.classList.add("result-correct");
+    lbl.className = "result-label ok";
+    lbl.textContent = "Correct";
+  } else {
+    box.classList.add("result-wrong");
+    lbl.className = "result-label err";
+    lbl.textContent = "Try again";
+  }
+  val.textContent = value;
+  exp.innerHTML = explain;
+}
+
+function checkQ1() {
+  var v = parseFloat(document.getElementById("q1").value);
+  var ok = Math.abs(v - 350) <= 5;
+  if (ok) { score++; updateProg(); }
+  showResult("r1", ok,
+    ok ? "350 ms" : "Answer: 200 x 1.75 = 350 ms",
+    "K+ channel block slows phase-3 repolarisation so AP duration increases. This lengthens QT on ECG. When QT exceeds 500 ms there is high risk of torsades de pointes (polymorphic VT)."
+  );
+}
+
+function checkQ3() {
+  var v = parseFloat(document.getElementById("q3").value);
+  var ok = Math.abs(v - 300) <= 10;
+  if (ok) { score++; updateProg(); }
+  showResult("r3", ok,
+    ok ? "300 V/s" : "Answer: 500 x (1 - 0.40) = 300 V/s",
+    "Lower dV/dt means lower conduction velocity and a wider QRS on ECG. Lidocaine widens QRS. A QRS above 120 ms indicates a conduction defect."
+  );
+}
+
+function checkQ4() {
+  var v = parseFloat(document.getElementById("q4").value);
+  var ok = Math.abs(v - 480) <= 5;
+  if (ok) { score++; updateProg(); }
+  showResult("r4", ok,
+    ok ? "QTc = 480 ms" : "Answer: 480 / sqrt(1.0) = 480 ms",
+    "QTc 480 ms exceeds upper limits for both men and women but is below the torsades threshold of 500 ms. Close monitoring is needed. Adding other QT-prolonging agents such as fluoroquinolones is hazardous."
+  );
+}
+
+function checkQ5() {
+  var v = parseFloat(document.getElementById("q5").value);
+  var ok = Math.abs(v - 60) <= 5;
+  if (ok) { score++; updateProg(); }
+  showResult("r5", ok,
+    ok ? "60 V/s" : "Answer: 400 x (1 - 0.85) = 60 V/s",
+    "60 V/s is just above the threshold of 50 V/s so APs can still fire, but respiratory muscles barely function. At 90% Nav block breathing stops. Treatment is mechanical ventilation. There is no antidote for TTX."
+  );
+}
+
+function setPD(type) {
+  var types = ["ctrl","ttx","tea","vera","amio"];
+  types.forEach(function(x) {
+    var el = document.getElementById("b-" + x);
+    if (el) el.className = "btn btn-outline btn-sm";
+  });
+  var active = document.getElementById("b-" + type);
+  if (active) active.className = "btn btn-sm";
+
+  var canvas = document.getElementById("pd-canvas");
+  if (!canvas) return;
+  var ctx = canvas.getContext("2d");
+  if (pdChart) { pdChart.destroy(); pdChart = null; }
+
+  var t = [], v = [], label = "", info = "", color = "#3b7fff";
+  var i;
+
+  if (type === "ctrl") {
+    label = "Control -- normal cardiomyocyte AP";
+    color = "#3b7fff";
+    info = "Phase 0: fast depolarisation (Na+). Phase 1: early repolarisation (Ito). Phase 2: plateau (Ca2+). Phase 3: repolarisation (K+). Phase 4: rest.";
+    for (i = 0; i <= 400; i++) {
+      t.push(i);
+      if (i < 50) v.push(-85);
+      else if (i < 60) v.push(-85 + (i-50)*12.5);
+      else if (i < 70) v.push(40);
+      else if (i < 90) v.push(40 - (i-70)*2.5);
+      else if (i < 200) v.push(-10);
+      else if (i < 250) v.push(-10 - (i-200)*1.5);
+      else v.push(-85);
+    }
+  } else if (type === "ttx") {
+    label = "+ Tetrodotoxin (Nav block)";
+    color = "#ef4444";
+    info = "TTX blocks Nav. Phase 0 is slower and AP amplitude is reduced. At full block, no AP is generated. Used in research to isolate K+ currents.";
+    for (i = 0; i <= 400; i++) {
+      t.push(i);
+      if (i < 50) v.push(-85);
+      else if (i < 80) v.push(-85 + (i-50)*3);
+      else if (i < 100) v.push(5);
+      else if (i < 120) v.push(5 - (i-100)*0.75);
+      else if (i < 200) v.push(-10);
+      else if (i < 260) v.push(-10 - (i-200)*1.25);
+      else v.push(-85);
+    }
+  } else if (type === "tea") {
+    label = "+ TEA (Kv block)";
+    color = "#f59e0b";
+    info = "TEA blocks Kv. Phase 3 is slower so AP duration increases to about 350 ms. Amplitude unchanged because Na+ channels are intact. Clinical analogue: amiodarone causing long QT.";
+    for (i = 0; i <= 600; i++) {
+      t.push(i);
+      if (i < 50) v.push(-85);
+      else if (i < 60) v.push(-85 + (i-50)*12.5);
+      else if (i < 70) v.push(40);
+      else if (i < 90) v.push(40 - (i-70)*2.5);
+      else if (i < 300) v.push(-10);
+      else if (i < 400) v.push(-10 - (i-300)*0.75);
+      else v.push(-85);
+    }
+  } else if (type === "vera") {
+    label = "+ Verapamil (Ca2+ block)";
+    color = "#a78bfa";
+    info = "Verapamil blocks L-type Ca2+. Phase 2 plateau is shortened. AP is slightly shorter. Slows SA node rate and causes vasodilation.";
+    for (i = 0; i <= 400; i++) {
+      t.push(i);
+      if (i < 50) v.push(-85);
+      else if (i < 60) v.push(-85 + (i-50)*12.5);
+      else if (i < 70) v.push(40);
+      else if (i < 90) v.push(40 - (i-70)*2.5);
+      else if (i < 150) v.push(-10);
+      else if (i < 200) v.push(-10 - (i-150)*1.5);
+      else v.push(-85);
+    }
+  } else if (type === "amio") {
+    label = "+ Amiodarone (multi-channel)";
+    color = "#22c55e";
+    info = "Amiodarone blocks Na+, K+, and Ca2+ channels. Reduces dV/dt, prolongs AP duration, and slows heart rate. Most effective antiarrhythmic but causes lung and thyroid toxicity.";
+    for (i = 0; i <= 600; i++) {
+      t.push(i);
+      if (i < 50) v.push(-85);
+      else if (i < 65) v.push(-85 + (i-50)*8.3);
+      else if (i < 80) v.push(40 - (i-65)*1.5);
+      else if (i < 250) v.push(17);
+      else if (i < 400) v.push(17 - (i-250)*0.69);
+      else v.push(-85);
+    }
+  }
+
+  document.getElementById("pd-label").textContent = label;
+  document.getElementById("pd-info").innerHTML = info;
+
+  if (typeof Chart !== "undefined") {
+    pdChart = new Chart(ctx, {
+      type: "line",
+      data: { labels: t, datasets: [{ data: v, borderColor: color, borderWidth: 2, pointRadius: 0, fill: false, tension: 0 }] },
+      options: {
+        animation: { duration: 400 },
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { title: { display: true, text: "Time (ms)", color: "#7a7a9a" }, ticks: { color: "#7a7a9a", maxTicksLimit: 8 }, grid: { color: "#1e1e30" } },
+          y: { title: { display: true, text: "mV", color: "#7a7a9a" }, ticks: { color: "#7a7a9a" }, min: -100, max: 60, grid: { color: "#1e1e30" } }
+        }
+      }
+    });
+  }
+}
+
+// Attach button events - no inline onclick needed
+document.addEventListener("DOMContentLoaded", function() {
+  ["ctrl","ttx","tea","vera","amio"].forEach(function(type) {
+    var btn = document.getElementById("b-" + type);
+    if (btn) btn.addEventListener("click", function() { setPD(type); });
+  });
+  setPD("ctrl");
+});
+</script>
+</body>
+</html>

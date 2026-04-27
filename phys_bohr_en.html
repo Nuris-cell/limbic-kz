@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Bohr Method: Dead Space · Limbic KZ</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--surface:#10101a;--s2:#161622;--border:#1e1e30;--b2:#28283e;--blue:#3b7fff;--blue2:#6fa3ff;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;--purple:#a78bfa;--text:#c8ccd8;--text2:#7a7a9a;--text-bright:#eeeef8;--radius:14px;--font:'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+a{color:var(--blue2);text-decoration:none}
+.topbar{background:rgba(10,10,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.logo{font-size:13px;font-weight:700;color:var(--text-bright)}
+.sep{color:var(--border);font-size:16px}
+.title-small{font-size:11px;color:var(--text2);font-weight:500}
+.back-link{font-size:11px;color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;background:none;transition:all .15s}
+.back-link:hover{color:var(--blue2);border-color:var(--blue)}
+.hero{padding:40px 32px 28px;max-width:960px;margin:0 auto}
+.hero-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);background:rgba(59,127,255,.12);border:1px solid rgba(59,127,255,.25);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.hero h1{font-size:clamp(20px,3.5vw,32px);font-weight:800;color:var(--text-bright);letter-spacing:-.03em;line-height:1.15;margin-bottom:8px}
+.hero-sub{font-size:13px;color:var(--text2);line-height:1.7;max-width:700px;margin-bottom:18px}
+.meta-row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-size:10px;font-weight:600;background:var(--s2);border:1px solid var(--border);padding:4px 10px;border-radius:6px;color:var(--text2)}
+.content{max-width:960px;margin:0 auto;padding:0 32px 80px}
+.section-title{font-size:18px;font-weight:700;color:var(--text-bright);margin:32px 0 12px;display:flex;align-items:center;gap:8px}
+.section-title span{font-size:13px;color:var(--text2);font-weight:400}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:700;color:var(--text-bright);margin-bottom:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th{background:var(--s2);padding:8px 12px;text-align:left;font-size:11px;letter-spacing:.05em;color:var(--text2);font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+input[type=number],input[type=text],select{background:var(--s2);border:1px solid var(--b2);color:var(--text-bright);border-radius:8px;padding:8px 12px;font-size:14px;outline:none;transition:border .15s;font-family:var(--font);width:100%}
+input:focus,select:focus{border-color:var(--blue)}
+label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-weight:500}
+.btn{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.btn:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:7px}
+.btn-outline{background:transparent;border:1px solid var(--b2);color:var(--text2)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue2)}
+.btn-green{background:var(--green)}
+.btn-green:hover{background:#16a34a}
+.result-box{background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:14px 18px;margin-top:10px;display:none}
+.result-box.show{display:block}
+.result-correct{border-color:var(--green);background:rgba(34,197,94,.07)}
+.result-wrong{border-color:var(--red);background:rgba(239,68,68,.07)}
+.result-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
+.result-label.ok{color:var(--green)}
+.result-label.err{color:var(--red)}
+.result-value{font-size:22px;font-weight:800;color:var(--text-bright);font-family:monospace;margin-bottom:4px}
+.result-explain{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px}
+.formula-box{background:rgba(59,127,255,.06);border:1px solid rgba(59,127,255,.2);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:13px;color:var(--blue2);margin:8px 0;line-height:1.6}
+.hint-toggle{font-size:12px;color:var(--blue2);cursor:pointer;background:none;border:none;padding:4px 0;font-family:var(--font);opacity:.8;margin-top:6px;display:block}
+.hint-toggle:hover{opacity:1}
+.hint-box{background:rgba(59,127,255,.06);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:6px;display:none}
+.hint-box.open{display:block}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-num{width:24px;height:24px;border-radius:50%;background:rgba(59,127,255,.2);color:var(--blue2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{font-size:13px;color:var(--text);line-height:1.6}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin:16px 0}
+.progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s}
+.badge-ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.badge-ibo{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);color:var(--purple);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.graph-container{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin:10px 0;position:relative}
+.slider-row{display:flex;align-items:center;gap:12px;margin:8px 0}
+.slider-row input[type=range]{flex:1;accent-color:var(--blue);height:4px}
+.slider-val{font-size:14px;font-weight:700;color:var(--blue2);min-width:60px;text-align:right;font-family:monospace}
+.norm-indicator{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+.norm-ok{background:rgba(34,197,94,.1);color:var(--green)}
+.norm-high{background:rgba(239,68,68,.1);color:var(--red)}
+.norm-low{background:rgba(245,158,11,.1);color:var(--orange)}
+@media(max-width:600px){.hero,.content{padding-left:16px;padding-right:16px}.row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="logo">🧠 Limbic KZ</span>
+    <span class="sep">|</span>
+    <span class="title-small">🫁 Bohr Method: Dead Space</span>
+  </div>
+  <button class="back-link" onclick="history.back()">← Back</button>
+</div>
+<div class="hero">
+  <div class="hero-tag">🔬 Virtual Physiology Lab</div>
+  <h1>🫁 Bohr Method: Dead Space</h1>
+  <div class="hero-sub">Virtual spirometry lab. Measuring anatomical and physiological dead space by Bohr's method. Clinical applications in COPD and pulmonary embolism.</div>
+  <div class="meta-row"><div class="chip">IBO level</div><div class="chip">Respiratory Physiology</div><div class="chip">5 tasks</div><div class="chip">Bohr formula</div></div>
+</div>
+<div class="content">
+
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div style="font-size:12px;color:var(--text2);margin-bottom:24px" id="prog-label">Progress: 0 / 5 tasks</div>
+<div class="section-title">📖 Theory</div>
+<div class="card">
+  <div class="card-title">Bohr Method — Measuring Anatomical Dead Space</div>
+  <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Dead space (VD)</strong> = volume of airways where no gas exchange occurs (nose, trachea, bronchi). Normal ≈ 150 mL or ~2 mL/kg.</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Bohr's principle:</strong> CO₂ in expired air is diluted by dead-space gas (CO₂ ≈ 0). By comparing arterial PaCO₂ (= alveolar) with mixed-expired PECO₂, we can back-calculate VD.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body">Clinical relevance: In COPD and PE, VD/VT rises above 0.35 → inefficient ventilation.</div></div>
+  <div class="formula-box">VD/VT = (PaCO₂ − PECO₂) / PaCO₂<br>Alveolar ventilation: VA = (VT − VD) × RR (L/min)</div>
+</div>
+<div class="section-title">🧪 Task 1 <span>— calculate dead space</span></div>
+<div class="card">
+  <div class="card-title">Patient at rest: VT=500 mL, PECO₂=28 mmHg, PaCO₂=40 mmHg, RR=16 min⁻¹</div>
+  <table><tr><th>Parameter</th><th>Value</th><th>Unit</th></tr>
+    <tr><td>Tidal volume (VT)</td><td>500</td><td>mL</td></tr>
+    <tr><td>Mixed expired CO₂ (PECO₂)</td><td>28</td><td>mmHg</td></tr>
+    <tr><td>Arterial CO₂ (PaCO₂)</td><td>40</td><td>mmHg</td></tr>
+    <tr><td>Respiratory rate (RR)</td><td>16</td><td>min⁻¹</td></tr>
+  </table>
+  <div class="row" style="margin-top:12px;align-items:flex-end">
+    <div style="flex:1"><label>Dead space VD (mL):</label><input type="number" id="q1" placeholder="mL (whole number)"></div>
+    <button class="btn" onclick="checkQ1()">Check</button>
+  </div>
+  <button class="hint-toggle" onclick="toggleHint('h1')">💡 Hint</button>
+  <div class="hint-box" id="h1">VD/VT = (40−28)/40 = 0.30. Then VD = 500 × 0.30 = ?</div>
+  <div class="result-box" id="r1"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+<div class="section-title">🧪 Task 2 <span>— alveolar ventilation</span></div>
+<div class="card">
+  <div class="card-title">Using VD = 150 mL, VT = 500 mL, RR = 16 min⁻¹, calculate VA.</div>
+  <div class="formula-box">VA = (VT − VD) × RR</div>
+  <div class="row" style="margin-top:12px;align-items:flex-end">
+    <div style="flex:1"><label>VA (L/min):</label><input type="number" step="0.1" id="q2" placeholder="L/min (one decimal)"></div>
+    <button class="btn" onclick="checkQ2()">Check</button>
+  </div>
+  <div class="result-box" id="r2"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+<div class="section-title">🧪 Task 3 <span>— interactive: effect of breathing pattern</span></div>
+<div class="card">
+  <div class="card-title">Adjust the sliders and observe VD/VT and alveolar ventilation</div>
+  <div style="display:grid;gap:12px;margin-bottom:14px">
+    <div><label>VT (mL): <span id="vt-val" style="color:var(--blue2);font-weight:700">500</span></label>
+    <input type="range" min="200" max="1200" value="500" oninput="updateBohr()" id="sl-vt" style="width:100%;accent-color:var(--blue);margin-top:6px"></div>
+    <div><label>PECO₂ (mmHg): <span id="pe-val" style="color:var(--blue2);font-weight:700">28</span></label>
+    <input type="range" min="10" max="38" value="28" oninput="updateBohr()" id="sl-pe" style="width:100%;accent-color:var(--blue);margin-top:6px"></div>
+    <div><label>RR (min⁻¹): <span id="rr-val" style="color:var(--blue2);font-weight:700">16</span></label>
+    <input type="range" min="8" max="40" value="16" oninput="updateBohr()" id="sl-rr" style="width:100%;accent-color:var(--blue);margin-top:6px"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">VD (mL)</div><div id="out-vd" style="font-size:22px;font-weight:800;color:var(--blue2);font-family:monospace">150</div></div>
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">VD/VT</div><div id="out-ratio" style="font-size:22px;font-weight:800;color:var(--orange);font-family:monospace">0.30</div></div>
+    <div class="card" style="padding:12px;text-align:center"><div style="font-size:10px;color:var(--text2)">VA (L/min)</div><div id="out-va" style="font-size:22px;font-weight:800;color:var(--green);font-family:monospace">5.6</div></div>
+  </div>
+</div>
+<div class="section-title">🧪 Task 4 <span>— hyperventilation</span></div>
+<div class="card">
+  <div class="card-title">After hyperventilation: VT=800 mL, RR=30 min⁻¹, PECO₂=18 mmHg, PaCO₂=26 mmHg. Calculate VA and compare to rest (5.6 L/min).</div>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>VD (mL):</label><input type="number" id="q4a" placeholder="VD in mL"></div>
+    <div style="flex:1"><label>VA (L/min):</label><input type="number" step="0.1" id="q4b" placeholder="L/min (one decimal)"></div>
+    <button class="btn" onclick="checkQ4()">Check</button>
+  </div>
+  <div class="result-box" id="r4"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+<div class="section-title">🧪 Task 5 <span>— clinical: pulmonary embolism (IBO)</span></div>
+<div class="card">
+  <div class="card-title">Female patient, 58 y.o. Post-hip surgery dyspnoea and hypoxaemia.</div>
+  <table><tr><th>Parameter</th><th>Patient</th><th>Normal</th></tr>
+    <tr><td>VT</td><td>450 mL</td><td>400–600 mL</td></tr>
+    <tr><td>RR</td><td>28 min⁻¹</td><td>12–18 min⁻¹</td></tr>
+    <tr><td>PaCO₂</td><td>32 mmHg</td><td>35–45 mmHg</td></tr>
+    <tr><td>PECO₂</td><td>15 mmHg</td><td>~28 mmHg</td></tr>
+  </table>
+  <p style="font-size:13px;color:var(--text2);margin:10px 0">Calculate VD/VT. In PE, physiological dead space increases because ventilated alveoli lose perfusion.</p>
+  <div class="row" style="align-items:flex-end">
+    <div style="flex:1"><label>VD/VT (to hundredths):</label><input type="number" step="0.01" id="q5a" placeholder="0.XX (to hundredths)"></div>
+    <div style="flex:1"><label>VD (mL):</label><input type="number" id="q5b" placeholder="mL (whole number)"></div>
+    <button class="btn" onclick="checkQ5()">Check</button>
+  </div>
+  <button class="hint-toggle" onclick="toggleHint('h5')">💡 Hint</button>
+  <div class="hint-box" id="h5">VD/VT = (PaCO₂ − PECO₂)/PaCO₂ = (32−15)/32 ≈ 0.53. Normal ≤ 0.35.</div>
+  <div class="result-box" id="r5"><div class="result-label"></div><div class="result-value"></div><div class="result-explain"></div></div>
+</div>
+
+</div>
+<script>
+function toggleHint(id){var el=document.getElementById(id);el.classList.toggle('open');}
+function showResult(id,correct,value,explain){var box=document.getElementById(id);box.classList.add('show');if(correct){box.classList.add('result-correct');box.querySelector('.result-label').className='result-label ok';box.querySelector('.result-label').textContent='✅ Correct';}else{box.classList.add('result-wrong');box.querySelector('.result-label').className='result-label err';box.querySelector('.result-label').textContent='❌ Try again';}box.querySelector('.result-value').textContent=value;box.querySelector('.result-explain').innerHTML=explain;}
+
+var score=0,total=5;
+function updateProg(){document.getElementById('prog').style.width=(score/total*100)+'%';document.getElementById('prog-label').textContent='Progress: '+score+' / '+total+' tasks';}
+function checkQ1(){var v=parseFloat(document.getElementById('q1').value);var ok=Math.abs(v-150)<=2;if(ok){score++;updateProg();}showResult('r1',ok,ok?'150 mL ✓':'Answer: 150 mL','VD/VT=(40−28)/40=0.30. VD=500×0.30=150 mL. Normal ~150 mL (30% of VT). Only 350 mL of each breath reaches alveoli.');}
+function checkQ2(){var v=parseFloat(document.getElementById('q2').value);var ok=Math.abs(v-5.6)<=0.15;if(ok){score++;updateProg();}showResult('r2',ok,ok?'5.6 L/min ✓':'VA=(500−150)×16/1000=5.6 L/min','In rapid shallow breathing (↓VT, ↑RR), VD/VT rises → VA falls → CO₂ retention.');}
+function updateBohr(){var vt=+document.getElementById('sl-vt').value,pe=+document.getElementById('sl-pe').value,rr=+document.getElementById('sl-rr').value,paco2=40;document.getElementById('vt-val').textContent=vt;document.getElementById('pe-val').textContent=pe;document.getElementById('rr-val').textContent=rr;var ratio=(paco2-pe)/paco2,vd=vt*ratio,va=(vt-vd)*rr/1000;document.getElementById('out-vd').textContent=Math.round(vd);document.getElementById('out-ratio').textContent=ratio.toFixed(2);document.getElementById('out-va').textContent=va.toFixed(1);}
+function checkQ4(){var a=parseFloat(document.getElementById('q4a').value),b=parseFloat(document.getElementById('q4b').value);var ok=Math.abs(a-246)<=10&&Math.abs(b-16.6)<=0.5;if(ok){score++;updateProg();}showResult('r4',ok,ok?'VD≈246 mL, VA≈16.6 L/min ✓':'VD=800×(26−18)/26≈246 mL; VA=(800−246)×30/1000≈16.6 L/min','VA increased ~3× vs rest! Hypocapnia (↓PaCO₂) causes cerebral vasoconstriction → dizziness, tingling. Patients during panic attacks can lose consciousness from hyperventilation.');}
+function checkQ5(){var a=parseFloat(document.getElementById('q5a').value),b=parseFloat(document.getElementById('q5b').value);var ok=Math.abs(a-0.53)<=0.03&&Math.abs(b-239)<=20;if(ok){score++;updateProg();}showResult('r5',ok,ok?'VD/VT≈0.53, VD≈239 mL ✓':'VD/VT=(32−15)/32=0.531; VD=450×0.531≈239 mL','<b>PE confirmed!</b> VD/VT=0.53 >> 0.35. Emboli occlude perfusion of ventilated alveoli → wasted ventilation. Hypoxaemia + hypocapnia (compensatory hyperventilation). Treatment: anticoagulation, thrombolysis.');}
+
+</script>
+</body>
+</html>

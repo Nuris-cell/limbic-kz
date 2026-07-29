@@ -411,6 +411,17 @@ body{background:var(--bg);color:var(--text);padding-bottom:0}
 <style id="welcome-search-photo">
 .welcome-guide{position:relative;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(330px,.75fr);gap:34px;background:linear-gradient(135deg,#242b52 0%,#304a64 100%);color:#fff;border-radius:26px;padding:32px;margin-bottom:34px;overflow:hidden;box-shadow:0 18px 50px rgba(35,44,83,.16)}.welcome-guide:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-90px;top:-120px;background:rgba(86,211,188,.15)}.welcome-guide.returning{padding:24px 28px}.welcome-guide.returning .welcome-steps{display:none}.welcome-guide.returning{grid-template-columns:1fr}.welcome-close{position:absolute;right:14px;top:12px;z-index:2;border:0;background:rgba(255,255,255,.1);color:#fff;width:30px;height:30px;border-radius:9px;font-size:18px;cursor:pointer}.welcome-main{position:relative;z-index:1}.welcome-badge{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:#8fe2d1;font-weight:800}.welcome-main h1{font-size:clamp(25px,3.2vw,42px);line-height:1.05;letter-spacing:-.04em;margin:12px 0;color:#fff;max-width:700px}.welcome-main p{color:rgba(255,255,255,.72);font-size:13px;line-height:1.65;max-width:650px}.welcome-actions{display:flex;gap:9px;margin-top:22px}.welcome-actions button{border-radius:11px;padding:11px 16px;font:700 11px var(--font);cursor:pointer}.welcome-primary{border:0;background:#fff;color:#242b52}.welcome-secondary{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff}.welcome-steps{position:relative;z-index:1;display:grid;gap:9px;align-content:center}.welcome-steps>div{display:grid;grid-template-columns:32px 1fr;gap:1px 10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:11px}.welcome-steps span{grid-row:1/3;width:30px;height:30px;border-radius:9px;background:rgba(143,226,209,.16);color:#8fe2d1;display:grid;place-items:center;font-size:11px;font-weight:800}.welcome-steps strong{font-size:11px}.welcome-steps small{font-size:9px;color:rgba(255,255,255,.58);margin-top:3px}.task-card.search-target{border-color:var(--blue)!important;box-shadow:0 0 0 4px rgba(89,101,216,.13),0 14px 35px rgba(45,55,120,.12);animation:searchPulse .8s ease 2}.author-card-new:first-child img{object-position:center 28%}@keyframes searchPulse{50%{transform:translateY(-2px)}}@media(max-width:850px){.welcome-guide{grid-template-columns:1fr}.welcome-steps{grid-template-columns:repeat(3,1fr)}.welcome-steps>div{grid-template-columns:28px 1fr}.welcome-steps small{display:none}}@media(max-width:560px){.welcome-guide{padding:24px 19px;border-radius:20px}.welcome-steps{grid-template-columns:1fr}.welcome-steps small{display:block}.welcome-actions{flex-direction:column}.welcome-actions button{width:100%}}
 </style>
+<style id="practice-module-styles">
+#practice-module-page{display:none;min-height:calc(100vh - var(--nav-h));background:var(--bg)}
+.practice-module-shell{padding:28px 30px 50px;max-width:1500px;margin:0 auto}
+.practice-module-toolbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:16px}
+.practice-module-heading{min-width:0}.practice-module-heading span{display:block;font-size:10px;font-weight:750;letter-spacing:.11em;text-transform:uppercase;color:var(--blue2);margin-bottom:5px}.practice-module-heading h1{font-size:24px;color:var(--text-bright);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.practice-module-back{border:1px solid var(--border);background:#fff;color:var(--text);border-radius:11px;padding:9px 13px;font:700 11px var(--font);cursor:pointer;transition:transform .2s ease,border-color .2s ease,color .2s ease}.practice-module-back:hover{transform:translateX(-2px);border-color:var(--blue2);color:var(--blue2)}
+.practice-module-frame-wrap{background:#fff;border:1px solid var(--border);border-radius:22px;padding:8px;box-shadow:0 18px 50px rgba(45,50,75,.08);overflow:hidden}
+#practice-module-frame{display:block;width:100%;height:calc(100vh - 185px);min-height:620px;border:0;border-radius:16px;background:#f4f6f9}
+.practice-module-loading{position:absolute;inset:0;display:grid;place-items:center;background:#f4f6f9;color:var(--text-dim);font-size:12px}
+@media(max-width:768px){.practice-module-shell{padding:16px 10px 84px}.practice-module-toolbar{align-items:flex-start}.practice-module-heading h1{font-size:18px}.practice-module-frame-wrap{padding:4px;border-radius:15px}#practice-module-frame{height:calc(100vh - 155px);min-height:540px;border-radius:12px}}
+</style>
 </head>
 <body>
 <nav id="topnav" class="app-topbar">
@@ -485,13 +496,13 @@ body{background:var(--bg);color:var(--text);padding-bottom:0}
       <div class="sidebar-subtopic" onclick="openSubtopic('physbio','enzyme_kinetics')"><span data-i18n="subEnzKin">Кинетика ферментов</span> <span class="sidebar-count">6</span></div>
       <div class="sidebar-subtopic" onclick="openSubtopic('physbio','parabiosis')"><span data-i18n="subParabio">Парабиоз и диабет</span> <span class="sidebar-count">2</span></div>
       <div class="sidebar-subtopic" onclick="openSubtopic('physbio','physiol_clinic')"><span data-i18n="subPhysiolClinic">Клиническая физиология</span> <span class="sidebar-count">20</span></div>
-      <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'phys_bohr_en.html':'phys_bohr.html')"><span data-i18n="subPhysBohr">🫁 Метод Бора (мёртв. пространство)</span> <span class="sidebar-count">5⚗</span></div>
-      <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'phys_ergo_en.html':'phys_ergo.html')"><span data-i18n="subPhysErgo">🚴 Эргоспирометрия (VO₂, RER)</span> <span class="sidebar-count">5⚗</span></div>
-      <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'phys_hemodynamics_en.html':'phys_hemodynamics.html')"><span data-i18n="subPhysHemo">❤️ Гемодинамика (ОПСС, МОК)</span> <span class="sidebar-count">5⚗</span></div>
-      <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'phys_renal_en.html':'phys_renal.html')"><span data-i18n="subPhysRenal">🫘 Функция почек (СКФ, ХБП)</span> <span class="sidebar-count">5⚗</span></div>
-      <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'phys_nernst_en.html':'phys_nernst.html')"><span data-i18n="subPhysNernst">⚡ Потенциал Нернста</span> <span class="sidebar-count">5⚗</span></div>
-      <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'phys_pharma_en.html':'phys_pharma.html')"><span data-i18n="subPhysPharma">💊 Фармакология каналов</span> <span class="sidebar-count">5⚗</span></div>
-      <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'phys_acid_base_en.html':'phys_acid_base.html')"><span data-i18n="subPhysAB">🩸 Кислотно-щелочной баланс</span> <span class="sidebar-count">5⚗</span></div>
+      <div class="sidebar-subtopic" onclick="openPracticeModule('phys_bohr')"><span data-i18n="subPhysBohr">🫁 Метод Бора (мёртв. пространство)</span> <span class="sidebar-count">5⚗</span></div>
+      <div class="sidebar-subtopic" onclick="openPracticeModule('phys_ergo')"><span data-i18n="subPhysErgo">🚴 Эргоспирометрия (VO₂, RER)</span> <span class="sidebar-count">5⚗</span></div>
+      <div class="sidebar-subtopic" onclick="openPracticeModule('phys_hemodynamics')"><span data-i18n="subPhysHemo">❤️ Гемодинамика (ОПСС, МОК)</span> <span class="sidebar-count">5⚗</span></div>
+      <div class="sidebar-subtopic" onclick="openPracticeModule('phys_renal')"><span data-i18n="subPhysRenal">🫘 Функция почек (СКФ, ХБП)</span> <span class="sidebar-count">5⚗</span></div>
+      <div class="sidebar-subtopic" onclick="openPracticeModule('phys_nernst')"><span data-i18n="subPhysNernst">⚡ Потенциал Нернста</span> <span class="sidebar-count">5⚗</span></div>
+      <div class="sidebar-subtopic" onclick="openPracticeModule('phys_pharma')"><span data-i18n="subPhysPharma">💊 Фармакология каналов</span> <span class="sidebar-count">5⚗</span></div>
+      <div class="sidebar-subtopic" onclick="openPracticeModule('phys_acid_base')"><span data-i18n="subPhysAB">🩸 Кислотно-щелочной баланс</span> <span class="sidebar-count">5⚗</span></div>
     </div>
     </div>
   
@@ -539,13 +550,13 @@ body{background:var(--bg);color:var(--text);padding-bottom:0}
   <div class="sidebar-section">
     <div class="sidebar-section-title" onclick="toggleSec(this)"><span data-i18n="sideBotany">🌻 Ботаника</span> <span class="arr">▶</span></div>
     <div class="sidebar-subtopics">
-      <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'pam_tasks_en.html':'pam_tasks.html')"><span data-i18n="subPam">PAM-флуорометрия</span> <span class="sidebar-count">4</span></div>
+      <div class="sidebar-subtopic" onclick="openPracticeModule('pam')"><span data-i18n="subPam">PAM-флуорометрия</span> <span class="sidebar-count">4</span></div>
     </div>
   </div>
   <div class="sidebar-section">
   <div class="sidebar-section-title" onclick="toggleSec(this)"><span data-i18n="sideVsosh">🏆 ВсОШ по биологии</span> <span class="arr">▶</span></div>
   <div class="sidebar-subtopics">
-    <div class="sidebar-subtopic" onclick="window.location.href=(LANG==='en'?'vsosh_biochem_2122_en.html':'vsosh_biochem_2122.html')">
+    <div class="sidebar-subtopic" onclick="openPracticeModule('vsosh')">
       <span data-i18n="subVsosh2122">Биохимия 2021–22 (11 кл.)</span> <span class="sidebar-count">5</span>
     </div>
   </div>
@@ -617,6 +628,16 @@ body{background:var(--bg);color:var(--text);padding-bottom:0}
       <button class="about-link-button" onclick="showAboutPage()">О проекте и авторах →</button>
     </section>
   </div>
+</div>
+
+<div id="practice-module-page">
+ <div class="practice-module-shell">
+  <div class="practice-module-toolbar">
+   <button class="practice-module-back" id="practice-module-back" onclick="showHome()">← Вернуться к обзору</button>
+   <div class="practice-module-heading"><span id="practice-module-kicker">Практический модуль</span><h1 id="practice-module-title">Практика</h1></div>
+  </div>
+  <div class="practice-module-frame-wrap"><iframe id="practice-module-frame" title="Практический модуль Limbic KZ"></iframe></div>
+ </div>
 </div>
 
 <div id="about-page" style="display:none">
@@ -749,8 +770,8 @@ const T = {
       {ic:'🔬',oc:"openSubtopic('biochemistry','aminoacid')",ti:'Идентификация аминокислот',de:'pH-лаборатория. Кривые титрования, pKₐ, pI, идентификация по справочнику.',co:'8 задач · Практический тур → IBO'},
       {ic:'🏆',oc:"openSubtopic('olympiad2026','peroxidase')",ti:'Кинетика пероксидазы (Raphanus sativus)',de:'Республиканская олимпиада 2026. Спектрофотометрия при 500 нм.',co:'2 задачи · Практический тур'},
       {ic:'🌿',oc:"openSubtopic('olympiad2026','myrosinase')",ti:'Мирозиназа (Brassica rapa) — расчётные задачи',de:'Республиканская олимпиада 2026. Кинетика, уравнение Хилла, MWC-модель.',co:'9 задач · Республиканский → IBO'},
-      {ic:'🌱',oc:"window.location.href=(LANG==='en'?'pam_tasks_en.html':'pam_tasks.html')",ti:'PAM-флуорометрия',de:'Практические задачи и виртуальная лаборатория. ETR, Fv/Fm, qP.',co:'4 задачи · Практический тур'},
-      {ic:'🏆',oc:"window.location.href=(LANG==='en'?'vsosh_biochem_2122_en.html':'vsosh_biochem_2122.html')",ti:'ВсОШ 2021–22: Биохимия (11 класс)',de:'Практический тур ВсОШ. Активность липазы: биуретовый метод, NaOH-титрование.',co:'5 заданий · Практический тур · 50 баллов'}]
+      {ic:'🌱',oc:"openPracticeModule('pam')",ti:'PAM-флуорометрия',de:'Практические задачи и виртуальная лаборатория. ETR, Fv/Fm, qP.',co:'4 задачи · Практический тур'},
+      {ic:'🏆',oc:"openPracticeModule('vsosh')",ti:'ВсОШ 2021–22: Биохимия (11 класс)',de:'Практический тур ВсОШ. Активность липазы: биуретовый метод, NaOH-титрование.',co:'5 заданий · Практический тур · 50 баллов'}]
   },
   en:{
     navHome:'Home',navGenetics:'Genetics',navStats:'Statistics',navBiochem:'Biochemistry',
@@ -827,15 +848,15 @@ const T = {
       {ic:'🧠',oc:"openSubtopic('anatomy','brain')",ti:'Brain — Synapses',de:'AMPA/GABA-A currents, summation, NMDA, LTP.',co:'1 task · IBO · Anatomy'},
       {ic:'🩸',oc:"openSubtopic('anatomy','blood_liver')",ti:'Blood & Liver',de:'Haemolytic jaundice, bilirubin kinetics, heparin, DIC.',co:'2 tasks · IBO · Anatomy'},
       {ic:'💪',oc:"openSubtopic('anatomy','muscles')",ti:'Muscles — ATP & Exercise',de:'Cross-bridge cycle, glycogen, heat production, sepsis.',co:'3 tasks · IBO · Anatomy'},
-      {ic:'🫁',oc:"window.location.href=(LANG==='en'?'phys_bohr_en.html':'phys_bohr.html')",ti:'Bohr Dead Space',de:'Anatomical dead space, alveolar ventilation, COPD & PE.',co:'5 tasks · Lab · ⚗'},
-      {ic:'🚴',oc:"window.location.href=(LANG==='en'?'phys_ergo_en.html':'phys_ergo.html')",ti:'Ergospirometry',de:'VO₂max, RER, anaerobic threshold. Heart failure.',co:'5 tasks · Lab · ⚗'},
-      {ic:'❤️',oc:"window.location.href=(LANG==='en'?'phys_hemodynamics_en.html':'phys_hemodynamics.html')",ti:'Haemodynamics Lab',de:'SVR, Fick method, LV work and power. Shock scenarios.',co:'5 tasks · Lab · ⚗'},
-      {ic:'🫘',oc:"window.location.href=(LANG==='en'?'phys_renal_en.html':'phys_renal.html')",ti:'Renal Function Lab',de:'GFR, tubular transport, CKD stages, diabetes insipidus.',co:'5 tasks · Lab · ⚗'},
-      {ic:'⚡',oc:"window.location.href=(LANG==='en'?'phys_nernst_en.html':'phys_nernst.html')",ti:'Nernst Equation Lab',de:'E_K, E_Na, driving force, hyperkalaemia, arrhythmias.',co:'5 tasks · Lab · ⚗'},
-      {ic:'💊',oc:"window.location.href=(LANG==='en'?'phys_pharma_en.html':'phys_pharma.html')",ti:'Channel Pharmacology Lab',de:'TTX, TEA, amiodarone. Long QT. Torsades de pointes.',co:'5 tasks · Lab · ⚗'},
-      {ic:'🩸',oc:"window.location.href=(LANG==='en'?'phys_acid_base_en.html':'phys_acid_base.html')",ti:'Acid-Base Balance Lab',de:'Four disorders, anion gap, Winters formula. Sepsis & DKA.',co:'5 tasks · Lab · ⚗'},
-      {ic:'🌱',oc:"window.location.href=(LANG==='en'?'pam_tasks_en.html':'pam_tasks.html')",ti:'PAM Fluorometry',de:'Practical tasks. ETR, Fv/Fm, qP, photosynthetic efficiency.',co:'4 tasks · Practical tour'},
-      {ic:'🏆',oc:"window.location.href=(LANG==='en'?'vsosh_biochem_2122_en.html':'vsosh_biochem_2122.html')",ti:'VsOSh 2021-22: Biochemistry',de:'Practical tour. Lipase activity: biuret method, NaOH titration.',co:'5 tasks · Practical tour'},
+      {ic:'🫁',oc:"openPracticeModule('phys_bohr')",ti:'Bohr Dead Space',de:'Anatomical dead space, alveolar ventilation, COPD & PE.',co:'5 tasks · Lab · ⚗'},
+      {ic:'🚴',oc:"openPracticeModule('phys_ergo')",ti:'Ergospirometry',de:'VO₂max, RER, anaerobic threshold. Heart failure.',co:'5 tasks · Lab · ⚗'},
+      {ic:'❤️',oc:"openPracticeModule('phys_hemodynamics')",ti:'Haemodynamics Lab',de:'SVR, Fick method, LV work and power. Shock scenarios.',co:'5 tasks · Lab · ⚗'},
+      {ic:'🫘',oc:"openPracticeModule('phys_renal')",ti:'Renal Function Lab',de:'GFR, tubular transport, CKD stages, diabetes insipidus.',co:'5 tasks · Lab · ⚗'},
+      {ic:'⚡',oc:"openPracticeModule('phys_nernst')",ti:'Nernst Equation Lab',de:'E_K, E_Na, driving force, hyperkalaemia, arrhythmias.',co:'5 tasks · Lab · ⚗'},
+      {ic:'💊',oc:"openPracticeModule('phys_pharma')",ti:'Channel Pharmacology Lab',de:'TTX, TEA, amiodarone. Long QT. Torsades de pointes.',co:'5 tasks · Lab · ⚗'},
+      {ic:'🩸',oc:"openPracticeModule('phys_acid_base')",ti:'Acid-Base Balance Lab',de:'Four disorders, anion gap, Winters formula. Sepsis & DKA.',co:'5 tasks · Lab · ⚗'},
+      {ic:'🌱',oc:"openPracticeModule('pam')",ti:'PAM Fluorometry',de:'Practical tasks. ETR, Fv/Fm, qP, photosynthetic efficiency.',co:'4 tasks · Practical tour'},
+      {ic:'🏆',oc:"openPracticeModule('vsosh')",ti:'VsOSh 2021-22: Biochemistry',de:'Practical tour. Lipase activity: biuret method, NaOH titration.',co:'5 tasks · Practical tour'},
       {ic:'🌿',oc:"openSubtopic('biochemistry','titration')",ti:'Seed Respiration: Ba(OH)₂/HCl',de:'Alkalimetric CO₂ measurement in germinating seeds.',co:'4 tasks · IBO · Biochemistry'},
       {ic:'💧',oc:"openSubtopic('biochemistry','lipase')",ti:'Lipase Kinetics (EC 3.1.1.3)',de:'Tributyrin hydrolysis, titrimetry, Michaelis-Menten.',co:'4 tasks · IBO · Biochemistry'},
       {ic:'🔬',oc:"openSubtopic('biochemistry','aminoacid')",ti:'Amino Acid Identification',de:'Ninhydrin reaction, Rf values, isoelectric point.',co:'3 tasks · IBO · Biochemistry'},
@@ -3141,7 +3162,7 @@ function toggleLang() {
  localStorage.setItem('limbic_lang',LANG);document.documentElement.lang=LANG;
  document.getElementById('lang-btn').textContent=LANG==='ru'?'KZ':LANG==='kk'?'EN':'RU';
  updateStaticText();renderHomeExtras();applyAppLanguage();updateDashboardStats();
- if(currentSection&&currentSubtopic)openSubtopic(currentSection,currentSubtopic);
+ if(currentSection&&currentSubtopic)openSubtopic(currentSection,currentSubtopic);else if(activePracticeModule)openPracticeModule(activePracticeModule);
 }
 
 function updateStaticText() {
@@ -3364,6 +3385,7 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'){closePracti
 function showHome() {
   document.getElementById('home-page').style.display='block';
   const aboutPage=document.getElementById('about-page');if(aboutPage)aboutPage.style.display='none';
+  const modulePage=document.getElementById('practice-module-page');if(modulePage)modulePage.style.display='none';activePracticeModule=null;
   const practiceBar=document.getElementById('practice-session-bar');if(practiceBar&&!limbicPracticeSession?.finished&&limbicPracticeSession)practiceBar.style.display='grid';
   setAppNav('home');
   updateDashboardStats();
@@ -3426,6 +3448,7 @@ function openSubtopic(sectionKey, subKey) {
 
   document.getElementById('home-page').style.display='none';
   const aboutPage=document.getElementById('about-page');if(aboutPage)aboutPage.style.display='none';
+  const modulePage=document.getElementById('practice-module-page');if(modulePage)modulePage.style.display='none';activePracticeModule=null;
   const practiceBar=document.getElementById('practice-session-bar');if(practiceBar)practiceBar.style.display='none';
   document.getElementById('task-page').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
@@ -3467,8 +3490,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ═══════ APP SHELL / DASHBOARD ═══════
 
+const PRACTICE_MODULES={
+ pam:{ru:'pam_tasks.html',en:'pam_tasks_en.html',title:{ru:'PAM-флуорометрия',kk:'PAM-флуорометриясы',en:'PAM Fluorometry'}},
+ vsosh:{ru:'vsosh_biochem_2122.html',en:'vsosh_biochem_2122_en.html',title:{ru:'ВсОШ 2021–22 · Биохимия',kk:'Биология олимпиадасы 2021–22 · Биохимия',en:'VSOSh 2021–22 · Biochemistry'}},
+ phys_nernst:{ru:'phys_nernst.html',en:'phys_nernst_en.html',title:{ru:'Потенциал Нернста',kk:'Нернст потенциалы',en:'Nernst Potential'}},
+ phys_pharma:{ru:'phys_pharma.html',en:'phys_pharma_en.html',title:{ru:'Фармакология каналов',kk:'Иондық арналар фармакологиясы',en:'Ion Channel Pharmacology'}},
+ phys_ergo:{ru:'phys_ergo.html',en:'phys_ergo_en.html',title:{ru:'Эргоспирометрия',kk:'Эргоспирометрия',en:'Ergospirometry'}},
+ phys_hemodynamics:{ru:'phys_hemodynamics.html',en:'phys_hemodynamics.html',title:{ru:'Гемодинамика',kk:'Гемодинамика',en:'Hemodynamics'}},
+ phys_bohr:{ru:'phys_bohr.html',en:'phys_bohr_en.html',title:{ru:'Метод Бора',kk:'Бор әдісі',en:'Bohr Method'}},
+ phys_renal:{ru:'phys_renal.html',en:'phys_renal_en.html',title:{ru:'Функция почек',kk:'Бүйрек қызметі',en:'Renal Function'}},
+ phys_acid_base:{ru:'phys_acid_base.html',en:'phys_acid_base_en.html',title:{ru:'Кислотно-щелочной баланс',kk:'Қышқыл-сілтілік тепе-теңдік',en:'Acid–Base Balance'}}
+};
+let activePracticeModule=null;
+function openPracticeModule(key){
+ const module=PRACTICE_MODULES[key];if(!module)return;
+ activePracticeModule=key;currentSection=null;currentSubtopic=null;
+ document.getElementById('home-page').style.display='none';document.getElementById('task-page').style.display='none';
+ const about=document.getElementById('about-page');if(about)about.style.display='none';
+ const page=document.getElementById('practice-module-page');page.style.display='block';
+ const title=module.title[LANG]||module.title.ru,file=LANG==='en'?(module.en||module.ru):module.ru;
+ document.getElementById('practice-module-title').textContent=title;
+ document.getElementById('practice-module-kicker').textContent=LANG==='en'?'Interactive practice':LANG==='kk'?'Интерактивті практикум':'Интерактивный практикум';
+ document.getElementById('practice-module-back').textContent=LANG==='en'?'← Back to overview':LANG==='kk'?'← Шолуға оралу':'← Вернуться к обзору';
+ const frame=document.getElementById('practice-module-frame'),next=file+'?embed=1&lang='+encodeURIComponent(LANG);
+ if(frame.getAttribute('src')!==next)frame.setAttribute('src',next);
+ setAppNav('topic');window.scrollTo({top:0,behavior:'smooth'});if(window.innerWidth<=768)closeSidebar();
+}
+window.addEventListener('message',event=>{if(event.origin===location.origin&&event.data&&event.data.type==='limbic-module-back')showHome()});
+
 function showAboutPage(){
- document.getElementById('home-page').style.display='none';document.getElementById('task-page').style.display='none';document.getElementById('about-page').style.display='block';
+ document.getElementById('home-page').style.display='none';document.getElementById('task-page').style.display='none';const modulePage=document.getElementById('practice-module-page');if(modulePage)modulePage.style.display='none';activePracticeModule=null;document.getElementById('about-page').style.display='block';
  const count=document.getElementById('about-task-count');if(count)count.textContent=getTaskCatalog().length+'+';applyAppLanguage();
  setAppNav('about');currentSection=null;currentSubtopic=null;window.scrollTo({top:0,behavior:'smooth'});if(window.innerWidth<=768)closeSidebar();
 }
@@ -3499,6 +3550,7 @@ function countSectionSolved(sectionKey){
 }
 function openDashboardCourse(button){
  const href=button&&button.dataset.href;
+ const moduleKey=button&&button.dataset.module;if(moduleKey){openPracticeModule(moduleKey);return}
  if(href){window.location.href=href;return}
  const sectionKey=button&&button.dataset.section,subKey=button&&button.dataset.subtopic;
  if(!sectionKey||!subKey||!SUBTOPICS[sectionKey]||!SUBTOPICS[sectionKey].subtopics[subKey])return;
@@ -3516,8 +3568,8 @@ function renderDashboardCourses(){
   return {key,entries,total:entries.reduce((n,[,sub])=>n+(sub.tasks||[]).length,0),solved:countSectionSolved(key),first:entries[0]&&entries[0][0]};
  });
  const external=[
-  {key:'botany',entries:[['pam',LANG==='en'?'PAM Fluorometry':LANG==='kk'?'PAM-флуорометриясы':'PAM-флуорометрия']],total:4,solved:0,href:LANG==='en'?'pam_tasks_en.html':'pam_tasks.html'},
-  {key:'vsosh',entries:[['biochem2122',LANG==='en'?'VSOSh Biochemistry 2021–22':LANG==='kk'?'Биохимия 2021–22 (11 сынып)':'Биохимия 2021–22 (11 класс)']],total:5,solved:0,href:LANG==='en'?'vsosh_biochem_2122_en.html':'vsosh_biochem_2122.html'}
+  {key:'botany',entries:[['pam',LANG==='en'?'PAM Fluorometry':LANG==='kk'?'PAM-флуорометриясы':'PAM-флуорометрия']],total:4,solved:0,module:'pam'},
+  {key:'vsosh',entries:[['biochem2122',LANG==='en'?'VSOSh Biochemistry 2021–22':LANG==='kk'?'Биохимия 2021–22 (11 сынып)':'Биохимия 2021–22 (11 класс)']],total:5,solved:0,module:'vsosh'}
  ];
  const cards=internal.concat(external);
  grid.innerHTML=cards.map((item,cardIndex)=>{
@@ -3525,7 +3577,7 @@ function renderDashboardCourses(){
   const previews=item.entries.slice(0,3).map(([subKey,externalTitle])=>'<span class="course-topic-chip">'+escapeHtml(externalTitle||localizedSubtopicName(item.key,subKey))+'</span>').join('');
   const more=item.entries.length>3?'<span class="course-topic-chip more">+'+(item.entries.length-3)+'</span>':'';
   const label=sectionName+': '+item.entries.length+' '+topicWord(item.entries.length)+', '+item.total+' '+problemWord;
-  const target=item.href?' data-href="'+escapeHtml(item.href)+'"':' data-section="'+escapeHtml(item.key)+'" data-subtopic="'+escapeHtml(item.first||'')+'"';
+  const target=item.module?' data-module="'+escapeHtml(item.module)+'"':item.href?' data-href="'+escapeHtml(item.href)+'"':' data-section="'+escapeHtml(item.key)+'" data-subtopic="'+escapeHtml(item.first||'')+'"';
   return '<button class="course-card" type="button"'+target+' onclick="openDashboardCourse(this)" aria-label="'+escapeHtml(label)+'" style="--card-index:'+cardIndex+'"><span class="course-card-top"><span class="course-card-icon">'+meta[0]+'</span><span class="course-card-arrow" aria-hidden="true">→</span></span><h3>'+escapeHtml(sectionName)+'</h3><p>'+escapeHtml(meta[1])+'</p><div class="course-card-topics">'+previews+more+'</div><footer><span>'+item.total+' '+problemWord+'<small>'+item.entries.length+' '+topicWord(item.entries.length)+'</small></span><b>'+item.solved+' '+ui('solved')+'</b></footer></button>';
  }).join('');
 }

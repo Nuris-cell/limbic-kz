@@ -2770,7 +2770,7 @@ function checkAnswer(taskId, hintsId, inputId, feedbackId) {
   if (!val) return;
 
   // Robust taskId parser handles subtopic keys containing underscores
-  const KNOWN_SECTIONS = ['genetics','stats','biochemistry','olympiad2026','molbio','physbio','ecoevo','anatomy'];
+  const KNOWN_SECTIONS = Object.keys(SUBTOPICS);
   let section = null, subKey = null, idx = 0;
   for (const sk of KNOWN_SECTIONS) {
     if (taskId.startsWith(sk + '_')) {

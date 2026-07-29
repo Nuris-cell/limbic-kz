@@ -74,7 +74,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-wei
 .norm-low{background:rgba(245,158,11,.1);color:var(--orange)}
 @media(max-width:600px){.hero,.content{padding-left:16px;padding-right:16px}.row{flex-direction:column}}
 </style>
-</head>
+<link rel="stylesheet" href="practice-unified.css">\n</head>
 <body>
 <div class="topbar">
   <div class="topbar-left">
@@ -173,5 +173,5 @@ function checkQ4(){var a=+document.getElementById('q4a').value,b=+document.getEl
 function checkQ5(){var a=+document.getElementById('q5a').value,b=+document.getElementById('q5b').value;var ok=Math.abs(a-3.1)<=0.2&&Math.abs(b-4.9)<=0.2;if(ok){score++;updateProg();}showResult('r5',ok,ok?'C_osm≈3.1; CH₂O≈+4.9 mL/min ✓':'C_osm=(120×8)/310≈3.1. CH₂O=8−3.1=4.9 mL/min','<b>Central diabetes insipidus.</b> CH₂O=+4.9 mL/min → losing 4.9 mL free water/min (=7 L/day!). P_osm=310 > normal → hypertonicity. ADH deficiency. Desmopressin test: if urine concentrates → central DI; if not → nephrogenic DI.');}
 
 </script>
-</body>
+<script src="practice-unified.js"></script>\n</body>
 </html>

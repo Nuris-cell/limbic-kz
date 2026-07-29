@@ -373,6 +373,10 @@ body{background:var(--bg);color:var(--text);padding-bottom:0}
 @media(max-width:768px){.about-page-shell{padding:25px 14px 95px}.about-hero-new{border-radius:21px;padding:32px 22px}.about-facts{gap:22px;justify-content:space-between}.about-facts strong{font-size:22px}.authors-grid-new{grid-template-columns:1fr}.about-values{grid-template-columns:1fr;gap:15px}.practice-builder-grid{grid-template-columns:1fr}.practice-topic-picker{max-height:280px}.practice-session-bar{top:68px;grid-template-columns:1fr auto auto}.mobile-bottom-nav{grid-template-columns:repeat(6,1fr)!important}.mobile-bottom-nav button{font-size:8px}}
 </style>
 <style id="language-fixes">#sidebar.catalog-pulse{box-shadow:inset 0 0 0 2px rgba(232,93,69,.28)}#lang-btn{min-width:46px}</style>
+<script src="kz-conditions.js"></script>
+<style id="kz-condition-styles">
+.kz-rich-source{margin-top:14px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);padding:0 12px}.kz-rich-source summary{cursor:pointer;padding:10px 0;color:var(--blue2);font-size:11px;font-weight:700}.kz-rich-source[open]{padding-bottom:12px}.kz-rich-source iframe{max-width:100%}
+</style>
 </head>
 <body>
 <nav id="topnav" class="app-topbar">
@@ -3000,6 +3004,13 @@ function renderTask(task, sectionKey, subKey, idx) {
   }).join('');
 
   let conditionHtml = buildCompleteCondition(applied, sectionKey, subKey, idx);
+  if(LANG==='kk'&&window.LIMBIC_KZ_CONDITIONS&&window.LIMBIC_KZ_CONDITIONS[taskId]){
+    const originalRich=conditionHtml;
+    conditionHtml=escapeHtml(window.LIMBIC_KZ_CONDITIONS[taskId]).replace(/\n/g,'<br>');
+    if(/<(?:table|iframe|svg)|vlab-/i.test(originalRich)){
+      conditionHtml+='<details class="kz-rich-source"><summary>Кесте, формула немесе интерактивті материал</summary>'+originalRich+'</details>';
+    }
+  }
   if (sectionKey === 'biochemistry' && subKey === 'titration' && idx === 0) {
     if (!window.__limbicTitration) rollTitrationInstance();
     conditionHtml = conditionHtml.replace('src="titration_lab.html"', 'src="' + titrationLabIframeSrc() + '"');
@@ -3386,7 +3397,7 @@ function getTaskCatalog(){
  Object.entries(SUBTOPICS).forEach(([sectionKey,section])=>{
   if(!section||!section.subtopics)return;
   Object.entries(section.subtopics).forEach(([subKey,sub])=>{
-   (sub.tasks||[]).forEach((task,index)=>rows.push({sectionKey,subKey,index,section:section.label||sectionKey,subtopic:sub.title||subKey,condition:task.condition||''}));
+   (sub.tasks||[]).forEach((task,index)=>{const id=sectionKey+'_'+subKey+'_'+index;const kz=LANG==='kk'&&window.LIMBIC_KZ_CONDITIONS&&window.LIMBIC_KZ_CONDITIONS[id];rows.push({sectionKey,subKey,index,section:localizedSectionName(sectionKey),subtopic:localizedSubtopicName(sectionKey,subKey),condition:kz||task.condition||''})});
   });
  });
  return rows;

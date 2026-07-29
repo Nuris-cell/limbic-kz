@@ -255,6 +255,60 @@ body{background:radial-gradient(circle at 80% -10%,rgba(47,140,255,.12),transpar
 .user-panel{display:none}.user-panel.open{display:block}.user-email{padding:12px;border-radius:12px;background:rgba(47,140,255,.08);border:1px solid rgba(47,140,255,.18);margin:12px 0;font-size:.82rem;color:var(--text-bright);overflow-wrap:anywhere}.user-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.user-stat{padding:14px;border-radius:13px;background:#080c14;border:1px solid var(--border);text-align:center}.user-stat strong{display:block;color:var(--blue2);font-size:1.4rem}.user-stat span{font-size:.68rem;color:var(--text-dim)}
 @media(max-width:560px){.account-btn{max-width:90px;padding:6px 9px}.auth-tabs{grid-template-columns:1fr 1fr}}
 
+
+/* ═══ Limbic editorial daylight — complete visual direction ═══ */
+:root{
+ --bg:#f4f0e7;--bg2:#ece6da;--surface:#fffdf8;--surface2:#f5efe3;
+ --border:#d8cfbf;--border2:#b8ad9b;--blue:#e85d3f;--blue2:#c8452e;
+ --blue-dim:rgba(232,93,63,.12);--blue-dim2:rgba(232,93,63,.07);
+ --text:#373a36;--text-dim:#74766f;--text-bright:#171a18;
+ --green:#247a61;--green-dim:rgba(36,122,97,.11);
+ --red:#c63f35;--red-dim:rgba(198,63,53,.1);--orange:#d9822b;--purple:#7656a8;
+ --sidebar-w:300px;--radius:18px;--font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ color-scheme:light
+}
+html{font-size:17px;background:var(--bg)}
+body{background:
+ radial-gradient(circle at 7% 5%,rgba(232,93,63,.10),transparent 25rem),
+ radial-gradient(circle at 91% 27%,rgba(36,122,97,.10),transparent 30rem),
+ linear-gradient(180deg,#f7f3eb 0%,#f1ece2 100%);color:var(--text)}
+::selection{background:#f3b19f;color:#171a18}
+::-webkit-scrollbar-thumb{background:#bbb09e}
+#topnav{background:rgba(255,253,248,.88);border-bottom:1px solid rgba(46,43,37,.12);box-shadow:0 5px 24px rgba(68,55,37,.05)}
+.logo{color:var(--text-bright);font-weight:800;letter-spacing:-.025em}.logo-dot{background:var(--blue);box-shadow:none}
+.nav-link{color:var(--text-dim);font-weight:650}.nav-link:hover{color:var(--text-bright);background:#eee7da}.nav-link.active{color:var(--blue2)}
+.lang-btn,.account-btn{background:#fffaf2;color:var(--text);border-color:#cfc4b3;box-shadow:none}.lang-btn:hover,.account-btn:hover{background:#fff;color:var(--blue2);border-color:var(--blue)}
+#sidebar{background:rgba(245,239,227,.94);border-right:1px solid #d8cfbf;box-shadow:14px 0 45px rgba(73,60,43,.05)}
+.sidebar-section-title{color:#a43e2c;font-weight:800}.sidebar-section-title:hover{background:rgba(232,93,63,.08)}
+.sidebar-subtopic{color:#676a63;border-left:3px solid transparent}.sidebar-subtopic:hover{color:var(--text-bright);background:rgba(255,255,255,.55)}.sidebar-subtopic.active{color:#1d604f;background:#e4eee7;border-left-color:#247a61}
+.sidebar-count{background:#e2d9ca;color:#6f6659}
+.hero{min-height:calc(88vh - var(--nav-h));isolation:isolate}.hero-bg{background:radial-gradient(ellipse 70% 55% at 50% 28%,rgba(232,93,63,.13),transparent 65%),radial-gradient(ellipse 42% 40% at 18% 74%,rgba(36,122,97,.09),transparent 65%)}.hero-grid{opacity:.055;background-image:linear-gradient(rgba(44,48,43,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(44,48,43,.35) 1px,transparent 1px);background-size:36px 36px;mask-image:linear-gradient(to bottom,#000,transparent 75%)}
+.hero-badge{border-color:#d7a092;color:#9c3827;background:rgba(255,253,248,.62);font-weight:750}
+.hero-title{background:linear-gradient(110deg,#181b18 20%,#923d2d 62%,#236b56);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:Georgia,"Times New Roman",serif;font-weight:800;letter-spacing:-.055em}
+.hero-sub-title{color:#4c514b;font-family:Georgia,"Times New Roman",serif;font-weight:500}
+.hero-desc{color:#666a63;font-size:1.02rem}
+.btn-primary{background:#e85d3f;color:#fffaf4;border:1px solid #d54d32;box-shadow:0 10px 26px rgba(190,62,37,.18)}.btn-primary:hover{background:#ca482f;box-shadow:0 13px 32px rgba(190,62,37,.24)}
+.btn-ghost{background:#fffaf2;color:#393b37;border-color:#cfc4b3}.btn-ghost:hover{background:#fff;color:#1d604f;border-color:#247a61}
+.practice-btn{border-color:#8ab3a5;color:#1e6c56;background:#e7f0ea}
+.stats-strip{background:rgba(255,253,248,.78);border-color:#d9cfbd;box-shadow:0 18px 50px rgba(73,60,43,.06)}.stat-item{border-color:#ddd3c3}.stat-num{color:#c84c35;font-family:Georgia,"Times New Roman",serif}.stat-label{color:#77756d}
+.section-tag{color:#a13e2d}.intro-section h2,.about-title,.subtopic-title{font-family:Georgia,"Times New Roman",serif;color:#20231f}.intro-section p{color:#555952}
+.topic-card{background:#fffdf8;border-color:#dcd2c2;box-shadow:0 14px 40px rgba(78,61,39,.07)}.topic-card:before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:linear-gradient(#e85d3f,#d89543);opacity:.7}.topic-card:nth-child(3n+2):before{background:linear-gradient(#247a61,#67a789)}.topic-card:nth-child(3n):before{background:linear-gradient(#7656a8,#b188cc)}.topic-card:hover{background:#fff;border-color:#bdad97;box-shadow:0 22px 55px rgba(78,61,39,.11);transform:translateY(-3px)}.topic-title{color:#232622}.topic-desc{color:#74756f}.topic-count{color:#a13e2d}
+.breadcrumb{color:#88857d}.breadcrumb span:hover{color:#b1422e}.subtopic-desc{color:#6b6e67}
+.task-card{background:#fffdf9;border:1px solid #d9cfbf;box-shadow:0 10px 32px rgba(72,57,38,.055);border-radius:20px}.task-card:hover{border-color:#bdb09c;box-shadow:0 15px 40px rgba(72,57,38,.08)}.task-card.solved{border-color:#6ea28e;box-shadow:inset 4px 0 0 #247a61,0 12px 32px rgba(36,122,97,.07)}
+.task-header{padding:20px 21px}.task-num{color:#a13e2d;background:#f9e5df;border-color:#efb9aa;font-weight:800;border-radius:999px;padding:3px 10px}.task-num.solved-num{color:#1e6c56;background:#e3f0e9;border-color:#a7caba}
+.task-condition{color:#343834;font-size:.96rem;line-height:1.78}.task-toggle{color:#8a877f}.task-toggle.open{color:#b5412c}.task-body{border-color:#dfd6c8}
+.diff-regional{background:#e8f0eb;color:#1d694f;border-color:#b7d0c3}.diff-national{background:#eee7f5;color:#6d4a96;border-color:#cfbfe0}.diff-ibo{background:#f8e3de;color:#ac3828;border-color:#e8afa3}
+.answer-zone{background:#faf6ef;border-color:#dfd6c8}.answer-label{color:#77756e}.answer-input{background:#fffdf9;color:#242724;border-color:#cfc4b3}.answer-input:focus{border-color:#e85d3f;box-shadow:0 0 0 3px rgba(232,93,63,.10)}.answer-input.correct{border-color:#247a61;background:#eaf3ee}.answer-input.wrong{border-color:#c63f35;background:#f9ebe8}
+.check-btn{background:#e85d3f;color:white}.check-btn:hover{background:#c94a32}.retry-btn{background:#fffaf2;color:#4b4e49;border-color:#cfc4b3}.retry-btn:hover{border-color:#247a61;color:#1d694f}
+.answer-feedback.correct{color:#1d694f;background:#e4f0e9}.answer-feedback.wrong{color:#ad392e;background:#f8e7e3}
+.hint-item{border-color:#dcd3c5}.hint-header{background:#f3ede3}.hint-header:hover{background:#ece5da}.hint-body{background:#fffdf8;border-color:#ded5c8}.hint-label,.hint-body{color:#4b4f49}.formula{background:#f0ebe2;border-color:#d5cbbb;color:#7c382b}.answer-box{background:#e7f1eb;border-color:#aed0bf;color:#1d694f}
+.vlab-card{background:#fffaf3;border-color:#d9cfbf}.vlab-scene,.vlab-monitor,.vlab-graph,.vlab-readout,.vlab-analyzer{background:#f0eadf}.vlab-param{background:#fffaf2}.vlab-formula{background:#e9f1ec;border-color:#a7c7ba}
+.about-section{background:#eee7dc;border-color:#d8cfbf}.site-footer{border-color:#d8cfbf;color:#77756e}
+.limbic-dialog{background:rgba(53,45,35,.48)}.limbic-dialog-card{background:#fffdf8;border-color:#d0c5b3;box-shadow:0 32px 100px rgba(55,43,27,.24)}.limbic-dialog-title{font-family:Georgia,"Times New Roman",serif;color:#20231f}.limbic-close,.auth-tab.active{background:#f1eadf;color:#333732;border-color:#d0c5b3}.practice-select,.auth-input{background:#fffaf3;color:#272a27;border-color:#cabfad}.auth-tabs,.user-stat{background:#eee7dc}.user-email{background:#e9f1ec;border-color:#b5cec2;color:#2c4038}
+.context-card{margin:0 0 16px;padding:14px 16px;border:1px solid #d8cdbc;border-left:4px solid #247a61;border-radius:13px;background:#f2f6f1;color:#4a514c}.context-card-title{font-size:.68rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase;color:#1f6d55;margin-bottom:7px}.context-card .task-condition{font-size:.86rem}
+.condition-brief{margin-top:13px;padding-top:11px;border-top:1px dashed #d7ccba;font-size:.78rem;color:#77736b}.condition-brief strong{color:#4c504a}
+@media(max-width:768px){body.sidebar-open:after{background:rgba(64,52,38,.34)}#sidebar{background:#f5efe4}.task-header{padding:17px 15px}.task-condition{font-size:.96rem}}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="application/ld+json">
@@ -712,7 +766,7 @@ const SUBTOPICS = {
             condition:'Ген D драконов (D — большое крыло). Частоты: <strong>D=0.3, d=0.7</strong>. Популяция = <strong>15 000</strong>. Сколько особей каждого генотипа (DD, Dd, dd)?',
             hints:[{label:'Подсказка 1',body:'<p>Вычислите частоты: DD=p²=0.09, Dd=2pq=0.42, dd=0.49. Умножьте на N.</p>'},{label:'✅ Полное решение',solution:true,body:'<div class="formula">DD: 0.09×15000 = 1350\nDd: 0.42×15000 = 6300\ndd: 0.49×15000 = 7350</div><div class="answer-box">DD=1350, Dd=6300, dd=7350</div>'}]},
           { num:'№5', diff:'regional', answer:['0.512','0.488','p=0.512','q=0.488'], roundHint:'Округлите до тысячных.',
-            condition:'Популяция драконов: <strong>HH=250, Hh=524, hh=226</strong>. Определите частоты аллелей H и h.',
+            condition:'В выборке популяции драконов обнаружено 250 особей HH, 524 особи Hh и 226 особей hh (всего N=1000). Рассчитайте частоты аллелей H и h по числу копий: p(H)=[2N(HH)+N(Hh)]/(2N), q(h)=1−p. Проверьте, что сумма частот равна единице.',
             hints:[{label:'Подсказка 1',body:'<p>Всего аллелей = 2×1000 = 2000. H = 2×250 + 524 = 1024.</p>'},{label:'✅ Полное решение',solution:true,body:'<p>p(H)=1024/2000=0.512, q(h)=976/2000=0.488</p><div class="answer-box">p(H)=0.512, q(h)=0.488</div>'}]},
           { num:'№6', diff:'regional', answer:['0.6','0.4','p=0.6','q=0.4'], roundHint:'Округлите до десятых.',
             condition:'Вселенная Marvel. Ген Fate: <strong>FF — злодей, Ff — обычный, ff — супергерой</strong>. Супергероев <strong>20%</strong>, злодеев <strong>40%</strong>. Частоты аллелей F и f?',
@@ -760,7 +814,7 @@ const SUBTOPICS = {
             condition:'Из задачи №19 (p=0.3, q=0.2, r=0.5). Вероятность рождения ребёнка с группой <strong>B</strong> при браке мужчины с генотипом i<sup>B</sup>i?',
             hints:[{label:'Подсказка 1',body:'<p>Мужчина BO. Суммируйте по всем генотипам женщины.</p>'},{label:'✅ Полное решение',solution:true,body:'<p>P = 0.125+0+0.075+0.04+0.15+0.06 = 0.45</p><div class="answer-box">Вероятность группы B у ребёнка = 45%</div>'}]},
           { num:'№21', diff:'national', answer:['0.5','0.24','0.26'], roundHint:'Округлите до сотых.',
-            condition:'"Фейсак". В HWE: <strong>AB=24%, группа A=51%</strong>. Частоты аллелей A, B, O?',
+            condition:'В популяции «Фейсак», находящейся в равновесии Харди—Вайнберга, частота фенотипа AB системы ABO составляет 24%, а суммарная частота фенотипа A — 51%. Обозначьте частоты аллелей Iᴬ, Iᴮ и i через p, q и r, учитывая p+q+r=1. Определите частоты всех трёх аллелей и проверьте, воспроизводят ли они заданные фенотипические доли.',
             hints:[{label:'Подсказка 1',body:'<p>2pq=0.24 → pq=0.12. p²+2pr=0.51, r=1−p−q=1−p−0.12/p.</p>'},{label:'Подсказка 2',body:'<div class="formula">p²−2p+0.75=0 → p=0.5\nq=0.12/0.5=0.24, r=0.26</div>'},{label:'✅ Полное решение',solution:true,body:'<div class="answer-box">p(A)=0.5, q(B)=0.24, r(O)=0.26</div>'}]},
           { num:'№22', diff:'national', answer:['0.1','0.2','0.3','0.4','p=0.1','q=0.2','p=0.1, q=0.2, r=0.3, s=0.4','p(A)=0.1, q(a₁)=0.2, r(a₂)=0.3, s(a₃)=0.4','0.1, 0.2, 0.3, 0.4','0.1 0.2 0.3 0.4'],
             roundHint:'Округлите до десятых.',
@@ -815,7 +869,7 @@ const SUBTOPICS = {
             condition:'Лягушки Synapse. Равновесие: S⁺=0.6, S⁻=0.4. Обратная (S⁻→S⁺): <strong>v=4.44×10⁻⁴</strong>. Частота прямой мутации?',
             hints:[{label:'Подсказка 1',body:'<p>u·p = v·q → u × 0.6 = 4.44×10⁻⁴ × 0.4</p>'},{label:'✅ Полное решение',solution:true,body:'<div class="answer-box">u = 2.96×10⁻⁴</div>'}]},
           { num:'№30', diff:'national', answer:['0.761','0.239'], roundHint:'Округлите до тысячных.',
-            condition:'Начальная частота a=0.2. Мутация A→a: <strong>u=10⁻³</strong>. Частоты через <strong>50 поколений</strong>?',
+            condition:'В большой популяции начальные частоты аллелей равны p(A)=0.80 и q(a)=0.20. Аллель A мутирует в a с вероятностью u=10⁻³ за поколение; обратной мутации и отбора нет. Рассчитайте частоты A и a через 50 поколений, используя pₜ=p₀(1−u)ᵗ и qₜ=1−pₜ. Укажите промежуточное значение (1−u)⁵⁰.',
             hints:[{label:'Подсказка 1',body:'<p>p₅₀ = 0.8 × 0.999⁵⁰ ≈ 0.8 × 0.9512 ≈ 0.761</p>'},{label:'✅ Полное решение',solution:true,body:'<div class="answer-box">p(A)≈0.761, q(a)≈0.239</div>'}]},
           { num:'№31', diff:'ibo', answer:['0.955','0.045','0.0447'], roundHint:'p,q до тысячных; q точнее — до четырёх знаков (0.0447).',
             condition:'Ген Dyshat: доминантный аллель — жизнь, рецессивный (aa) — летален. Мутация A→a: <strong>u=2×10⁻³</strong>, обратной нет. Равновесные частоты?',
@@ -887,7 +941,7 @@ const SUBTOPICS = {
             hints:[{label:'Подсказка 1',body:'<div class="formula">L = 1&minus;0.88 = 0.12</div>'},{label:'✅ Полное решение',solution:true,body:'<p>L=0.12. 12% потенциального потомства элиминируется каждое поколение. При q&rarr;0.01 груз стремится к нулю.</p><div class="answer-box">L = 0.12 (12% генетического груза)</div>'}]},
           { num:'№55', diff:'ibo', answer:['0.0909'],
             roundHint:'До четырёх знаков.',
-            condition:'Летальный рецессив (aa). q_{n+1}=q/(1+q). q₀=0.10. <strong>q после 1 поколения?</strong>',
+            condition:'Рецессивный аллель a летален только в гомозиготном состоянии aa; генотипы AA и Aa имеют одинаковую приспособленность. Начальная частота аллеля a равна q₀=0.10. После удаления aa частота меняется по рекуррентной формуле <strong>qₙ₊₁=qₙ/(1+qₙ)</strong>. Рассчитайте q после одного поколения отбора и округлите ответ до четырёх знаков.',
             hints:[{label:'Подсказка 1',body:'<p>q₁=0.10/1.10.</p>'},{label:'✅ Решение',solution:true,body:'<div class="answer-box">q₁ = 0.0909</div>'}]},
           { num:'№56', diff:'ibo', answer:['90'],
             roundHint:'t (целое число поколений).',
@@ -1260,7 +1314,7 @@ C̄ = 600 мкл/л &nbsp;&nbsp; P̄ = 18.6 мкмоль/(м²·с)<br>
           },
           { num: '6', diff: 'regional', roundHint: 'Введите название аминокислоты в образце X.',
             answer: ['глицин','glycine','gly','глицина','glycin'],
-            condition: `<p style="font-size:0.85rem;margin-bottom:10px;"><strong>Задание 3. Идентификация.</strong></p><p style="font-size:0.85rem;">На основе экспериментальных данных определите содержимое <strong>колбы X</strong>. Сравните с справочным листом (см. задание 1) и введите название аминокислоты.</p>`,
+            condition: `<p><strong>Идентификация образца X.</strong></p><p>Экспериментальное титрование показало две ионизационные ступени: pKₐ₁≈2.34 и pKₐ₂≈9.60; дополнительная ионизируемая R-группа отсутствует. Рассчитанная изоэлектрическая точка pI≈5.97. Сопоставьте эти признаки со справочными значениями аминокислот и определите содержимое колбы X. Введите полное название или общепринятое трёхбуквенное сокращение.</p>`,
             hints: [
               { label: 'Ключ к идентификации', body: `<p><strong>Признаки образца X:</strong></p><ul style="font-size:0.82rem;padding-left:16px;line-height:1.8;"><li>Только 2 pKₐ → нет ионизируемой R-группы (нейтральная АК)</li><li>pKa₁ ≈ 2.34, pKa₂ ≈ 9.60</li><li>pI = 5.97</li></ul><p style="margin-top:6px;">Из справочника: <strong>Глицин</strong> (pKa₁=2.3, pKa₂=9.6, без R-группы).</p>` },
               { label: '✅ Ответ', solution: true, body: `<div class="answer-box">Колба X — <strong>Глицин</strong> (Gly, G)</div>` }
@@ -1268,7 +1322,7 @@ C̄ = 600 мкл/л &nbsp;&nbsp; P̄ = 18.6 мкмоль/(м²·с)<br>
           },
           { num: '7', diff: 'regional', roundHint: 'Введите название аминокислоты в образце Y.',
             answer: ['глутаминовая кислота','глутаминовая','glutamic','glu','глутамат','глутаминовой кислоты','glutamic acid'],
-            condition: `<p style="font-size:0.85rem;margin-bottom:10px;"><strong>Задание 3. Идентификация.</strong></p><p style="font-size:0.85rem;">На основе данных определите содержимое <strong>колбы Y</strong>.</p>`,
+            condition: `<p><strong>Идентификация образца Y.</strong></p><p>Для образца обнаружены три ионизационные ступени. Боковая группа имеет pKₐR≈4.25, следовательно, она ведёт себя как дополнительная кислая карбоксильная группа; изоэлектрическая точка образца pI≈3.22. Сопоставьте набор pKₐ и pI со справочными данными и определите аминокислоту в колбе Y. Введите название или трёхбуквенное сокращение.</p>`,
             hints: [
               { label: 'Ключ к идентификации', body: `<p><strong>Признаки образца Y:</strong></p><ul style="font-size:0.82rem;padding-left:16px;line-height:1.8;"><li>3 pKₐ → есть ионизируемая R-группа</li><li>pKaR ≈ 4.25 → R-группа кислая (COOH)</li><li>pI ≈ 3.22 < 7 → кислая аминокислота</li></ul><p style="margin-top:6px;">Справочник: <strong>Глутаминовая кислота</strong> (pKa₁=2.2, pKaR=4.3, pKa₂=9.7).</p>` },
               { label: '✅ Ответ', solution: true, body: `<div class="answer-box">Колба Y — <strong>Глутаминовая кислота</strong> (Glu, E)</div>` }
@@ -1276,7 +1330,7 @@ C̄ = 600 мкл/л &nbsp;&nbsp; P̄ = 18.6 мкмоль/(м²·с)<br>
           },
           { num: '8', diff: 'national', roundHint: 'Введите название аминокислоты в образце Z.',
             answer: ['гистидин','histidine','his','гистидина','histidin'],
-            condition: `<p style="font-size:0.85rem;margin-bottom:10px;"><strong>Задание 3. Идентификация.</strong></p><p style="font-size:0.85rem;">На основе данных определите содержимое <strong>колбы Z</strong>.</p>`,
+            condition: `<p><strong>Идентификация образца Z.</strong></p><p>Титрование выявило три ионизационные ступени. Значение pKₐR≈6.00 соответствует слабоосновной боковой группе, способной принимать и отдавать протон около физиологического pH; pKₐ₂≈9.17, а pI≈7.59. Определите аминокислоту в колбе Z по этим признакам и введите название или трёхбуквенное сокращение.</p>`,
             hints: [
               { label: 'Ключ к идентификации', body: `<p><strong>Признаки образца Z:</strong></p><ul style="font-size:0.82rem;padding-left:16px;line-height:1.8;"><li>3 pKₐ → есть ионизируемая R-группа</li><li>pKaR ≈ 6.00 → R-группа слабо основная (около нейтрального)</li><li>pI ≈ 7.59 > 7 → основная аминокислота</li></ul><p style="margin-top:6px;">Уникальный pKaR ≈ 6.0 (имидазол) характерен только для <strong>Гистидина</strong>.</p>` },
               { label: '✅ Ответ', solution: true, body: `<div class="answer-box">Колба Z — <strong>Гистидин</strong> (His, H)</div><div class="formula">pI(Z) = (pKaR + pKa₂) / 2 = (6.00 + 9.17) / 2 = 7.59</div>` }
@@ -1457,7 +1511,7 @@ C<sub>белка</sub> = 0,25 мг/мл · ε = 15 000 M⁻¹·см⁻¹ · [S] 
             condition:'В выборке гаплотипы двух локусов встречаются с частотами <strong>f(AB)=0.60, f(Ab)=0.10, f(aB)=0.10, f(ab)=0.20</strong>. Рассчитайте коэффициент неравновесия по сцеплению по формуле <strong>D = f(AB)·f(ab) − f(Ab)·f(aB)</strong>. Укажите знак D и определите, какие сочетания представлены чаще ожидаемого.',
             hints:[{label:'Подсказка 1',body:'<p>D = 0.60×0.20 − 0.10×0.10.</p>'},{label:'✅ Решение',solution:true,body:'<div class="answer-box">D = +0.11</div>'}]},
           { num:'№2', diff:'ibo', answer:['0.524'], roundHint:'До тысячных.',
-            condition:'D=0.11, p(A)=p(B)=0.70. D_max=min(0.21,0.21)=0.21. <strong>D′=D/D_max?</strong>',
+            condition:'Для двух локусов частоты аллелей равны p(A)=0.70 и p(B)=0.70, а коэффициент неравновесия по сцеплению D=0.11. Максимально возможное положительное значение при этих частотах равно <strong>Dmax=min[p(A)(1−p(B)), p(B)(1−p(A))]=0.21</strong>. Рассчитайте нормированный коэффициент D′=D/Dmax и интерпретируйте силу сцепления.',
             hints:[{label:'✅ Решение',solution:true,body:'<div class="answer-box">D′ = 0.524</div>'}]},
           { num:'№3', diff:'ibo', answer:['11'], roundHint:'Целое (поколений).',
             condition:'В популяции начальное неравновесие по сцеплению составляет <strong>D₀ = 0.11</strong>, а частота рекомбинации между локусами <strong>r = 0.20</strong>. При случайном скрещивании D изменяется по формуле <strong>Dₜ = D₀(1 − r)ᵗ</strong>. Определите минимальное целое число поколений t, после которого |Dₜ| станет меньше 0.01.',
@@ -1475,7 +1529,7 @@ C<sub>белка</sub> = 0,25 мг/мл · ε = 15 000 M⁻¹·см⁻¹ · [S] 
             condition:'Для пары праймеров температуры плавления равны <strong>Tₘ₁ = 62 °C</strong> и <strong>Tₘ₂ = 58 °C</strong>. Рекомендуемую температуру отжига рассчитывают по формуле <strong>Tₐ = 0.3Tₘ₁ + 0.7Tₘ₂ − 14.9</strong>. Рассчитайте Tₐ и округлите результат до десятых градуса Цельсия.',
             hints:[{label:'✅ Решение',solution:true,body:'<div class="answer-box">44.3 °C</div>'}]},
           { num:'№3', diff:'ibo', answer:['4.6'], roundHint:'До одного знака.',
-            condition:'Идеал (E=1): 1.073×10¹⁰. При E=0.9: 2.31×10⁹. Во сколько раз больше при идеале?',
+            condition:'Сравнивают две реакции ПЦР с одинаковыми N₀=10 копий и 30 циклами. При идеальной эффективности E=1 ожидается 1.073×10¹⁰ копий, а при E=0.90 — 2.31×10⁹ копий. Рассчитайте, во сколько раз идеальная реакция даёт больше продукта: разделите первое число копий на второе и округлите коэффициент до десятых.',
             hints:[{label:'✅ Решение',solution:true,body:'<div class="answer-box">В 4.6 раза</div>'}]}
         ]
       },
@@ -1487,10 +1541,10 @@ C<sub>белка</sub> = 0,25 мг/мл · ε = 15 000 M⁻¹·см⁻¹ · [S] 
             condition:'Рост: n=10 локусов, d=2.5 см/аллель, база 150 см, p=0.4. Плюс-аллелей = 2np. <strong>Ожидаемый рост?</strong>',
             hints:[{label:'Подсказка 1',body:'<p>8 плюс-аллелей. 150+8×2.5.</p>'},{label:'✅ Решение',solution:true,body:'<div class="answer-box">170 см</div>'}]},
           { num:'№2', diff:'ibo', answer:['5.5'], roundHint:'см до одного знака.',
-            condition:'Дисперсия плюс-аллелей = 2np(1−p) = 4.8. σ_аллелей=√4.8≈2.19. <strong>σ роста?</strong>',
+            condition:'Количественный признак контролируется n независимыми локусами с одинаковой частотой плюс-аллеля p. Для заданных параметров дисперсия числа плюс-аллелей равна <strong>2np(1−p)=4.8</strong>, поэтому стандартное отклонение их числа σ=√4.8≈2.19. Если каждый плюс-аллель изменяет рост на известную величину d из предыдущего пункта, рассчитайте стандартное отклонение роста σроста=σ·d и укажите единицы.',
             hints:[{label:'✅ Решение',solution:true,body:'<div class="answer-box">5.5 см</div>'}]},
           { num:'№3', diff:'ibo', answer:['178'], roundHint:'Целое (см).',
-            condition:'Оба родителя 180 см. μ=170, h²=0.8. μ_дети=μ+h²×(μ_род−μ). <strong>Ожидаемый рост детей?</strong>',
+            condition:'Средний рост в популяции μ=170 см, оба родителя имеют рост 180 см, а наследуемость признака в узком смысле h²=0.80. Используя формулу прогноза ответа потомства <strong>μдети=μ+h²(μрод−μ)</strong>, рассчитайте ожидаемый средний рост детей. Объясните, почему результат не равен росту родителей.',
             hints:[{label:'✅ Решение',solution:true,body:'<div class="answer-box">178 см</div>'}]}
         ]
       },
@@ -1661,7 +1715,7 @@ C<sub>белка</sub> = 0,25 мг/мл · ε = 15 000 M⁻¹·см⁻¹ · [S] 
         desc: 'Равновесие хищник-жертва, период, парадокс.',
         tasks: [
           {num:"№1",diff:"ibo",answer:["30"],roundHint:"Целое число.",condition:"В экосистеме зайцы (N) и рыси (P). Модель Лотки–Вольтерры: dN/dt=rN−αNP; dP/dt=βNP−dP. Параметры: r=1.2/год, α=0.04, β=0.02, d=0.6/год.<br><br>Найдите <strong>равновесное N*</strong> из dP/dt=0.",hints:[{label:"Подсказка 1",body:"<p>dP/dt=0: βNP−dP=0 → P(βN−d)=0. При P≠0 → βN=d.</p>"},{label:"Подсказка 2",body:"<div class=\"formula\">N* = d/β = 0.6/0.02</div>"},{label:"✅ Полное решение",solution:true,body:"<p>N*=30 зайцев. Парадокс: равновесие жертвы определяется параметрами хищника (d, β), а не своими собственными r и K!</p><div class=\"answer-box\">N* = 30 зайцев</div>"}]},
-          {num:"№2",diff:"ibo",answer:["30"],roundHint:"Целое число.",condition:"Те же параметры (r=1.2, α=0.04). Найдите <strong>равновесное P*</strong> из dN/dt=0.",hints:[{label:"Подсказка 1",body:"<p>dN/dt=0: rN−αNP=0 → N(r−αP)=0. При N≠0 → r=αP.</p>"},{label:"Подсказка 2",body:"<div class=\"formula\">P* = r/α = 1.2/0.04</div>"},{label:"✅ Полное решение",solution:true,body:"<p>P*=30 рысей. Равновесие хищника определяется параметрами жертвы (r, α) — двойной парадокс модели.</p><div class=\"answer-box\">P* = 30 рысей</div>"}]},
+          {num:"№2",diff:"ibo",answer:["30"],roundHint:"Целое число.",condition:"Популяция жертвы подчиняется логистической модели с изъятием хищником: <strong>dN/dt = rN − αNP</strong>. Используйте параметры r=1.20 год⁻¹ и α=0.040 (особь хищника·год)⁻¹. Найдите равновесную численность хищника P*, при которой численность жертвы не изменяется (dN/dt=0 при N>0). Покажите преобразование уравнения и укажите единицы.",hints:[{label:"Подсказка 1",body:"<p>dN/dt=0: rN−αNP=0 → N(r−αP)=0. При N≠0 → r=αP.</p>"},{label:"Подсказка 2",body:"<div class=\"formula\">P* = r/α = 1.2/0.04</div>"},{label:"✅ Полное решение",solution:true,body:"<p>P*=30 рысей. Равновесие хищника определяется параметрами жертвы (r, α) — двойной парадокс модели.</p><div class=\"answer-box\">P* = 30 рысей</div>"}]},
           {num:"№3",diff:"ibo",answer:["7.40"],roundHint:"До сотых (лет).",condition:"r=1.2/год, d=0.6/год. Период колебаний системы: <strong>T=2π/√(r·d)</strong>.<br><br>Рассчитайте T. Как этот период связан с реальными циклами зайца и рыси в природе (~10 лет)?",hints:[{label:"Подсказка 1",body:"<p>Вычислите r·d, возьмите √ и разделите 2π на результат.</p>"},{label:"Подсказка 2",body:"<div class=\"formula\">r·d = 1.2×0.6 = 0.72\n√0.72 = 0.849</div>"},{label:"Подсказка 3",body:"<div class=\"formula\">T = 2π/0.849 = 6.283/0.849 ≈ 7.40 лет</div>"},{label:"✅ Полное решение",solution:true,body:"<p>T≈7.40 лет. Реальные популяции зайца и рыси в Канаде показывают ~10-летние циклы. Расхождение — из-за упрощения модели (нет пространственной структуры, задержек и т.д.).</p><div class=\"answer-box\">T ≈ 7.40 лет</div>"}]},
           {num:"№4",diff:"ibo",answer:["35"],roundHint:"Целое число.",condition:"Браконьеры убивают <strong>10% рысей/год</strong>: к d добавляется 0.1, новое d′=0.7.<br><br>Рассчитайте <strong>новое N*=d′/β</strong>. Объясните парадокс Вольтерры.",hints:[{label:"Подсказка 1",body:"<p>Используйте ту же формулу N*=d/β, но с новым d′=0.7.</p>"},{label:"Подсказка 2",body:"<div class=\"formula\">N*_new = 0.7/0.02 = 35</div>"},{label:"Подсказка 3",body:"<p>Парадокс: охота на рысей (хищников) УВЕЛИЧИЛА число зайцев (жертв) с 30 до 35. P* = r/α = 30 — не изменилось. Тот же принцип объясняет, почему пестициды иногда ухудшают ситуацию с вредителями.</p>"},{label:"✅ Полное решение",solution:true,body:"<p>N*=35 зайцев (было 30). Парадокс Вольтерры: уменьшение числа хищников сдвигает равновесие жертвы вверх. Это основа концепции биологического контроля вредителей.</p><div class=\"answer-box\">N* = 35 зайцев (парадокс!)</div>"}]}
         ]
@@ -1764,7 +1818,7 @@ m₁=0 (птенцы), m₂=0.5, m₃=2.0<br>
             condition:'Ингибитор 5-азацитидин снижает скорость метилирования: k_met снижается до <strong>0.002 мин⁻¹</strong>. k_dem остаётся 0.005 мин⁻¹. <strong>Рассчитайте новое равновесие f*.</strong> Как это объясняет противораковый эффект препарата?',
             hints:[{label:'✅ Решение',solution:true,body:'<p>p16 реактивируется → G1 arrest.</p><div class="answer-box">0.286</div>'}]},
           { num:'№4', diff:'ibo', answer:['-0.018'], roundHint:'До тысячных.',
-            condition:'dr/dt=s₁r(1−r)−s₂rv. s₁=0.3, s₂=0.5, r₀=0.1, v₀=0.9. <strong>dr/dt?</strong>',
+            condition:'В модели коэволюции частота устойчивого генотипа хозяина обозначена r, а частота вирулентного генотипа паразита — v. Скорость изменения r описывается уравнением <strong>dr/dt = s₁r(1−r) − s₂rv</strong>. При s₁=0.30, s₂=0.50, r₀=0.10 и v₀=0.90 рассчитайте начальное значение dr/dt. Укажите знак результата и объясните, растёт или уменьшается частота устойчивости хозяина в данный момент.',
             hints:[{label:'Подсказка 1',body:'<p>0.3×0.1×0.9−0.5×0.1×0.9=0.027−0.045.</p>'},{label:'✅ Решение',solution:true,body:'<div class="answer-box">−0.018</div>'}]}
         ]
       },
@@ -2760,6 +2814,63 @@ function checkAnswer(taskId, hintsId, inputId, feedbackId) {
 }
 
 
+
+function plainConditionLength(html) {
+  const holder=document.createElement('div');holder.innerHTML=String(html||'');
+  return (holder.textContent||'').replace(/\s+/g,' ').trim().length;
+}
+function conditionSectionGuidance(sectionKey) {
+  const guidance={
+    genetics:'Покажите используемую генетическую модель, вычисление частот аллелей или генотипов и итоговую проверку.',
+    stats:'Сформулируйте нулевую гипотезу, укажите степени свободы и критерий решения, затем интерпретируйте результат.',
+    biochemistry:'Запишите формулу, подстановку чисел и единицы измерения на каждом этапе расчёта.',
+    olympiad2026:'Покажите ход вычислений и свяжите численный результат с биологическим смыслом эксперимента.',
+    molbio:'Укажите молекулярно-биологическую модель, формулу и единицы измерения результата.',
+    physbio:'Запишите физиологическую зависимость, подстановку и интерпретацию полученного значения.',
+    anatomy:'Обоснуйте ответ через строение и функцию рассматриваемой системы органов.',
+    ecoevo:'Запишите используемую экологическую или эволюционную модель и объясните биологический смысл результата.'
+  };
+  return guidance[sectionKey]||'Покажите формулу, промежуточные вычисления, единицы измерения и биологическую интерпретацию результата.';
+}
+function referencedTaskIndexes(condition, currentIndex) {
+  const text=String(condition||'').replace(/<[^>]*>/g,' ');
+  const indexes=[];
+  let match;
+  const direct=/(?:из\s+(?:задачи\s*)?№|из\s*№|задани[ея]\s+№?)\s*(\d+)/gi;
+  while((match=direct.exec(text)))indexes.push(Number(match[1])-1);
+  const qd=/QD1\.(\d+)/gi;
+  while((match=qd.exec(text)))indexes.push(Number(match[1])-1);
+  if(/из предыдущей задачи|те же параметры|та же популяция|те же данные|предыдущего задания/i.test(text))indexes.push(currentIndex-1);
+  return Array.from(new Set(indexes.filter(index=>Number.isInteger(index)&&index>=0&&index<currentIndex)));
+}
+
+function promotedDataHint(task) {
+  const hints=task&&Array.isArray(task.hints)?task.hints:[];
+  const first=hints[0];
+  if(!first||first.solution||!/данн|исходн|dataset|given/i.test(String(first.label||'')))return '';
+  return '<div class="context-card"><div class="context-card-title">Исходные данные</div>'+String(first.body||'')+'</div>';
+}
+
+function buildCompleteCondition(applied, sectionKey, subKey, idx) {
+  let condition=applied.condition||'';
+  const section=SUBTOPICS[sectionKey];
+  const sub=section&&section.subtopics?section.subtopics[subKey]:null;
+  const refs=referencedTaskIndexes(condition,idx);
+  let context=promotedDataHint(applied);
+  if(sub&&refs.length){
+    const blocks=refs.map(refIndex=>{
+      const source=sub.tasks[refIndex];if(!source)return '';
+      const translated=applyEN(source,sectionKey,subKey,refIndex);
+      return '<div class="context-card"><div class="context-card-title">Полные исходные данные из '+(translated.num||('задачи '+(refIndex+1)))+'</div><div class="task-condition">'+translated.condition+'</div>'+promotedDataHint(translated)+'</div>'; 
+    }).filter(Boolean);
+    context=blocks.join('');
+  }
+  if(plainConditionLength(condition)<180||refs.length){
+    condition+='<div class="condition-brief"><strong>Требования к решению.</strong> '+conditionSectionGuidance(sectionKey)+' Не ограничивайтесь одним числом: ответ должен быть проверяемым и самостоятельным.</div>';
+  }
+  return context+condition;
+}
+
 function resetTaskAnswer(taskId, inputId, feedbackId) {
   const input=document.getElementById(inputId);
   const feedback=document.getElementById(feedbackId);
@@ -2800,7 +2911,7 @@ function renderTask(task, sectionKey, subKey, idx) {
     </div>`;
   }).join('');
 
-  let conditionHtml = applied.condition;
+  let conditionHtml = buildCompleteCondition(applied, sectionKey, subKey, idx);
   if (sectionKey === 'biochemistry' && subKey === 'titration' && idx === 0) {
     if (!window.__limbicTitration) rollTitrationInstance();
     conditionHtml = conditionHtml.replace('src="titration_lab.html"', 'src="' + titrationLabIframeSrc() + '"');

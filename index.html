@@ -3498,25 +3498,35 @@ function countSectionSolved(sectionKey){
  return count;
 }
 function openDashboardCourse(button){
+ const href=button&&button.dataset.href;
+ if(href){window.location.href=href;return}
  const sectionKey=button&&button.dataset.section,subKey=button&&button.dataset.subtopic;
  if(!sectionKey||!subKey||!SUBTOPICS[sectionKey]||!SUBTOPICS[sectionKey].subtopics[subKey])return;
  openSubtopic(sectionKey,subKey);
 }
 function renderDashboardCourses(){
  const grid=document.getElementById('dashboard-course-grid');if(!grid)return;
- const sections=Object.entries(SUBTOPICS).filter(([,section])=>{
+ const problemWord=LANG==='en'?'problems':LANG==='kk'?'есеп':'задач';
+ const topicWord=count=>LANG==='en'?(count===1?'topic':'topics'):LANG==='kk'?'тақырып':'тем';
+ const internal=Object.entries(SUBTOPICS).filter(([,section])=>{
   if(!section||!section.subtopics)return false;
   return Object.values(section.subtopics).some(sub=>(sub.tasks||[]).length>0);
- });
- grid.innerHTML=sections.map(([key,section],cardIndex)=>{
+ }).map(([key,section])=>{
   const entries=Object.entries(section.subtopics).filter(([,sub])=>(sub.tasks||[]).length>0);
-  const total=entries.reduce((n,[,sub])=>n+(sub.tasks||[]).length,0),solved=countSectionSolved(key),meta=dashboardSectionMeta(key),first=entries[0];
-  const previews=entries.slice(0,3).map(([subKey])=>'<span class="course-topic-chip">'+escapeHtml(localizedSubtopicName(key,subKey))+'</span>').join('');
-  const more=entries.length>3?'<span class="course-topic-chip more">+'+(entries.length-3)+'</span>':'';
-  const problemWord=LANG==='en'?'problems':LANG==='kk'?'есеп':'задач';
-  const topicWord=LANG==='en'?(entries.length===1?'topic':'topics'):LANG==='kk'?'тақырып':'тем';
-  const label=localizedSectionName(key)+': '+entries.length+' '+topicWord+', '+total+' '+problemWord;
-  return '<button class="course-card" type="button" data-section="'+escapeHtml(key)+'" data-subtopic="'+escapeHtml(first?first[0]:'')+'" onclick="openDashboardCourse(this)" aria-label="'+escapeHtml(label)+'" style="--card-index:'+cardIndex+'"><span class="course-card-top"><span class="course-card-icon">'+meta[0]+'</span><span class="course-card-arrow" aria-hidden="true">→</span></span><h3>'+escapeHtml(localizedSectionName(key))+'</h3><p>'+escapeHtml(meta[1])+'</p><div class="course-card-topics">'+previews+more+'</div><footer><span>'+total+' '+problemWord+'<small>'+entries.length+' '+topicWord+'</small></span><b>'+solved+' '+ui('solved')+'</b></footer></button>';
+  return {key,entries,total:entries.reduce((n,[,sub])=>n+(sub.tasks||[]).length,0),solved:countSectionSolved(key),first:entries[0]&&entries[0][0]};
+ });
+ const external=[
+  {key:'botany',entries:[['pam',LANG==='en'?'PAM Fluorometry':LANG==='kk'?'PAM-флуорометриясы':'PAM-флуорометрия']],total:4,solved:0,href:LANG==='en'?'pam_tasks_en.html':'pam_tasks.html'},
+  {key:'vsosh',entries:[['biochem2122',LANG==='en'?'VSOSh Biochemistry 2021–22':LANG==='kk'?'Биохимия 2021–22 (11 сынып)':'Биохимия 2021–22 (11 класс)']],total:5,solved:0,href:LANG==='en'?'vsosh_biochem_2122_en.html':'vsosh_biochem_2122.html'}
+ ];
+ const cards=internal.concat(external);
+ grid.innerHTML=cards.map((item,cardIndex)=>{
+  const meta=dashboardSectionMeta(item.key),sectionName=localizedSectionName(item.key);
+  const previews=item.entries.slice(0,3).map(([subKey,externalTitle])=>'<span class="course-topic-chip">'+escapeHtml(externalTitle||localizedSubtopicName(item.key,subKey))+'</span>').join('');
+  const more=item.entries.length>3?'<span class="course-topic-chip more">+'+(item.entries.length-3)+'</span>':'';
+  const label=sectionName+': '+item.entries.length+' '+topicWord(item.entries.length)+', '+item.total+' '+problemWord;
+  const target=item.href?' data-href="'+escapeHtml(item.href)+'"':' data-section="'+escapeHtml(item.key)+'" data-subtopic="'+escapeHtml(item.first||'')+'"';
+  return '<button class="course-card" type="button"'+target+' onclick="openDashboardCourse(this)" aria-label="'+escapeHtml(label)+'" style="--card-index:'+cardIndex+'"><span class="course-card-top"><span class="course-card-icon">'+meta[0]+'</span><span class="course-card-arrow" aria-hidden="true">→</span></span><h3>'+escapeHtml(sectionName)+'</h3><p>'+escapeHtml(meta[1])+'</p><div class="course-card-topics">'+previews+more+'</div><footer><span>'+item.total+' '+problemWord+'<small>'+item.entries.length+' '+topicWord(item.entries.length)+'</small></span><b>'+item.solved+' '+ui('solved')+'</b></footer></button>';
  }).join('');
 }
 function localizedSubtopicDescription(sectionKey,subKey){

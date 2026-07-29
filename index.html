@@ -120,7 +120,7 @@
 .answer-input.correct{border-color:var(--green);background:var(--green-dim);}
 .answer-input.wrong{border-color:var(--red);background:var(--red-dim);}
 .check-btn{background:var(--blue);color:#fff;font-size:0.76rem;font-weight:600;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
-.check-btn:hover{background:var(--blue2);}.check-btn:disabled{opacity:0.4;cursor:default;}
+.check-btn:hover{background:var(--blue2);}.retry-btn{min-height:46px;padding:8px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:.76rem;font-weight:600;cursor:pointer;align-items:center;justify-content:center}.retry-btn:hover{border-color:var(--blue2);color:var(--blue2);}.check-btn:disabled{opacity:0.4;cursor:default;}
 .answer-feedback{margin-top:8px;font-size:0.76rem;padding:6px 10px;border-radius:6px;display:none;}
 .answer-feedback.correct{display:block;color:var(--green);background:var(--green-dim);}
 .answer-feedback.wrong{display:block;color:var(--red);background:var(--red-dim);}
@@ -235,7 +235,7 @@ body{background:radial-gradient(circle at 80% -10%,rgba(47,140,255,.12),transpar
 .practice-info{padding:12px;border-radius:12px;background:rgba(47,140,255,.09);border:1px solid rgba(47,140,255,.2);font-size:.8rem;line-height:1.55;margin:16px 0}.practice-actions{display:flex;gap:10px;justify-content:flex-end}.practice-tag{display:inline-flex;border:1px solid rgba(105,180,255,.3);background:rgba(47,140,255,.1);color:#a9d4ff;border-radius:999px;padding:5px 10px;font-size:.7rem;margin-bottom:12px}
 @media(max-width:900px){.nav-links{display:none}.stats-strip{margin:0 16px}.stat-item{padding:16px 8px}.stat-num{font-size:1.5rem}}
 @media(max-width:768px){#sidebar{top:var(--nav-h);height:calc(100dvh - var(--nav-h));width:min(88vw,320px);min-width:min(88vw,320px);z-index:500;box-shadow:24px 0 70px rgba(0,0,0,.65)}body.sidebar-open:after{content:"";position:fixed;inset:var(--nav-h) 0 0;z-index:490;background:rgba(0,0,0,.56);backdrop-filter:blur(2px)}#sidebar-toggle{display:block;min-width:40px;min-height:38px}.hero{min-height:auto;padding:84px 18px 60px}.hero-desc{font-size:.92rem}.topics-grid,.diff-legend{margin-left:14px;margin-right:14px}.task-page-inner{padding:28px 14px 80px}.task-header{padding:15px;gap:9px}.task-condition{font-size:.95rem;line-height:1.72}.task-condition iframe{min-height:300px}}
-@media(max-width:560px){html{font-size:16px}.logo-dot{display:none}.logo img{width:30px!important;height:30px!important}.hero-title{font-size:2.75rem}.hero-sub-title{font-size:1.25rem}.hero-cta{flex-direction:column}.hero-cta button{width:100%}.stats-strip{display:grid;grid-template-columns:1fr 1fr}.stat-item{border-bottom:1px solid var(--border)}.answer-row{flex-direction:column}.check-btn{width:100%}.task-header-content{min-width:0}.task-condition{overflow-wrap:anywhere}.practice-actions{flex-direction:column-reverse}.practice-actions button{width:100%}.limbic-dialog-card{padding:19px}.site-footer{padding:24px 16px}}
+@media(max-width:560px){html{font-size:16px}.logo-dot{display:none}.logo img{width:30px!important;height:30px!important}.hero-title{font-size:2.75rem}.hero-sub-title{font-size:1.25rem}.hero-cta{flex-direction:column}.hero-cta button{width:100%}.stats-strip{display:grid;grid-template-columns:1fr 1fr}.stat-item{border-bottom:1px solid var(--border)}.answer-row{flex-direction:column}.check-btn,.retry-btn{width:100%}.task-header-content{min-width:0}.task-condition{overflow-wrap:anywhere}.practice-actions{flex-direction:column-reverse}.practice-actions button{width:100%}.limbic-dialog-card{padding:19px}.site-footer{padding:24px 16px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
 </style>
@@ -2691,6 +2691,8 @@ function checkAnswer(taskId, hintsId, inputId, feedbackId) {
       lastHint.querySelector('.hint-body').classList.add('open');
     }
     document.getElementById(inputId.replace('inp','btn')).disabled = true;
+    const retryButton = document.getElementById('retry_' + taskId);
+    if (retryButton) retryButton.style.display = 'inline-flex';
   } else {
     input.className = 'answer-input wrong';
     input.classList.add('shake');
@@ -2707,6 +2709,18 @@ function checkAnswer(taskId, hintsId, inputId, feedbackId) {
       }
     }
   }
+}
+
+
+function resetTaskAnswer(taskId, inputId, feedbackId) {
+  const input=document.getElementById(inputId);
+  const feedback=document.getElementById(feedbackId);
+  const checkButton=document.getElementById(inputId.replace('inp','btn'));
+  const retryButton=document.getElementById('retry_'+taskId);
+  if(input){input.value='';input.className='answer-input';input.focus();}
+  if(feedback){feedback.className='answer-feedback';feedback.textContent='';}
+  if(checkButton)checkButton.disabled=false;
+  if(retryButton)retryButton.style.display='none';
 }
 
 // ═══════ RENDER ═══════
@@ -2767,6 +2781,7 @@ function renderTask(task, sectionKey, subKey, idx) {
           <div class="answer-row">
             <input class="answer-input" id="inp_${taskId}" placeholder="${t.placeholder}" onkeydown="if(event.key==='Enter')checkAnswer('${taskId}','hints_${taskId}','inp_${taskId}','fb_${taskId}')">
             <button class="check-btn" id="btn_${taskId}" onclick="checkAnswer('${taskId}','hints_${taskId}','inp_${taskId}','fb_${taskId}')">${t.checkBtn}</button>
+            <button class="retry-btn" id="retry_${taskId}" style="display:none" onclick="resetTaskAnswer('${taskId}','inp_${taskId}','fb_${taskId}')">↻ Ещё раз</button>
           </div>
           <div class="answer-feedback" id="fb_${taskId}"></div>
         </div>

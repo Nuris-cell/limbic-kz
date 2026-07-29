@@ -383,6 +383,10 @@ body{background:var(--bg);color:var(--text);padding-bottom:0}
 :root{--bg:#f4f6f8;--bg2:#edf1f4;--surface:#ffffff;--surface2:#f5f7fa;--border:#dfe4e8;--border2:#cdd5dc;--blue:#5965d8;--blue2:#4651c3;--blue-dim:rgba(89,101,216,.11);--blue-dim2:rgba(89,101,216,.06);--green:#16866f;--green-dim:rgba(22,134,111,.11);--orange:#d48a33}
 .app-topbar{background:rgba(250,252,253,.94)!important}.brand-mark{overflow:hidden;background:#fff!important;border:1px solid #d9e0e5}.brand-mark img{width:100%;height:100%;object-fit:cover;display:block}.global-search-trigger{background:#f0f3f6}.topbar-practice{background:var(--blue)!important;border-color:var(--blue)!important}.topbar-practice:hover{background:var(--blue2)!important}.dashboard-primary{background:var(--blue)}.dashboard-primary:hover{background:var(--blue2)}#sidebar{background:#eef2f5!important}.continue-card{background:linear-gradient(135deg,#fff 0%,#f4f3ff 100%)}.dna-orbit{background:linear-gradient(145deg,#dfe2ff,#eff0ff)}.dna-orbit span{color:var(--blue2)}.dna-orbit:before,.dna-orbit:after{border-color:rgba(89,101,216,.3)}.eyebrow,.card-label,.about-link-button,.section-heading button{color:var(--blue2)}.quick-icon.coral{background:#eceeff;color:var(--blue2)}.quick-icon.mint{background:#e5f3ef;color:var(--green)}.about-hero-new{background:linear-gradient(135deg,#242b52,#304a64)}.about-hero-new:after{background:rgba(101,213,190,.16)}
 </style>
+
+<style id="welcome-search-photo">
+.welcome-guide{position:relative;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(330px,.75fr);gap:34px;background:linear-gradient(135deg,#242b52 0%,#304a64 100%);color:#fff;border-radius:26px;padding:32px;margin-bottom:34px;overflow:hidden;box-shadow:0 18px 50px rgba(35,44,83,.16)}.welcome-guide:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-90px;top:-120px;background:rgba(86,211,188,.15)}.welcome-guide.returning{padding:24px 28px}.welcome-guide.returning .welcome-steps{display:none}.welcome-guide.returning{grid-template-columns:1fr}.welcome-close{position:absolute;right:14px;top:12px;z-index:2;border:0;background:rgba(255,255,255,.1);color:#fff;width:30px;height:30px;border-radius:9px;font-size:18px;cursor:pointer}.welcome-main{position:relative;z-index:1}.welcome-badge{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:#8fe2d1;font-weight:800}.welcome-main h1{font-size:clamp(25px,3.2vw,42px);line-height:1.05;letter-spacing:-.04em;margin:12px 0;color:#fff;max-width:700px}.welcome-main p{color:rgba(255,255,255,.72);font-size:13px;line-height:1.65;max-width:650px}.welcome-actions{display:flex;gap:9px;margin-top:22px}.welcome-actions button{border-radius:11px;padding:11px 16px;font:700 11px var(--font);cursor:pointer}.welcome-primary{border:0;background:#fff;color:#242b52}.welcome-secondary{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff}.welcome-steps{position:relative;z-index:1;display:grid;gap:9px;align-content:center}.welcome-steps>div{display:grid;grid-template-columns:32px 1fr;gap:1px 10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:11px}.welcome-steps span{grid-row:1/3;width:30px;height:30px;border-radius:9px;background:rgba(143,226,209,.16);color:#8fe2d1;display:grid;place-items:center;font-size:11px;font-weight:800}.welcome-steps strong{font-size:11px}.welcome-steps small{font-size:9px;color:rgba(255,255,255,.58);margin-top:3px}.task-card.search-target{border-color:var(--blue)!important;box-shadow:0 0 0 4px rgba(89,101,216,.13),0 14px 35px rgba(45,55,120,.12);animation:searchPulse .8s ease 2}.author-card-new:first-child img{object-position:center 28%}@keyframes searchPulse{50%{transform:translateY(-2px)}}@media(max-width:850px){.welcome-guide{grid-template-columns:1fr}.welcome-steps{grid-template-columns:repeat(3,1fr)}.welcome-steps>div{grid-template-columns:28px 1fr}.welcome-steps small{display:none}}@media(max-width:560px){.welcome-guide{padding:24px 19px;border-radius:20px}.welcome-steps{grid-template-columns:1fr}.welcome-steps small{display:block}.welcome-actions{flex-direction:column}.welcome-actions button{width:100%}}
+</style>
 </head>
 <body>
 <nav id="topnav" class="app-topbar">
@@ -526,6 +530,20 @@ body{background:var(--bg);color:var(--text);padding-bottom:0}
 <main id="main">
 <div id="home-page">
   <div class="dashboard-shell">
+    <section class="welcome-guide" id="welcome-guide">
+      <button class="welcome-close" onclick="dismissWelcomeGuide()" aria-label="Закрыть">×</button>
+      <div class="welcome-main">
+        <span class="welcome-badge" id="welcome-badge">Добро пожаловать в Limbic KZ</span>
+        <h1 id="welcome-title">Подготовка к биологическим олимпиадам — понятно и по шагам</h1>
+        <p id="welcome-copy">Здесь можно изучать темы, решать задачи с подсказками и собирать практик-тесты на время. Прогресс сохраняется автоматически.</p>
+        <div class="welcome-actions"><button class="welcome-primary" id="welcome-start" onclick="startWelcomeLearning()">Начать с первой темы →</button><button class="welcome-secondary" id="welcome-test" onclick="openPracticeBuilder()">Собрать тест</button></div>
+      </div>
+      <div class="welcome-steps">
+        <div><span>1</span><strong id="welcome-step1-title">Выберите тему</strong><small id="welcome-step1-copy">Откройте нужный раздел в программе</small></div>
+        <div><span>2</span><strong id="welcome-step2-title">Решайте задачи</strong><small id="welcome-step2-copy">Проверяйте ответы и используйте подсказки</small></div>
+        <div><span>3</span><strong id="welcome-step3-title">Закрепите результат</strong><small id="welcome-step3-copy">Пройдите смешанный тест на время</small></div>
+      </div>
+    </section>
     <section class="dashboard-welcome">
       <div>
         <span class="eyebrow">Персональный план</span>
@@ -590,7 +608,7 @@ body{background:var(--bg);color:var(--text);padding-bottom:0}
       <div class="section-heading"><div><span class="eyebrow">Команда</span><h2>Авторы Limbic KZ</h2></div></div>
       <div class="authors-grid-new">
         <article class="author-card-new">
-          <img src="assets/photo-sailaubek.jpg" alt="Сайлаубек Нурислам" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="author-placeholder" style="display:none">СН</div>
+          <img src="assets/photo-sailaubek-new.svg" alt="Сайлаубек Нурислам" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="author-placeholder" style="display:none">СН</div>
           <span class="author-role-new">Ведущий автор и основатель</span><h3>Сайлаубек Нурислам</h3><p>Разработка платформы, содержание задач и образовательная концепция.</p><a href="https://t.me/Apoprotein" target="_blank" rel="noopener">@Apoprotein ↗</a>
         </article>
         <article class="author-card-new">
@@ -815,6 +833,21 @@ const KZ_BASE={
 };
 T.kk=Object.assign({},T.ru,KZ_BASE);
 
+
+const WELCOME_I18N={
+ ru:{badge:'Добро пожаловать в Limbic KZ',title:'Подготовка к биологическим олимпиадам — понятно и по шагам',copy:'Здесь можно изучать темы, решать задачи с подсказками и собирать практик-тесты на время. Прогресс сохраняется автоматически.',start:'Начать с первой темы →',test:'Собрать тест',s1:'Выберите тему',c1:'Откройте нужный раздел в программе',s2:'Решайте задачи',c2:'Проверяйте ответы и используйте подсказки',s3:'Закрепите результат',c3:'Пройдите смешанный тест на время',close:'Закрыть'},
+ kk:{badge:'Limbic KZ-ке қош келдіңіз',title:'Биология олимпиадасына түсінікті әрі қадамдық дайындық',copy:'Мұнда тақырыптарды оқып, кеңестермен есептер шығарып, уақытқа практикалық тест құрастыруға болады. Прогресс автоматты түрде сақталады.',start:'Бірінші тақырыптан бастау →',test:'Тест құрастыру',s1:'Тақырыпты таңдаңыз',c1:'Бағдарламадан қажетті бөлімді ашыңыз',s2:'Есептерді шешіңіз',c2:'Жауаптарды тексеріп, кеңестерді қолданыңыз',s3:'Нәтижені бекітіңіз',c3:'Уақытқа аралас тесттен өтіңіз',close:'Жабу'},
+ en:{badge:'Welcome to Limbic KZ',title:'A clear, step-by-step path to biology olympiads',copy:'Study topics, solve problems with hints, and build timed practice tests. Your progress is saved automatically.',start:'Start with the first topic →',test:'Build a test',s1:'Choose a topic',c1:'Open the section you need in the curriculum',s2:'Solve problems',c2:'Check answers and use step-by-step hints',s3:'Reinforce your skills',c3:'Take a mixed timed practice test',close:'Close'}
+};
+function applyWelcomeLanguage(){
+ const d=WELCOME_I18N[LANG]||WELCOME_I18N.ru,map={'welcome-badge':'badge','welcome-title':'title','welcome-copy':'copy','welcome-start':'start','welcome-test':'test','welcome-step1-title':'s1','welcome-step1-copy':'c1','welcome-step2-title':'s2','welcome-step2-copy':'c2','welcome-step3-title':'s3','welcome-step3-copy':'c3'};
+ Object.entries(map).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=d[key]});
+ const close=document.querySelector('.welcome-close');if(close)close.setAttribute('aria-label',d.close);
+}
+function dismissWelcomeGuide(){const guide=document.getElementById('welcome-guide');if(guide)guide.style.display='none';try{localStorage.setItem('limbic_welcome_seen','1')}catch(e){}}
+function startWelcomeLearning(){dismissWelcomeGuide();openSubtopic('genetics','hw')}
+function initializeWelcomeGuide(){applyWelcomeLanguage();try{if(localStorage.getItem('limbic_welcome_seen')==='1'){const guide=document.getElementById('welcome-guide');if(guide)guide.classList.add('returning')}}catch(e){}}
+
 const EXT_I18N={
  ru:{dashboardAbout:'Полные условия, пошаговые подсказки, виртуальные лаборатории и задачи уровня областных, республиканских и международных олимпиад — в одном рабочем пространстве.',aboutLead:'Limbic KZ — бесплатная образовательная платформа для школьников Казахстана. Наша цель — собрать качественные задачи, полные условия, понятные разборы и практические симуляции в одном удобном месте.',tasks:'задач',directions:'направлений',students:'для учеников',founder:'Ведущий автор и основатель',coauthor:'Соавтор',cofounder:'Сооснователь',resultTitle:'Тест завершён',resultPoints:'баллов',authTitle:'Личный кабинет',authCopy:'Синхронизируйте прогресс между телефоном и компьютером.',signIn:'Вход',signup:'Регистрация',name:'Имя',password:'Пароль',forgot:'Забыли пароль?'},
  kk:{dashboardAbout:'Толық шарттар, қадамдық кеңестер, виртуалды зертханалар және облыстық, республикалық, халықаралық олимпиада есептері — бір оқу кеңістігінде.',aboutLead:'Limbic KZ — Қазақстан оқушыларына арналған тегін білім беру платформасы. Мақсатымыз — сапалы есептерді, толық шарттарды, түсінікті талдаулар мен практикалық симуляцияларды бір ыңғайлы жерде жинау.',tasks:'есеп',directions:'бағыт',students:'оқушылар үшін',founder:'Жетекші автор және негізін қалаушы',coauthor:'Бірлескен автор',cofounder:'Бірлескен негізін қалаушы',resultTitle:'Тест аяқталды',resultPoints:'ұпай',authTitle:'Жеке кабинет',authCopy:'Прогресті телефон мен компьютер арасында синхрондаңыз.',signIn:'Кіру',signup:'Тіркелу',name:'Аты',password:'Құпиясөз',forgot:'Құпиясөзді ұмыттыңыз ба?'},
@@ -843,6 +876,7 @@ function applyAppLanguage(){
  if(!limbicUser){const a=document.getElementById('account-btn');if(a)a.textContent=ui('login')}
  renderDashboardCourses();
  applyExtendedLanguage();
+ applyWelcomeLanguage();
 }
 function localizedSectionName(key){
  const en={genetics:'Population Genetics',stats:'Statistics',biochemistry:'Biochemistry',olympiad2026:'Republican Olympiad 2026',molbio:'Molecular Biology',physbio:'Physiology and Biochemistry',ecoevo:'Ecology and Evolution',anatomy:'Anatomy and Physiology',botany:'Botany',vsosh:'Olympiad Archive'};
@@ -3491,17 +3525,17 @@ function runGlobalSearch(query){
  if(q.length<2){box.innerHTML='<div class="search-empty">'+escapeHtml(ui('searchEmpty'))+'</div>';return}
  const found=getTaskCatalog().filter(item=>(item.section+' '+item.subtopic+' '+item.condition).toLocaleLowerCase('ru').includes(q)).slice(0,60);
  if(!found.length){box.innerHTML='<div class="search-empty">'+(LANG==='en'?'Nothing found. Try a shorter query.':LANG==='kk'?'Ештеңе табылмады. Қысқаша сұрау енгізіңіз.':'Ничего не найдено. Попробуйте более короткий запрос.')+'</div>';return}
- box.innerHTML=found.map(item=>'<button class="search-result" onclick="openSearchResult('+JSON.stringify(item.sectionKey)+','+JSON.stringify(item.subKey)+','+item.index+')"><span><h4>'+escapeHtml(item.subtopic)+' · '+(LANG==='en'?'problem ':LANG==='kk'?'есеп ':'задача ')+(item.index+1)+'</h4><p>'+escapeHtml(item.condition)+'</p></span><em>'+escapeHtml(item.section)+'</em></button>').join('');
+ box.innerHTML=found.map(item=>'<button class="search-result" data-section="'+escapeHtml(item.sectionKey)+'" data-subtopic="'+escapeHtml(item.subKey)+'" data-index="'+item.index+'" onclick="openSearchResult(this.dataset.section,this.dataset.subtopic,Number(this.dataset.index))"><span><h4>'+escapeHtml(item.subtopic)+' · '+(LANG==='en'?'problem ':LANG==='kk'?'есеп ':'задача ')+(item.index+1)+'</h4><p>'+escapeHtml(item.condition)+'</p></span><em>'+escapeHtml(item.section)+'</em></button>').join('');
 }
 function openSearchResult(sectionKey,subKey,index){
  closeGlobalSearch();openSubtopic(sectionKey,subKey);
- setTimeout(()=>{const cards=document.querySelectorAll('#tasks-container .task-card'),card=cards[index];if(card){card.scrollIntoView({behavior:'smooth',block:'center'});const header=card.querySelector('.task-header'),body=card.querySelector('.task-body');if(header&&body&&!body.classList.contains('open'))toggleTask(header);}},100);
+ setTimeout(()=>{const card=document.getElementById('card_'+sectionKey+'_'+subKey+'_'+index);if(!card)return;card.classList.add('search-target');card.scrollIntoView({behavior:'smooth',block:'center'});const header=card.querySelector('.task-header'),body=card.querySelector('.task-body');if(header&&body&&!body.classList.contains('open'))toggleTask(header);setTimeout(()=>card.classList.remove('search-target'),2200)},120);
 }
 document.addEventListener('keydown',event=>{
  if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){event.preventDefault();openGlobalSearch()}
  if(event.key==='Escape')closeGlobalSearch();
 });
-document.addEventListener('DOMContentLoaded',()=>{updateDashboardStats();setAppNav('home')});
+document.addEventListener('DOMContentLoaded',()=>{updateDashboardStats();setAppNav('home');initializeWelcomeGuide()});
 
   // inline lab helpers — see renderTask for embedded simulators
 

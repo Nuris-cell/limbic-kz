@@ -924,9 +924,10 @@ function applyAppLanguage(){
  applyWelcomeLanguage();
 }
 function localizedSectionName(key){
+ const ru={botany:'Ботаника',vsosh:'Олимпиадный архив'};
  const en={genetics:'Population Genetics',stats:'Statistics',biochemistry:'Biochemistry',olympiad2026:'Republican Olympiad 2026',molbio:'Molecular Biology',physbio:'Physiology and Biochemistry',ecoevo:'Ecology and Evolution',anatomy:'Anatomy and Physiology',botany:'Botany',vsosh:'Olympiad Archive'};
  const kk={genetics:'Популяциялық генетика',stats:'Статистика',biochemistry:'Биохимия',olympiad2026:'Республикалық олимпиада 2026',molbio:'Молекулалық биология',physbio:'Физиология және биохимия',ecoevo:'Экология және эволюция',anatomy:'Анатомия және физиология',botany:'Ботаника',vsosh:'Олимпиада мұрағаты'};
- return LANG==='en'?(en[key]||SUBTOPICS[key]?.label||key):LANG==='kk'?(kk[key]||SUBTOPICS[key]?.label||key):(SUBTOPICS[key]?.label||key)
+ return LANG==='en'?(en[key]||SUBTOPICS[key]?.label||key):LANG==='kk'?(kk[key]||SUBTOPICS[key]?.label||key):(ru[key]||SUBTOPICS[key]?.label||key)
 }
 function localizedSubtopicName(sectionKey,subKey){
  if(LANG==='en'){const tr=TRANS_EN[sectionKey+'.'+subKey];return (tr&&tr.title)||SUBTOPICS[sectionKey]?.subtopics[subKey]?.title||subKey}
@@ -3574,7 +3575,7 @@ function renderDashboardCourses(){
  const cards=internal.concat(external);
  grid.innerHTML=cards.map((item,cardIndex)=>{
   const meta=dashboardSectionMeta(item.key),sectionName=localizedSectionName(item.key);
-  const previews=item.entries.slice(0,3).map(([subKey,externalTitle])=>'<span class="course-topic-chip">'+escapeHtml(externalTitle||localizedSubtopicName(item.key,subKey))+'</span>').join('');
+  const previews=item.entries.slice(0,3).map(([subKey,entry])=>'<span class="course-topic-chip">'+escapeHtml(item.module?entry:localizedSubtopicName(item.key,subKey))+'</span>').join('');
   const more=item.entries.length>3?'<span class="course-topic-chip more">+'+(item.entries.length-3)+'</span>':'';
   const label=sectionName+': '+item.entries.length+' '+topicWord(item.entries.length)+', '+item.total+' '+problemWord;
   const target=item.module?' data-module="'+escapeHtml(item.module)+'"':item.href?' data-href="'+escapeHtml(item.href)+'"':' data-section="'+escapeHtml(item.key)+'" data-subtopic="'+escapeHtml(item.first||'')+'"';

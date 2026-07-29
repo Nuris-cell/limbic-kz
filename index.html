@@ -2814,6 +2814,55 @@ function checkAnswer(taskId, hintsId, inputId, feedbackId) {
 }
 
 
+
+function plainConditionLength(html) {
+  const holder=document.createElement('div');holder.innerHTML=String(html||'');
+  return (holder.textContent||'').replace(/\s+/g,' ').trim().length;
+}
+function conditionSectionGuidance(sectionKey) {
+  const guidance={
+    genetics:'Покажите используемую генетическую модель, вычисление частот аллелей или генотипов и итоговую проверку.',
+    stats:'Сформулируйте нулевую гипотезу, укажите степени свободы и критерий решения, затем интерпретируйте результат.',
+    biochemistry:'Запишите формулу, подстановку чисел и единицы измерения на каждом этапе расчёта.',
+    olympiad2026:'Покажите ход вычислений и свяжите численный результат с биологическим смыслом эксперимента.',
+    molbio:'Укажите молекулярно-биологическую модель, формулу и единицы измерения результата.',
+    physbio:'Запишите физиологическую зависимость, подстановку и интерпретацию полученного значения.',
+    anatomy:'Обоснуйте ответ через строение и функцию рассматриваемой системы органов.',
+    ecoevo:'Запишите используемую экологическую или эволюционную модель и объясните биологический смысл результата.'
+  };
+  return guidance[sectionKey]||'Покажите формулу, промежуточные вычисления, единицы измерения и биологическую интерпретацию результата.';
+}
+function referencedTaskIndexes(condition, currentIndex) {
+  const text=String(condition||'').replace(/<[^>]*>/g,' ');
+  const indexes=[];
+  let match;
+  const direct=/(?:из\s+(?:задачи\s*)?№|из\s*№|задани[ея]\s+№?)\s*(\d+)/gi;
+  while((match=direct.exec(text)))indexes.push(Number(match[1])-1);
+  const qd=/QD1\.(\d+)/gi;
+  while((match=qd.exec(text)))indexes.push(Number(match[1])-1);
+  if(/из предыдущей задачи|те же параметры|та же популяция|те же данные|предыдущего задания/i.test(text))indexes.push(currentIndex-1);
+  return Array.from(new Set(indexes.filter(index=>Number.isInteger(index)&&index>=0&&index<currentIndex)));
+}
+function buildCompleteCondition(applied, sectionKey, subKey, idx) {
+  let condition=applied.condition||'';
+  const section=SUBTOPICS[sectionKey];
+  const sub=section&&section.subtopics?section.subtopics[subKey]:null;
+  const refs=referencedTaskIndexes(condition,idx);
+  let context='';
+  if(sub&&refs.length){
+    const blocks=refs.map(refIndex=>{
+      const source=sub.tasks[refIndex];if(!source)return '';
+      const translated=applyEN(source,sectionKey,subKey,refIndex);
+      return '<div class="context-card"><div class="context-card-title">Полные исходные данные из '+(translated.num||('задачи '+(refIndex+1)))+'</div><div class="task-condition">'+translated.condition+'</div></div>';
+    }).filter(Boolean);
+    context=blocks.join('');
+  }
+  if(plainConditionLength(condition)<180||refs.length){
+    condition+='<div class="condition-brief"><strong>Требования к решению.</strong> '+conditionSectionGuidance(sectionKey)+' Не ограничивайтесь одним числом: ответ должен быть проверяемым и самостоятельным.</div>';
+  }
+  return context+condition;
+}
+
 function resetTaskAnswer(taskId, inputId, feedbackId) {
   const input=document.getElementById(inputId);
   const feedback=document.getElementById(feedbackId);
@@ -2854,7 +2903,7 @@ function renderTask(task, sectionKey, subKey, idx) {
     </div>`;
   }).join('');
 
-  let conditionHtml = applied.condition;
+  let conditionHtml = buildCompleteCondition(applied, sectionKey, subKey, idx);
   if (sectionKey === 'biochemistry' && subKey === 'titration' && idx === 0) {
     if (!window.__limbicTitration) rollTitrationInstance();
     conditionHtml = conditionHtml.replace('src="titration_lab.html"', 'src="' + titrationLabIframeSrc() + '"');

@@ -824,6 +824,11 @@ function localizedSectionName(key){
  const kk={genetics:'Популяциялық генетика',stats:'Статистика',biochemistry:'Биохимия',olympiad2026:'Республикалық олимпиада 2026',molbio:'Молекулалық биология',physbio:'Физиология және биохимия',ecoevo:'Экология және эволюция',anatomy:'Анатомия және физиология',botany:'Ботаника',vsosh:'Олимпиада мұрағаты'};
  return LANG==='en'?(en[key]||SUBTOPICS[key]?.label||key):LANG==='kk'?(kk[key]||SUBTOPICS[key]?.label||key):(SUBTOPICS[key]?.label||key)
 }
+function localizedSubtopicName(sectionKey,subKey){
+ if(LANG==='en'){const tr=TRANS_EN[sectionKey+'.'+subKey];return (tr&&tr.title)||SUBTOPICS[sectionKey]?.subtopics[subKey]?.title||subKey}
+ if(LANG==='kk'){const el=document.querySelector('.sidebar-subtopic[onclick*="'+sectionKey+'"][onclick*="'+subKey+'"] span');if(el)return el.textContent}
+ return SUBTOPICS[sectionKey]?.subtopics[subKey]?.title||subKey
+}
 function openProgramCatalog(){const sidebar=document.getElementById('sidebar');sidebar.classList.add('open');document.body.classList.add('sidebar-open');const title=sidebar.querySelector('.sidebar-catalog-title');if(title)title.scrollIntoView({behavior:'smooth',block:'start'});sidebar.classList.add('catalog-pulse');setTimeout(()=>sidebar.classList.remove('catalog-pulse'),700)}
 
 // ═══════ DATA ═══════
@@ -3154,7 +3159,7 @@ function updateAuthUI(){
   button.textContent=name;document.getElementById('auth-user-email').textContent=limbicUser.email||name;
   document.getElementById('auth-solved-count').textContent=solvedTasks.size;
  }else{
-  guest.style.display='block';panel.classList.remove('open');button.textContent='Войти';
+  guest.style.display='block';panel.classList.remove('open');button.textContent=ui('login');
  }
 }
 async function loadCloudProgress(){
@@ -3193,15 +3198,12 @@ async function initializeAuth(){
 
 // ═══════ PRACTICE TESTS ═══════
 let limbicPracticeSession=null;
-function practiceSectionLabel(key) {
- const labels={all:'Все разделы',genetics:'Генетика',stats:'Статистика',biochemistry:'Биохимия',olympiad2026:'Олимпиада 2026',molbio:'Молекулярная биология',physbio:'Физиология и биохимия',ecoevo:'Экология и эволюция',anatomy:'Анатомия и физиология'};
- return labels[key]||(SUBTOPICS[key]&&SUBTOPICS[key].label)||key;
-}
+function practiceSectionLabel(key){return key==='all'?(LANG==='en'?'All sections':LANG==='kk'?'Барлық бөлімдер':'Все разделы'):localizedSectionName(key)}
 function renderPracticeTopicPicker(){
  const picker=document.getElementById('practice-topic-picker');if(!picker)return;
  picker.innerHTML=Object.entries(SUBTOPICS).filter(([,s])=>s&&s.subtopics).map(([sectionKey,section])=>{
   const options=Object.entries(section.subtopics).map(([subKey,sub])=>'<label class="practice-topic-option"><input type="checkbox" value="'+sectionKey+'::'+subKey+'" onchange="updatePracticeSelection()" checked><span>'+escapeHtml(sub.title||subKey)+'</span><em>'+(sub.tasks||[]).length+'</em></label>').join('');
-  return '<div class="practice-topic-group"><h4>'+escapeHtml(section.label||sectionKey)+'</h4>'+options+'</div>';
+  return '<div class="practice-topic-group"><h4>'+escapeHtml(localizedSectionName(sectionKey))+'</h4>'+options+'</div>';
  }).join('');
  updatePracticeSelection();
 }
@@ -3210,7 +3212,7 @@ function selectAllPracticeTopics(checked){document.querySelectorAll('#practice-t
 function updatePracticeSelection(){
  const chosen=selectedPracticeTopics(),note=document.getElementById('practice-selection-note');if(!note)return;
  let available=0;chosen.forEach(value=>{const [s,k]=value.split('::'),sub=SUBTOPICS[s]&&SUBTOPICS[s].subtopics[k];available+=(sub&&sub.tasks||[]).length});
- note.textContent=chosen.length?chosen.length+' тем выбрано · '+available+' задач доступно':'Выберите хотя бы одну тему';
+ note.textContent=chosen.length?(LANG==='en'?chosen.length+' topics selected · '+available+' problems available':LANG==='kk'?chosen.length+' тақырып таңдалды · '+available+' есеп қолжетімді':chosen.length+' тем выбрано · '+available+' задач доступно'):(LANG==='en'?'Select at least one topic':LANG==='kk'?'Кемінде бір тақырыпты таңдаңыз':'Выберите хотя бы одну тему');
 }
 function openPracticeBuilder(){
  renderPracticeTopicPicker();
@@ -3219,7 +3221,7 @@ function openPracticeBuilder(){
 function closePracticeBuilder(){const dialog=document.getElementById('practice-dialog');if(dialog)dialog.classList.remove('open');document.body.style.overflow='';}
 function startPracticeTest(){
  const topics=selectedPracticeTopics(),requested=Number(document.getElementById('practice-count').value)||10,minutes=Math.max(1,Math.min(180,Number(document.getElementById('practice-minutes').value)||20));
- if(!topics.length){document.getElementById('practice-selection-note').textContent='Сначала выберите хотя бы одну тему';return}
+ if(!topics.length){document.getElementById('practice-selection-note').textContent=LANG==='en'?'Select at least one topic first':LANG==='kk'?'Алдымен кемінде бір тақырыпты таңдаңыз':'Сначала выберите хотя бы одну тему';return}
  const allowed=new Set(topics),pool=[];
  Object.entries(SUBTOPICS).forEach(([sectionKey,section])=>{
   if(!section||!section.subtopics)return;
@@ -3228,9 +3230,9 @@ function startPracticeTest(){
  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
  const chosen=pool.slice(0,Math.min(requested,pool.length)),taskIds=chosen.map(item=>item.sectionKey+'_'+item.subKey+'_'+item.idx);
  limbicPracticeSession={taskIds:new Set(taskIds),correct:new Set(),startedAt:Date.now(),endsAt:Date.now()+minutes*60000,total:chosen.length,timer:null,finished:false};
- document.getElementById('bc-section').textContent='Практика';document.getElementById('bc-sub').textContent='Смешанный тест';
- document.getElementById('sub-title').textContent='Практик-тест';
- document.getElementById('sub-desc').innerHTML='<span class="practice-tag">⚡ '+chosen.length+' задач · '+topics.length+' тем · '+minutes+' мин</span><br>Каждый правильный ответ приносит 1 балл.';
+ document.getElementById('bc-section').textContent=ui('practice');document.getElementById('bc-sub').textContent=LANG==='en'?'Mixed test':LANG==='kk'?'Аралас тест':'Смешанный тест';
+ document.getElementById('sub-title').textContent=ui('practiceTest');
+ document.getElementById('sub-desc').innerHTML='<span class="practice-tag">⚡ '+chosen.length+' '+(LANG==='en'?'problems':LANG==='kk'?'есеп':'задач')+' · '+topics.length+' '+(LANG==='en'?'topics':LANG==='kk'?'тақырып':'тем')+' · '+minutes+' min</span><br>'+(LANG==='en'?'Each correct answer earns 1 point.':LANG==='kk'?'Әр дұрыс жауапқа 1 ұпай беріледі.':'Каждый правильный ответ приносит 1 балл.');
  document.getElementById('tasks-container').innerHTML=chosen.map(item=>renderTask(item.task,item.sectionKey,item.subKey,item.idx)).join('');
  document.getElementById('home-page').style.display='none';document.getElementById('about-page').style.display='none';document.getElementById('task-page').style.display='block';
  document.getElementById('practice-session-bar').style.display='grid';updatePracticeHud();limbicPracticeSession.timer=setInterval(tickPracticeTimer,1000);tickPracticeTimer();
@@ -3248,7 +3250,7 @@ function recordPracticeAnswer(taskId,isCorrect){
 }
 function updatePracticeHud(){
  if(!limbicPracticeSession)return;const el=document.getElementById('practice-live-score');
- if(el)el.textContent=limbicPracticeSession.correct.size+' / '+limbicPracticeSession.total+' баллов';
+ if(el)el.textContent=limbicPracticeSession.correct.size+' / '+limbicPracticeSession.total+' '+ui('points');
 }
 function finishPracticeTest(autoFinished){
  if(!limbicPracticeSession||limbicPracticeSession.finished)return;
@@ -3257,7 +3259,7 @@ function finishPracticeTest(autoFinished){
  document.querySelectorAll('#tasks-container input,#tasks-container .check-btn').forEach(el=>el.disabled=true);
  document.getElementById('practice-session-bar').style.display='none';
  document.getElementById('practice-result-score').textContent=score+' / '+total;document.getElementById('practice-result-percent').textContent=percent+'%';
- document.getElementById('practice-result-copy').textContent=autoFinished?'Время закончилось. Правильные ответы уже добавлены в общий прогресс.':'Тест завершён. Правильные ответы уже добавлены в общий прогресс.';
+ document.getElementById('practice-result-copy').textContent=LANG==='en'?(autoFinished?'Time is up. Correct answers were added to your progress.':'Test finished. Correct answers were added to your progress.'):LANG==='kk'?(autoFinished?'Уақыт аяқталды. Дұрыс жауаптар жалпы прогреске қосылды.':'Тест аяқталды. Дұрыс жауаптар жалпы прогреске қосылды.'):(autoFinished?'Время закончилось. Правильные ответы уже добавлены в общий прогресс.':'Тест завершён. Правильные ответы уже добавлены в общий прогресс.');
  document.getElementById('practice-result-dialog').classList.add('open');document.body.style.overflow='hidden';
  try{localStorage.setItem('limbic_last_practice',JSON.stringify({score,total,percent,date:new Date().toISOString()}))}catch(e){}
 }
@@ -3313,14 +3315,12 @@ function openSubtopic(sectionKey, subKey) {
   const enKey = sectionKey + '.' + subKey;
   const enSub = TRANS_EN[enKey];
 
-  const secLabel = LANG === 'en' ? (sec.label_en || TRANS_EN[sectionKey+'.hw']?.title || sec.label) : sec.label;
-  const subTitle = LANG === 'en' ? (enSub?.title || sub.title) : sub.title;
-  const subDesc = LANG === 'en' ? (enSub?.desc || sub.desc) : sub.desc;
+  const secLabel=localizedSectionName(sectionKey);
+  const subTitle=localizedSubtopicName(sectionKey,subKey);
+  const subDesc=LANG==='en'?(enSub?.desc||sub.desc):sub.desc;
 
   // Better: use section label from T
-  const secDisplayLabel = LANG === 'en' ? 
-    (sectionKey === 'genetics' ? 'Population Genetics' : sectionKey === 'stats' ? 'Statistics' : sectionKey === 'olympiad2026' ? 'Republican Olympiad 2026' : sectionKey === 'botany' ? 'Botany' : sectionKey === 'anatomy' ? 'Anatomy & Physiology' : sectionKey === 'molbio' ? 'Molecular Biology' : sectionKey === 'physbio' ? 'Physiology & Biochemistry' : sectionKey === 'ecoevo' ? 'Ecology & Evolution' : 'Biochemistry') :
-    (SUBTOPICS[sectionKey] ? SUBTOPICS[sectionKey].label : sectionKey);
+  const secDisplayLabel=localizedSectionName(sectionKey);
 
   document.getElementById('bc-section').textContent = secDisplayLabel;
   document.getElementById('bc-sub').textContent = subTitle;
@@ -3377,7 +3377,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showAboutPage(){
  document.getElementById('home-page').style.display='none';document.getElementById('task-page').style.display='none';document.getElementById('about-page').style.display='block';
- const count=document.getElementById('about-task-count');if(count)count.textContent=getTaskCatalog().length+'+';
+ const count=document.getElementById('about-task-count');if(count)count.textContent=getTaskCatalog().length+'+';applyAppLanguage();
  setAppNav('about');currentSection=null;currentSubtopic=null;window.scrollTo({top:0,behavior:'smooth'});if(window.innerWidth<=768)closeSidebar();
 }
 
@@ -3407,7 +3407,7 @@ function renderDashboardCourses(){
  grid.innerHTML=Object.entries(SUBTOPICS).filter(([,s])=>s&&s.subtopics).map(([key,section])=>{
   const entries=Object.entries(section.subtopics), total=entries.reduce((n,[,sub])=>n+(sub.tasks||[]).length,0), solved=countSectionSolved(key), meta=dashboardSectionMeta(key);
   const first=entries[0];
-  return '<button class="course-card" onclick="openSubtopic('+JSON.stringify(key)+','+JSON.stringify(first?first[0]:'')+')"><span class="course-card-icon">'+meta[0]+'</span><h3>'+escapeHtml(section.label||key)+'</h3><p>'+meta[1]+'</p><footer><span>'+total+' задач</span><b>'+solved+' решено</b></footer></button>';
+  return '<button class="course-card" onclick="openSubtopic('+JSON.stringify(key)+','+JSON.stringify(first?first[0]:'')+')"><span class="course-card-icon">'+meta[0]+'</span><h3>'+escapeHtml(localizedSectionName(key))+'</h3><p>'+meta[1]+'</p><footer><span>'+total+' '+(LANG==='en'?'problems':LANG==='kk'?'есеп':'задач')+'</span><b>'+solved+' '+ui('solved')+'</b></footer></button>';
  }).join('');
 }
 function updateDashboardStats(){

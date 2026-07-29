@@ -74,7 +74,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-wei
 .norm-low{background:rgba(245,158,11,.1);color:var(--orange)}
 @media(max-width:600px){.hero,.content{padding-left:16px;padding-right:16px}.row{flex-direction:column}}
 </style>
-</head>
+<link rel="stylesheet" href="practice-unified.css">\n</head>
 <body>
 <div class="topbar">
   <div class="topbar-left">
@@ -170,5 +170,5 @@ function checkQ4(){var v=+document.getElementById('q4').value;var ok=Math.abs(v-
 function checkQ5(){var a=+document.getElementById('q5a').value,b=+document.getElementById('q5b').value;var ok=Math.abs(a-22)<=1&&Math.abs(b-23)<=2;if(ok){score++;updateProg();}showResult('r5',ok,ok?'AG=22; expected PaCO₂≈23 mmHg ✓':'AG=140−(108+10)=22. Winters: PaCO₂=1.5×10+8=23±2 mmHg','Real PaCO₂=28 > expected (23) → inadequate compensation = concurrent respiratory acidosis (pneumonia in sepsis?). Diagnosis: HIGH AG METABOLIC ACIDOSIS (lactic/sepsis) + Respiratory acidosis. Treatment: antibiotics, mechanical ventilation, fluids.');}
 
 </script>
-</body>
+<script src="practice-unified.js"></script>\n</body>
 </html>

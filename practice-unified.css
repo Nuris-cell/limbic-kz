@@ -1,0 +1,35 @@
+:root{
+ --bg:#f4f6f9!important;--bg2:#eef1f5!important;--surface:#ffffff!important;--surface2:#f7f8fa!important;
+ --card:#ffffff!important;--border:#dfe3ea!important;--border2:#cfd5df!important;
+ --text:#4f554f!important;--text2:#7a817a!important;--text-dim:#7a817a!important;--text-bright:#1d211d!important;
+ --blue:#5965d8!important;--blue2:#5965d8!important;--accent:#5965d8!important;--green:#168f6a!important;
+}
+html{background:#f4f6f9!important}
+body{background:linear-gradient(180deg,#f8f9fb 0%,#f2f4f7 100%)!important;color:#4f554f!important;font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",sans-serif!important}
+body.limbic-embedded{min-height:100vh!important;padding:0 0 56px!important}
+body.limbic-embedded>.topbar,body.limbic-embedded>.top-nav{display:none!important}
+.topbar,.top-nav{background:rgba(255,255,255,.94)!important;border-bottom:1px solid #e1e4e9!important;box-shadow:0 6px 24px rgba(42,48,62,.05)!important;backdrop-filter:blur(16px)}
+.topbar-logo,.top-nav-title,.logo{color:#1d211d!important}
+.topbar a,.top-nav a,.back-link{color:#5965d8!important;border-color:#d9dcef!important;background:#f5f6fc!important}
+.hero,.page-header{background:linear-gradient(135deg,#ffffff 0%,#f3f5fb 100%)!important;border:1px solid #e0e4eb!important;border-radius:24px!important;box-shadow:0 16px 48px rgba(46,52,76,.07)!important}
+body.limbic-embedded .hero,body.limbic-embedded .page-header{margin-top:24px!important}
+.hero h1,.page-header h1,h1,h2,h3,.card-title,.task-head h2{color:#1d211d!important}
+.hero-sub,.page-header p{color:#697069!important}
+.hero-tag,.chip,.meta-chip,.task-badge,.sq-tag{background:#eef0fb!important;color:#5965d8!important;border-color:#d9dcef!important}
+.content,.container,.wrapper,main{color:#4f554f}
+.card,.task,.task-card,.info-box,.sq,.condition,.explanation,.theory-card,.panel{background:#fff!important;border-color:#dfe3ea!important;box-shadow:0 8px 28px rgba(48,54,72,.055)!important}
+.task-head,.task-card>.task-head{background:#fff!important;border-color:#e4e7ec!important}
+.task-body,.task-inner,.hint-body,.explanation{background:#fff!important;color:#4f554f!important}
+input,select,textarea{background:#f8f9fb!important;color:#1d211d!important;border:1px solid #cfd5df!important;border-radius:10px!important}
+input:focus,select:focus,textarea:focus{border-color:#5965d8!important;box-shadow:0 0 0 3px rgba(89,101,216,.13)!important;outline:none!important}
+button,.btn,.check-btn{border-radius:10px!important;transition:transform .2s ease,box-shadow .2s ease,background .2s ease!important}
+button:hover,.btn:hover,.check-btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(60,67,105,.12)}
+.progress-fill{background:linear-gradient(90deg,#5965d8,#72bea7)!important}
+.progress-bar{background:#e7eaf0!important}
+table{background:#fff!important;border-color:#dfe3ea!important}
+th{background:#f0f2f7!important;color:#343934!important}
+td{border-color:#e3e6eb!important;color:#4f554f!important}
+a{color:#5965d8}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#cdd2dc;border-radius:10px}
+@media(max-width:760px){.hero,.page-header{border-radius:18px!important;margin-left:10px!important;margin-right:10px!important}.content,.container,.wrapper{padding-left:12px!important;padding-right:12px!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}

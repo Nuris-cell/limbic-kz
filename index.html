@@ -374,14 +374,24 @@ body{background:var(--bg);color:var(--text);padding-bottom:0}
 </style>
 <style id="language-fixes">#sidebar.catalog-pulse{box-shadow:inset 0 0 0 2px rgba(232,93,69,.28)}#lang-btn{min-width:46px}</style>
 <script src="kz-conditions.js"></script>
+<script src="en-conditions.js"></script>
 <style id="kz-condition-styles">
 .kz-rich-source{margin-top:14px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);padding:0 12px}.kz-rich-source summary{cursor:pointer;padding:10px 0;color:var(--blue2);font-size:11px;font-weight:700}.kz-rich-source[open]{padding-bottom:12px}.kz-rich-source iframe{max-width:100%}
+</style>
+
+<style id="logo-palette-refresh">
+:root{--bg:#f4f6f8;--bg2:#edf1f4;--surface:#ffffff;--surface2:#f5f7fa;--border:#dfe4e8;--border2:#cdd5dc;--blue:#5965d8;--blue2:#4651c3;--blue-dim:rgba(89,101,216,.11);--blue-dim2:rgba(89,101,216,.06);--green:#16866f;--green-dim:rgba(22,134,111,.11);--orange:#d48a33}
+.app-topbar{background:rgba(250,252,253,.94)!important}.brand-mark{overflow:hidden;background:#fff!important;border:1px solid #d9e0e5}.brand-mark img{width:100%;height:100%;object-fit:cover;display:block}.global-search-trigger{background:#f0f3f6}.topbar-practice{background:var(--blue)!important;border-color:var(--blue)!important}.topbar-practice:hover{background:var(--blue2)!important}.dashboard-primary{background:var(--blue)}.dashboard-primary:hover{background:var(--blue2)}#sidebar{background:#eef2f5!important}.continue-card{background:linear-gradient(135deg,#fff 0%,#f4f3ff 100%)}.dna-orbit{background:linear-gradient(145deg,#dfe2ff,#eff0ff)}.dna-orbit span{color:var(--blue2)}.dna-orbit:before,.dna-orbit:after{border-color:rgba(89,101,216,.3)}.eyebrow,.card-label,.about-link-button,.section-heading button{color:var(--blue2)}.quick-icon.coral{background:#eceeff;color:var(--blue2)}.quick-icon.mint{background:#e5f3ef;color:var(--green)}.about-hero-new{background:linear-gradient(135deg,#242b52,#304a64)}.about-hero-new:after{background:rgba(101,213,190,.16)}
+</style>
+
+<style id="welcome-search-photo">
+.welcome-guide{position:relative;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(330px,.75fr);gap:34px;background:linear-gradient(135deg,#242b52 0%,#304a64 100%);color:#fff;border-radius:26px;padding:32px;margin-bottom:34px;overflow:hidden;box-shadow:0 18px 50px rgba(35,44,83,.16)}.welcome-guide:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-90px;top:-120px;background:rgba(86,211,188,.15)}.welcome-guide.returning{padding:24px 28px}.welcome-guide.returning .welcome-steps{display:none}.welcome-guide.returning{grid-template-columns:1fr}.welcome-close{position:absolute;right:14px;top:12px;z-index:2;border:0;background:rgba(255,255,255,.1);color:#fff;width:30px;height:30px;border-radius:9px;font-size:18px;cursor:pointer}.welcome-main{position:relative;z-index:1}.welcome-badge{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:#8fe2d1;font-weight:800}.welcome-main h1{font-size:clamp(25px,3.2vw,42px);line-height:1.05;letter-spacing:-.04em;margin:12px 0;color:#fff;max-width:700px}.welcome-main p{color:rgba(255,255,255,.72);font-size:13px;line-height:1.65;max-width:650px}.welcome-actions{display:flex;gap:9px;margin-top:22px}.welcome-actions button{border-radius:11px;padding:11px 16px;font:700 11px var(--font);cursor:pointer}.welcome-primary{border:0;background:#fff;color:#242b52}.welcome-secondary{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff}.welcome-steps{position:relative;z-index:1;display:grid;gap:9px;align-content:center}.welcome-steps>div{display:grid;grid-template-columns:32px 1fr;gap:1px 10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:11px}.welcome-steps span{grid-row:1/3;width:30px;height:30px;border-radius:9px;background:rgba(143,226,209,.16);color:#8fe2d1;display:grid;place-items:center;font-size:11px;font-weight:800}.welcome-steps strong{font-size:11px}.welcome-steps small{font-size:9px;color:rgba(255,255,255,.58);margin-top:3px}.task-card.search-target{border-color:var(--blue)!important;box-shadow:0 0 0 4px rgba(89,101,216,.13),0 14px 35px rgba(45,55,120,.12);animation:searchPulse .8s ease 2}.author-card-new:first-child img{object-position:center 28%}@keyframes searchPulse{50%{transform:translateY(-2px)}}@media(max-width:850px){.welcome-guide{grid-template-columns:1fr}.welcome-steps{grid-template-columns:repeat(3,1fr)}.welcome-steps>div{grid-template-columns:28px 1fr}.welcome-steps small{display:none}}@media(max-width:560px){.welcome-guide{padding:24px 19px;border-radius:20px}.welcome-steps{grid-template-columns:1fr}.welcome-steps small{display:block}.welcome-actions{flex-direction:column}.welcome-actions button{width:100%}}
 </style>
 </head>
 <body>
 <nav id="topnav" class="app-topbar">
   <a class="app-brand" onclick="showHome()" aria-label="Limbic KZ — главная">
-    <span class="brand-mark">L</span>
+    <span class="brand-mark"><img src="favicon.png" alt="" width="38" height="38"></span>
     <span class="brand-copy"><strong>Limbic</strong><small>Biology prep</small></span>
   </a>
   <button class="global-search-trigger" onclick="openGlobalSearch()" aria-label="Поиск по задачам">
@@ -520,6 +530,20 @@ body{background:var(--bg);color:var(--text);padding-bottom:0}
 <main id="main">
 <div id="home-page">
   <div class="dashboard-shell">
+    <section class="welcome-guide" id="welcome-guide">
+      <button class="welcome-close" onclick="dismissWelcomeGuide()" aria-label="Закрыть">×</button>
+      <div class="welcome-main">
+        <span class="welcome-badge" id="welcome-badge">Добро пожаловать в Limbic KZ</span>
+        <h1 id="welcome-title">Подготовка к биологическим олимпиадам — понятно и по шагам</h1>
+        <p id="welcome-copy">Здесь можно изучать темы, решать задачи с подсказками и собирать практик-тесты на время. Прогресс сохраняется автоматически.</p>
+        <div class="welcome-actions"><button class="welcome-primary" id="welcome-start" onclick="startWelcomeLearning()">Начать с первой темы →</button><button class="welcome-secondary" id="welcome-test" onclick="openPracticeBuilder()">Собрать тест</button></div>
+      </div>
+      <div class="welcome-steps">
+        <div><span>1</span><strong id="welcome-step1-title">Выберите тему</strong><small id="welcome-step1-copy">Откройте нужный раздел в программе</small></div>
+        <div><span>2</span><strong id="welcome-step2-title">Решайте задачи</strong><small id="welcome-step2-copy">Проверяйте ответы и используйте подсказки</small></div>
+        <div><span>3</span><strong id="welcome-step3-title">Закрепите результат</strong><small id="welcome-step3-copy">Пройдите смешанный тест на время</small></div>
+      </div>
+    </section>
     <section class="dashboard-welcome">
       <div>
         <span class="eyebrow">Персональный план</span>
@@ -584,7 +608,7 @@ body{background:var(--bg);color:var(--text);padding-bottom:0}
       <div class="section-heading"><div><span class="eyebrow">Команда</span><h2>Авторы Limbic KZ</h2></div></div>
       <div class="authors-grid-new">
         <article class="author-card-new">
-          <img src="assets/photo-sailaubek.jpg" alt="Сайлаубек Нурислам" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="author-placeholder" style="display:none">СН</div>
+          <img src="assets/photo-sailaubek-new.svg" alt="Сайлаубек Нурислам" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="author-placeholder" style="display:none">СН</div>
           <span class="author-role-new">Ведущий автор и основатель</span><h3>Сайлаубек Нурислам</h3><p>Разработка платформы, содержание задач и образовательная концепция.</p><a href="https://t.me/Apoprotein" target="_blank" rel="noopener">@Apoprotein ↗</a>
         </article>
         <article class="author-card-new">
@@ -808,6 +832,33 @@ const KZ_BASE={
  breadHome:'Басты бет',answerLabel:'Сіздің жауабыңыз',placeholder:'Жауапты енгізіңіз (сан, формула...)',checkBtn:'Тексеру',showHints:'Кеңестерді көрсету ↓',feedOk:'✓ Дұрыс! Жарайсыз.',feedWrong:'Әзірге дұрыс емес. Қайта байқап көріңіз.',hint:'Кеңес',solution:'✅ Толық шешімі',dRegional:'Облыстық',dNational:'Республикалық',dIBO:'IBO',dPractical:'Практикум'
 };
 T.kk=Object.assign({},T.ru,KZ_BASE);
+
+
+const WELCOME_I18N={
+ ru:{badge:'Добро пожаловать в Limbic KZ',title:'Подготовка к биологическим олимпиадам — понятно и по шагам',copy:'Здесь можно изучать темы, решать задачи с подсказками и собирать практик-тесты на время. Прогресс сохраняется автоматически.',start:'Начать с первой темы →',test:'Собрать тест',s1:'Выберите тему',c1:'Откройте нужный раздел в программе',s2:'Решайте задачи',c2:'Проверяйте ответы и используйте подсказки',s3:'Закрепите результат',c3:'Пройдите смешанный тест на время',close:'Закрыть'},
+ kk:{badge:'Limbic KZ-ке қош келдіңіз',title:'Биология олимпиадасына түсінікті әрі қадамдық дайындық',copy:'Мұнда тақырыптарды оқып, кеңестермен есептер шығарып, уақытқа практикалық тест құрастыруға болады. Прогресс автоматты түрде сақталады.',start:'Бірінші тақырыптан бастау →',test:'Тест құрастыру',s1:'Тақырыпты таңдаңыз',c1:'Бағдарламадан қажетті бөлімді ашыңыз',s2:'Есептерді шешіңіз',c2:'Жауаптарды тексеріп, кеңестерді қолданыңыз',s3:'Нәтижені бекітіңіз',c3:'Уақытқа аралас тесттен өтіңіз',close:'Жабу'},
+ en:{badge:'Welcome to Limbic KZ',title:'A clear, step-by-step path to biology olympiads',copy:'Study topics, solve problems with hints, and build timed practice tests. Your progress is saved automatically.',start:'Start with the first topic →',test:'Build a test',s1:'Choose a topic',c1:'Open the section you need in the curriculum',s2:'Solve problems',c2:'Check answers and use step-by-step hints',s3:'Reinforce your skills',c3:'Take a mixed timed practice test',close:'Close'}
+};
+function applyWelcomeLanguage(){
+ const d=WELCOME_I18N[LANG]||WELCOME_I18N.ru,map={'welcome-badge':'badge','welcome-title':'title','welcome-copy':'copy','welcome-start':'start','welcome-test':'test','welcome-step1-title':'s1','welcome-step1-copy':'c1','welcome-step2-title':'s2','welcome-step2-copy':'c2','welcome-step3-title':'s3','welcome-step3-copy':'c3'};
+ Object.entries(map).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=d[key]});
+ const close=document.querySelector('.welcome-close');if(close)close.setAttribute('aria-label',d.close);
+}
+function dismissWelcomeGuide(){const guide=document.getElementById('welcome-guide');if(guide)guide.style.display='none';try{localStorage.setItem('limbic_welcome_seen','1')}catch(e){}}
+function startWelcomeLearning(){dismissWelcomeGuide();openSubtopic('genetics','hw')}
+function initializeWelcomeGuide(){applyWelcomeLanguage();try{if(localStorage.getItem('limbic_welcome_seen')==='1'){const guide=document.getElementById('welcome-guide');if(guide)guide.classList.add('returning')}}catch(e){}}
+
+const EXT_I18N={
+ ru:{dashboardAbout:'Полные условия, пошаговые подсказки, виртуальные лаборатории и задачи уровня областных, республиканских и международных олимпиад — в одном рабочем пространстве.',aboutLead:'Limbic KZ — бесплатная образовательная платформа для школьников Казахстана. Наша цель — собрать качественные задачи, полные условия, понятные разборы и практические симуляции в одном удобном месте.',tasks:'задач',directions:'направлений',students:'для учеников',founder:'Ведущий автор и основатель',coauthor:'Соавтор',cofounder:'Сооснователь',resultTitle:'Тест завершён',resultPoints:'баллов',authTitle:'Личный кабинет',authCopy:'Синхронизируйте прогресс между телефоном и компьютером.',signIn:'Вход',signup:'Регистрация',name:'Имя',password:'Пароль',forgot:'Забыли пароль?'},
+ kk:{dashboardAbout:'Толық шарттар, қадамдық кеңестер, виртуалды зертханалар және облыстық, республикалық, халықаралық олимпиада есептері — бір оқу кеңістігінде.',aboutLead:'Limbic KZ — Қазақстан оқушыларына арналған тегін білім беру платформасы. Мақсатымыз — сапалы есептерді, толық шарттарды, түсінікті талдаулар мен практикалық симуляцияларды бір ыңғайлы жерде жинау.',tasks:'есеп',directions:'бағыт',students:'оқушылар үшін',founder:'Жетекші автор және негізін қалаушы',coauthor:'Бірлескен автор',cofounder:'Бірлескен негізін қалаушы',resultTitle:'Тест аяқталды',resultPoints:'ұпай',authTitle:'Жеке кабинет',authCopy:'Прогресті телефон мен компьютер арасында синхрондаңыз.',signIn:'Кіру',signup:'Тіркелу',name:'Аты',password:'Құпиясөз',forgot:'Құпиясөзді ұмыттыңыз ба?'},
+ en:{dashboardAbout:'Complete problem statements, step-by-step hints, virtual labs, and regional, national, and international olympiad problems — all in one learning workspace.',aboutLead:'Limbic KZ is a free learning platform for students in Kazakhstan. Our goal is to bring high-quality problems, complete statements, clear solutions, and practical simulations together in one convenient place.',tasks:'problems',directions:'directions',students:'free for students',founder:'Lead author and founder',coauthor:'Co-author',cofounder:'Co-founder',resultTitle:'Test completed',resultPoints:'points',authTitle:'Account',authCopy:'Sync your progress between your phone and computer.',signIn:'Sign in',signup:'Register',name:'Name',password:'Password',forgot:'Forgot password?'}
+};
+function extUi(key){const d=EXT_I18N[LANG]||EXT_I18N.ru;return d[key]||EXT_I18N.ru[key]||key}
+function applyExtendedLanguage(){
+ const pairs=[['.dashboard-about>p','dashboardAbout'],['.about-hero-new>p','aboutLead'],['.about-facts div:nth-child(1) span','tasks'],['.about-facts div:nth-child(2) span','directions'],['.about-facts div:nth-child(3) span','students'],['.author-card-new:nth-child(1) .author-role-new','founder'],['.author-card-new:nth-child(2) .author-role-new','coauthor'],['.author-card-new:nth-child(3) .author-role-new','cofounder'],['#practice-result-title','resultTitle'],['.result-score span','resultPoints'],['#auth-title','authTitle'],['#auth-title + .limbic-dialog-copy','authCopy'],['#auth-tab-login','signIn'],['#auth-tab-signup','signup'],['#auth-name-field label','name'],['label[for="auth-password"]','password'],['.auth-link','forgot']];
+ pairs.forEach(([sel,key])=>{const el=document.querySelector(sel);if(el)el.textContent=extUi(key)});
+}
+
 const APP_I18N={
  ru:{search:'Найти тему или задачу',practice:'Практика',login:'Войти',workspace:'Моё обучение',overview:'Обзор',bank:'Банк задач',practiceTest:'Практик-тест',progress:'Прогресс',about:'О проекте',program:'Программа',plan:'Персональный план',ready:'Готовы продолжить?',welcome:'Решайте олимпиадные задачи последовательно или соберите короткий тест по нужному разделу.',continueLearning:'Продолжить обучение',continue:'Продолжить →',next:'Следующий шаг',yourProgress:'Ваш прогресс',solved:'решено',saved:'Прогресс сохраняется автоматически',quickPractice:'Быстрая практика',quickPracticeSub:'Случайный тест на 10–20 задач',bankSub:'Поиск по темам и условиям',sync:'Синхронизация',syncSub:'Продолжайте на другом устройстве',sections:'Разделы',choose:'Выберите направление',allProgram:'Вся программа',chaos:'Подготовка без хаоса',aboutAuthors:'О проекте и авторах →',back:'← Вернуться к обзору',aboutEyebrow:'О проекте',aboutTitle:'Мы делаем олимпиадную биологию понятнее',team:'Команда',authors:'Авторы Limbic KZ',approach:'Наш подход',learnPractice:'Учиться через практику',buildTest:'Собрать практик-тест',mixHelp:'Смешайте любые темы, задайте количество заданий и время.',testTopics:'Темы теста',selectAll:'Выбрать все',clear:'Сбросить',taskCount:'Количество задач',timeMinutes:'Время, минут',startTest:'Начать тест →',cancel:'Отмена',searchPlaceholder:'Тема, термин или фраза из условия…',searchEmpty:'Введите хотя бы два символа — поиск пройдёт по всем задачам.',newTest:'Новый тест',review:'Посмотреть ответы',finish:'Завершить',exam:'Экзамен',points:'баллов'},
  kk:{search:'Тақырыпты немесе есепті табу',practice:'Практика',login:'Кіру',workspace:'Менің оқуым',overview:'Шолу',bank:'Есептер банкі',practiceTest:'Практикалық тест',progress:'Прогресс',about:'Жоба туралы',program:'Бағдарлама',plan:'Жеке жоспар',ready:'Жалғастыруға дайынсыз ба?',welcome:'Олимпиадалық есептерді ретімен шешіңіз немесе қажетті бөлімдерден қысқа тест құрастырыңыз.',continueLearning:'Оқуды жалғастыру',continue:'Жалғастыру →',next:'Келесі қадам',yourProgress:'Сіздің прогресіңіз',solved:'шешілді',saved:'Прогресс автоматты түрде сақталады',quickPractice:'Жылдам практика',quickPracticeSub:'10–20 есептен кездейсоқ тест',bankSub:'Тақырыптар мен шарттар бойынша іздеу',sync:'Синхрондау',syncSub:'Басқа құрылғыда жалғастырыңыз',sections:'Бөлімдер',choose:'Бағытты таңдаңыз',allProgram:'Барлық бағдарлама',chaos:'Жүйелі дайындық',aboutAuthors:'Жоба және авторлар туралы →',back:'← Шолуға оралу',aboutEyebrow:'Жоба туралы',aboutTitle:'Біз олимпиадалық биологияны түсініктірек етеміз',team:'Команда',authors:'Limbic KZ авторлары',approach:'Біздің тәсіл',learnPractice:'Практика арқылы үйрену',buildTest:'Практикалық тест құрастыру',mixHelp:'Кез келген тақырыптарды араластырып, тапсырма саны мен уақытты белгілеңіз.',testTopics:'Тест тақырыптары',selectAll:'Барлығын таңдау',clear:'Тазарту',taskCount:'Тапсырмалар саны',timeMinutes:'Уақыт, минут',startTest:'Тестті бастау →',cancel:'Бас тарту',searchPlaceholder:'Тақырып, термин немесе есеп шарты…',searchEmpty:'Кемінде екі таңба енгізіңіз — іздеу барлық есеп бойынша орындалады.',newTest:'Жаңа тест',review:'Жауаптарды қарау',finish:'Аяқтау',exam:'Емтихан',points:'ұпай'},
@@ -819,9 +870,13 @@ function applyAppLanguage(){
  [['.global-search-trigger .search-label','search'],['#topnav .topbar-practice','practice'],['.sidebar-kicker','workspace'],['.sidebar-primary[data-view="home"] b','overview'],['.sidebar-primary:nth-of-type(2) b','bank'],['.sidebar-primary:nth-of-type(3) b','practiceTest'],['.sidebar-primary:nth-of-type(4) b','progress'],['.sidebar-primary[data-view="about"] b','about'],['.sidebar-catalog-title','program'],['.dashboard-welcome .eyebrow','plan'],['#dashboard-greeting','ready'],['.dashboard-welcome p','welcome'],['.continue-card .card-label','continueLearning'],['#continue-button','continue'],['.continue-visual small','next'],['.progress-card .card-label','yourProgress'],['.progress-ring small','solved'],['.progress-ring-wrap p','saved'],['.quick-action:nth-child(1) b','quickPractice'],['.quick-action:nth-child(1) small','quickPracticeSub'],['.quick-action:nth-child(2) b','bank'],['.quick-action:nth-child(2) small','bankSub'],['.quick-action:nth-child(3) b','sync'],['.quick-action:nth-child(3) small','syncSub'],['.dashboard-section .section-heading .eyebrow','sections'],['.dashboard-section .section-heading h2','choose'],['.dashboard-section .section-heading button','allProgram'],['.dashboard-about h2','chaos'],['.about-link-button','aboutAuthors'],['.back-dashboard','back'],['.about-hero-new>.eyebrow','aboutEyebrow'],['.about-hero-new h1','aboutTitle'],['.authors-section-new .eyebrow','team'],['.authors-section-new h2','authors'],['.about-values .eyebrow','approach'],['.about-values h2','learnPractice'],['#practice-title','buildTest'],['#practice-title + .limbic-dialog-copy','mixHelp'],['.practice-field-label>span:first-child','testTopics'],['.practice-field label[for="practice-count"]','taskCount'],['.practice-field label[for="practice-minutes"]','timeMinutes'],['#practice-dialog .practice-actions .btn-ghost','cancel'],['#practice-dialog .practice-actions .btn-primary','startTest'],['#practice-result-dialog .practice-actions .btn-ghost','review'],['#practice-result-dialog .practice-actions .btn-primary','newTest'],['#practice-session-bar>div:first-child span','exam'],['#practice-session-bar>button','finish']].forEach(x=>put(x[0],x[1]));
  const bs=document.querySelectorAll('.practice-field-label button');if(bs[0])bs[0].textContent=ui('selectAll');if(bs[1])bs[1].textContent=ui('clear');
  const input=document.getElementById('global-search-input');if(input)input.placeholder=ui('searchPlaceholder');
+ const searchButton=document.querySelector('.global-search-trigger');if(searchButton)searchButton.setAttribute('aria-label',ui('search'));
+ const languageButton=document.getElementById('lang-btn');if(languageButton)languageButton.setAttribute('aria-label',LANG==='en'?'Change language':LANG==='kk'?'Тілді ауыстыру':'Сменить язык');
  const empty=document.querySelector('#global-search-results .search-empty');if(empty)empty.textContent=ui('searchEmpty');
  if(!limbicUser){const a=document.getElementById('account-btn');if(a)a.textContent=ui('login')}
  renderDashboardCourses();
+ applyExtendedLanguage();
+ applyWelcomeLanguage();
 }
 function localizedSectionName(key){
  const en={genetics:'Population Genetics',stats:'Statistics',biochemistry:'Biochemistry',olympiad2026:'Republican Olympiad 2026',molbio:'Molecular Biology',physbio:'Physiology and Biochemistry',ecoevo:'Ecology and Evolution',anatomy:'Anatomy and Physiology',botany:'Botany',vsosh:'Olympiad Archive'};
@@ -3004,11 +3059,13 @@ function renderTask(task, sectionKey, subKey, idx) {
   }).join('');
 
   let conditionHtml = buildCompleteCondition(applied, sectionKey, subKey, idx);
-  if(LANG==='kk'&&window.LIMBIC_KZ_CONDITIONS&&window.LIMBIC_KZ_CONDITIONS[taskId]){
+  const completeTranslation=LANG==='en'&&window.LIMBIC_EN_CONDITIONS?window.LIMBIC_EN_CONDITIONS[taskId]:LANG==='kk'&&window.LIMBIC_KZ_CONDITIONS?window.LIMBIC_KZ_CONDITIONS[taskId]:null;
+  if(completeTranslation){
     const originalRich=conditionHtml;
-    conditionHtml=escapeHtml(window.LIMBIC_KZ_CONDITIONS[taskId]).replace(/\n/g,'<br>');
+    conditionHtml=escapeHtml(completeTranslation).replace(/\n/g,'<br>');
     if(/<(?:table|iframe|svg)|vlab-/i.test(originalRich)){
-      conditionHtml+='<details class="kz-rich-source"><summary>Кесте, формула немесе интерактивті материал</summary>'+originalRich+'</details>';
+      const richLabel=LANG==='en'?'Table, formula, or interactive material':'Кесте, формула немесе интерактивті материал';
+      conditionHtml+='<details class="kz-rich-source"><summary>'+richLabel+'</summary>'+originalRich+'</details>';
     }
   }
   if (sectionKey === 'biochemistry' && subKey === 'titration' && idx === 0) {
@@ -3059,7 +3116,7 @@ function toggleLang() {
  const order=['ru','kk','en'];LANG=order[(order.indexOf(LANG)+1)%order.length];
  localStorage.setItem('limbic_lang',LANG);document.documentElement.lang=LANG;
  document.getElementById('lang-btn').textContent=LANG==='ru'?'KZ':LANG==='kk'?'EN':'RU';
- updateStaticText();renderHomeExtras();applyAppLanguage();
+ updateStaticText();renderHomeExtras();applyAppLanguage();updateDashboardStats();
  if(currentSection&&currentSubtopic)openSubtopic(currentSection,currentSubtopic);
 }
 
@@ -3397,14 +3454,17 @@ function getTaskCatalog(){
  Object.entries(SUBTOPICS).forEach(([sectionKey,section])=>{
   if(!section||!section.subtopics)return;
   Object.entries(section.subtopics).forEach(([subKey,sub])=>{
-   (sub.tasks||[]).forEach((task,index)=>{const id=sectionKey+'_'+subKey+'_'+index;const kz=LANG==='kk'&&window.LIMBIC_KZ_CONDITIONS&&window.LIMBIC_KZ_CONDITIONS[id];rows.push({sectionKey,subKey,index,section:localizedSectionName(sectionKey),subtopic:localizedSubtopicName(sectionKey,subKey),condition:kz||task.condition||''})});
+   (sub.tasks||[]).forEach((task,index)=>{const id=sectionKey+'_'+subKey+'_'+index;const translated=LANG==='en'&&window.LIMBIC_EN_CONDITIONS?window.LIMBIC_EN_CONDITIONS[id]:LANG==='kk'&&window.LIMBIC_KZ_CONDITIONS?window.LIMBIC_KZ_CONDITIONS[id]:null;rows.push({sectionKey,subKey,index,section:localizedSectionName(sectionKey),subtopic:localizedSubtopicName(sectionKey,subKey),condition:translated||task.condition||''})});
   });
  });
  return rows;
 }
 function dashboardSectionMeta(key){
  const meta={genetics:['🧬','Наследование, популяции и эволюционные процессы'],stats:['▥','Статистические критерии и анализ данных'],biochemistry:['⚗','Эксперименты, ферменты и обмен веществ'],molbio:['⌁','ДНК, экспрессия генов и биотехнологии'],physbio:['♡','Физиология систем и биохимические расчёты'],ecoevo:['🌿','Экология, популяции и эволюция'],anatomy:['◎','Анатомия и физиология человека'],olympiad2026:['🏆','Задачи республиканской олимпиады'],botany:['✣','Физиология и систематика растений'],vsosh:['★','Архив олимпиадных практических туров']};
- return meta[key]||['•','Олимпиадные задачи и практические навыки'];
+ const item=meta[key]||['•','Олимпиадные задачи и практические навыки'];
+ const en={genetics:'Inheritance, populations, and evolutionary processes',stats:'Statistical tests and data analysis',biochemistry:'Experiments, enzymes, and metabolism',olympiad2026:'Republican olympiad problems',molbio:'DNA, gene expression, and biotechnology',physbio:'Systems physiology and biochemical calculations',ecoevo:'Ecology, populations, and evolution',anatomy:'Human anatomy and physiology',botany:'Plant physiology and systematics',vsosh:'Archived olympiad practical rounds'};
+ const kk={genetics:'Тұқымқуалау, популяциялар және эволюциялық үдерістер',stats:'Статистикалық критерийлер және деректерді талдау',biochemistry:'Тәжірибелер, ферменттер және зат алмасу',olympiad2026:'Республикалық олимпиада есептері',molbio:'ДНҚ, ген экспрессиясы және биотехнология',physbio:'Жүйелер физиологиясы және биохимиялық есептеулер',ecoevo:'Экология, популяциялар және эволюция',anatomy:'Адам анатомиясы мен физиологиясы',botany:'Өсімдіктер физиологиясы және жүйеленуі',vsosh:'Олимпиаданың практикалық турларының мұрағаты'};
+ return [item[0],LANG==='en'?(en[key]||item[1]):LANG==='kk'?(kk[key]||item[1]):item[1]];
 }
 function countSectionSolved(sectionKey){
  let count=0;
@@ -3421,17 +3481,26 @@ function renderDashboardCourses(){
   return '<button class="course-card" onclick="openSubtopic('+JSON.stringify(key)+','+JSON.stringify(first?first[0]:'')+')"><span class="course-card-icon">'+meta[0]+'</span><h3>'+escapeHtml(localizedSectionName(key))+'</h3><p>'+meta[1]+'</p><footer><span>'+total+' '+(LANG==='en'?'problems':LANG==='kk'?'есеп':'задач')+'</span><b>'+solved+' '+ui('solved')+'</b></footer></button>';
  }).join('');
 }
+function localizedSubtopicDescription(sectionKey,subKey){
+ const sub=SUBTOPICS[sectionKey]&&SUBTOPICS[sectionKey].subtopics[subKey],en=TRANS_EN[sectionKey+'.'+subKey];
+ if(LANG==='en')return (en&&en.desc)||'Continue with problems from this topic.';
+ if(LANG==='kk')return 'Осы тақырыптағы есептерді шешуді жалғастырыңыз.';
+ return (sub&&sub.desc)||'Продолжите решать задачи по этой теме.';
+}
 function updateDashboardStats(){
  const catalog=getTaskCatalog(),total=catalog.length,solved=Math.min(solvedTasks.size,total),percent=total?Math.round(solved/total*100):0;
- const map={'dashboard-solved':solved,'dashboard-total':'из '+total+' задач','dashboard-percent':percent+'%','sidebar-progress-count':solved};
+ const totalText=LANG==='en'?'of '+total+' problems':LANG==='kk'?total+' есептің ішінен':'из '+total+' задач';
+ const map={'dashboard-solved':solved,'dashboard-total':totalText,'dashboard-percent':percent+'%','sidebar-progress-count':solved};
  Object.entries(map).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.textContent=value;});
  const bar=document.getElementById('dashboard-progress-bar');if(bar)bar.style.width=percent+'%';
- const ring=document.getElementById('dashboard-ring');if(ring)ring.style.background='conic-gradient(var(--green) '+(percent*3.6)+'deg,#ecebe5 0deg)';
+ const ring=document.getElementById('dashboard-ring');if(ring)ring.style.background='conic-gradient(var(--green) '+(percent*3.6)+'deg,#e4e8ec 0deg)';
  const greeting=document.getElementById('dashboard-greeting');
- if(greeting)greeting.textContent=limbicUser?'С возвращением!':'Готовы продолжить?';
- const saved=localStorage.getItem('limbic_last_topic');
- if(saved){try{const last=JSON.parse(saved),section=SUBTOPICS[last.sectionKey],sub=section&&section.subtopics[last.subKey];if(sub){document.getElementById('continue-title').textContent=sub.title;document.getElementById('continue-desc').textContent=sub.desc||'Продолжите с последней открытой темы.';document.getElementById('continue-button').dataset.section=last.sectionKey;document.getElementById('continue-button').dataset.sub=last.subKey;}}catch(e){}}
+ if(greeting)greeting.textContent=limbicUser?(LANG==='en'?'Welcome back!':LANG==='kk'?'Қайта оралғаныңызға қуаныштымыз!':'С возвращением!'):ui('ready');
+ let last={sectionKey:'genetics',subKey:'hw'};const saved=localStorage.getItem('limbic_last_topic');if(saved){try{last=JSON.parse(saved)}catch(e){}}
+ const section=SUBTOPICS[last.sectionKey],sub=section&&section.subtopics[last.subKey];
+ if(sub){document.getElementById('continue-title').textContent=localizedSubtopicName(last.sectionKey,last.subKey);document.getElementById('continue-desc').textContent=localizedSubtopicDescription(last.sectionKey,last.subKey);document.getElementById('continue-button').dataset.section=last.sectionKey;document.getElementById('continue-button').dataset.sub=last.subKey}
  renderDashboardCourses();
+ applyExtendedLanguage();
 }
 function continueLearning(){
  const btn=document.getElementById('continue-button');
@@ -3453,20 +3522,20 @@ function closeGlobalSearch(){
 function escapeHtml(value){const el=document.createElement('div');el.textContent=String(value||'');return el.innerHTML}
 function runGlobalSearch(query){
  const box=document.getElementById('global-search-results'),q=String(query||'').trim().toLocaleLowerCase('ru');
- if(q.length<2){box.innerHTML='<div class="search-empty">Введите хотя бы два символа — поиск пройдёт по всем задачам.</div>';return}
+ if(q.length<2){box.innerHTML='<div class="search-empty">'+escapeHtml(ui('searchEmpty'))+'</div>';return}
  const found=getTaskCatalog().filter(item=>(item.section+' '+item.subtopic+' '+item.condition).toLocaleLowerCase('ru').includes(q)).slice(0,60);
- if(!found.length){box.innerHTML='<div class="search-empty">Ничего не найдено. Попробуйте более короткий запрос.</div>';return}
- box.innerHTML=found.map(item=>'<button class="search-result" onclick="openSearchResult('+JSON.stringify(item.sectionKey)+','+JSON.stringify(item.subKey)+','+item.index+')"><span><h4>'+escapeHtml(item.subtopic)+' · задача '+(item.index+1)+'</h4><p>'+escapeHtml(item.condition)+'</p></span><em>'+escapeHtml(item.section)+'</em></button>').join('');
+ if(!found.length){box.innerHTML='<div class="search-empty">'+(LANG==='en'?'Nothing found. Try a shorter query.':LANG==='kk'?'Ештеңе табылмады. Қысқаша сұрау енгізіңіз.':'Ничего не найдено. Попробуйте более короткий запрос.')+'</div>';return}
+ box.innerHTML=found.map(item=>'<button class="search-result" data-section="'+escapeHtml(item.sectionKey)+'" data-subtopic="'+escapeHtml(item.subKey)+'" data-index="'+item.index+'" onclick="openSearchResult(this.dataset.section,this.dataset.subtopic,Number(this.dataset.index))"><span><h4>'+escapeHtml(item.subtopic)+' · '+(LANG==='en'?'problem ':LANG==='kk'?'есеп ':'задача ')+(item.index+1)+'</h4><p>'+escapeHtml(item.condition)+'</p></span><em>'+escapeHtml(item.section)+'</em></button>').join('');
 }
 function openSearchResult(sectionKey,subKey,index){
  closeGlobalSearch();openSubtopic(sectionKey,subKey);
- setTimeout(()=>{const cards=document.querySelectorAll('#tasks-container .task-card'),card=cards[index];if(card){card.scrollIntoView({behavior:'smooth',block:'center'});const header=card.querySelector('.task-header'),body=card.querySelector('.task-body');if(header&&body&&!body.classList.contains('open'))toggleTask(header);}},100);
+ setTimeout(()=>{const card=document.getElementById('card_'+sectionKey+'_'+subKey+'_'+index);if(!card)return;card.classList.add('search-target');card.scrollIntoView({behavior:'smooth',block:'center'});const header=card.querySelector('.task-header'),body=card.querySelector('.task-body');if(header&&body&&!body.classList.contains('open'))toggleTask(header);setTimeout(()=>card.classList.remove('search-target'),2200)},120);
 }
 document.addEventListener('keydown',event=>{
  if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){event.preventDefault();openGlobalSearch()}
  if(event.key==='Escape')closeGlobalSearch();
 });
-document.addEventListener('DOMContentLoaded',()=>{updateDashboardStats();setAppNav('home')});
+document.addEventListener('DOMContentLoaded',()=>{updateDashboardStats();setAppNav('home');initializeWelcomeGuide()});
 
   // inline lab helpers — see renderTask for embedded simulators
 

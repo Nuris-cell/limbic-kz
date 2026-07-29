@@ -2843,17 +2843,25 @@ function referencedTaskIndexes(condition, currentIndex) {
   if(/из предыдущей задачи|те же параметры|та же популяция|те же данные|предыдущего задания/i.test(text))indexes.push(currentIndex-1);
   return Array.from(new Set(indexes.filter(index=>Number.isInteger(index)&&index>=0&&index<currentIndex)));
 }
+
+function promotedDataHint(task) {
+  const hints=task&&Array.isArray(task.hints)?task.hints:[];
+  const first=hints[0];
+  if(!first||first.solution||!/данн|исходн|dataset|given/i.test(String(first.label||'')))return '';
+  return '<div class="context-card"><div class="context-card-title">Исходные данные</div>'+String(first.body||'')+'</div>';
+}
+
 function buildCompleteCondition(applied, sectionKey, subKey, idx) {
   let condition=applied.condition||'';
   const section=SUBTOPICS[sectionKey];
   const sub=section&&section.subtopics?section.subtopics[subKey]:null;
   const refs=referencedTaskIndexes(condition,idx);
-  let context='';
+  let context=promotedDataHint(applied);
   if(sub&&refs.length){
     const blocks=refs.map(refIndex=>{
       const source=sub.tasks[refIndex];if(!source)return '';
       const translated=applyEN(source,sectionKey,subKey,refIndex);
-      return '<div class="context-card"><div class="context-card-title">Полные исходные данные из '+(translated.num||('задачи '+(refIndex+1)))+'</div><div class="task-condition">'+translated.condition+'</div></div>';
+      return '<div class="context-card"><div class="context-card-title">Полные исходные данные из '+(translated.num||('задачи '+(refIndex+1)))+'</div><div class="task-condition">'+translated.condition+'</div>'+promotedDataHint(translated)+'</div>'; 
     }).filter(Boolean);
     context=blocks.join('');
   }

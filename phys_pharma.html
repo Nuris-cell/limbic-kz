@@ -74,7 +74,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-wei
 .norm-low{background:rgba(245,158,11,.1);color:var(--orange)}
 @media(max-width:600px){.hero,.content{padding-left:16px;padding-right:16px}.row{flex-direction:column}}
 </style>
-</head>
+<link rel="stylesheet" href="practice-unified.css">\n</head>
 <body>
 <div class="topbar">
   <div class="topbar-left">
@@ -204,5 +204,5 @@ function checkQ4(){var v=+document.getElementById('q4').value;var ok=Math.abs(v-
 function checkQ5(){var v=+document.getElementById('q5').value;var ok=Math.abs(v-60)<=5;if(ok){score++;updateProg();}showResult('r5',ok,ok?'60 В/с ✓ — критически низко!':'400 × (1−0.85) = 400 × 0.15 = 60 В/с','60 В/с > порога (50 В/с) — ПД ещё генерируется, но на грани. При 85% блокаде дыхательные мышцы работают с трудом. При 90% блокаде — остановка дыхания. Лечение: ИВЛ (антидота нет!). Ситуация с фугу — это именно такая картина.');}
 
 </script>
-</body>
+<script src="practice-unified.js"></script>\n</body>
 </html>

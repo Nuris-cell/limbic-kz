@@ -2475,7 +2475,8 @@ function applyEN(task, sectionKey, subKey, idx) {
 }
 
 // ═══════ STATE ═══════
-const solvedTasks = new Set();
+const solvedTasks = new Set((() => { try { return JSON.parse(localStorage.getItem('limbic_solved_tasks') || '[]'); } catch (e) { return []; } })());
+function persistSolvedTasks(){ try { localStorage.setItem('limbic_solved_tasks', JSON.stringify([...solvedTasks])); } catch(e){} }
 
 // ═══════ TITRATION LAB — random triplicates per subtopic visit ═══════
 function rollTitrationInstance() {
@@ -2544,6 +2545,39 @@ function lipaseLabIframeSrc() {
   }
 }
 
+
+// Normalize mathematically equivalent answers: 0.7, 0,7, p=0.7, 70%.
+function normalizeAnswerText(value) {
+  return String(value ?? '').toLowerCase()
+    .replace(/[−–—]/g, '-').replace(/,/g, '.')
+    .replace(/\s+/g, '').replace(/[;]+$/g, '');
+}
+function extractAnswerNumbers(value) {
+  const matches = normalizeAnswerText(value).match(/[-+]?\d*\.?\d+(?:e[-+]?\d+)?%?/g) || [];
+  return matches.map(token => {
+    const percent = token.endsWith('%');
+    const number = Number.parseFloat(token.replace('%',''));
+    return { value: percent ? number / 100 : number, percent };
+  }).filter(item => Number.isFinite(item.value));
+}
+function answersEquivalent(userValue, expectedValue) {
+  const user = normalizeAnswerText(userValue);
+  const expected = normalizeAnswerText(expectedValue);
+  if (user === expected) return true;
+  const stripLabel = value => value
+    .replace(/^(?:p|q|r|f|x|y|z|χ2|χ²|chi2|ответ|answer)[=:≈~]?/i, '')
+    .replace(/[()\[\]]/g, '');
+  if (stripLabel(user) === stripLabel(expected)) return true;
+  const userNums = extractAnswerNumbers(user);
+  const expectedNums = extractAnswerNumbers(expected);
+  if (!userNums.length || userNums.length !== expectedNums.length) return false;
+  return userNums.every((item,index) => {
+    const target=expectedNums[index];
+    const tolerance=Math.max(1e-6,Math.abs(target.value)*0.005);
+    return Math.abs(item.value-target.value)<=tolerance;
+  });
+}
+
 // ═══════ ANSWER CHECKING ═══════
 function checkAnswer(taskId, hintsId, inputId, feedbackId) {
   const input = document.getElementById(inputId);
@@ -2571,7 +2605,7 @@ function checkAnswer(taskId, hintsId, inputId, feedbackId) {
   }
   const task = SUBTOPICS[section].subtopics[subKey].tasks[idx];
   const answers = task.answer || [];
-  let isCorrect = answers.some(a => val === a.toString().toLowerCase());
+  let isCorrect = answers.some(a => answersEquivalent(rawVal, a));
   if (taskId === 'biochemistry_titration_0' && window.__limbicTitration) {
     const num = parseFloat(rawVal.replace(',', '.'));
     if (!Number.isNaN(num)) {
@@ -2607,6 +2641,7 @@ function checkAnswer(taskId, hintsId, inputId, feedbackId) {
     feedback.className = 'answer-feedback correct';
     feedback.textContent = t.feedOk;
     solvedTasks.add(taskId);
+    persistSolvedTasks();
     const card = document.getElementById('card_' + taskId);
     if (card) {
       card.classList.add('solved');

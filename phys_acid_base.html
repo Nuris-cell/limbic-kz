@@ -74,7 +74,7 @@ label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-wei
 .norm-low{background:rgba(245,158,11,.1);color:var(--orange)}
 @media(max-width:600px){.hero,.content{padding-left:16px;padding-right:16px}.row{flex-direction:column}}
 </style>
-</head>
+<link rel="stylesheet" href="practice-unified.css">\n</head>
 <body>
 <div class="topbar">
   <div class="topbar-left">
@@ -188,5 +188,5 @@ function checkQ4(){var v=+document.getElementById('q4').value;var ok=Math.abs(v-
 function checkQ5(){var a=+document.getElementById('q5a').value;var b=+document.getElementById('q5b').value;var ok=Math.abs(a-22)<=1&&Math.abs(b-23)<=2;if(ok){score++;updateProg();}showResult('r5',ok,ok?'AG=22; ожидаемый PaCO₂≈23 мм рт.ст. ✓':'AG=140−(108+10)=22. Winters: PaCO₂=1.5×10+8=23±2 мм рт.ст.','Реальный PaCO₂=28 > ожидаемого (23) → компенсация недостаточна = сопутствующий дыхательный ацидоз (пневмония при сепсисе?). Диагноз: МЕТАБОЛИЧЕСКИЙ АЦИДОЗ С ВЫСОКИМ AG (лактат/сепсис) + Дыхательный ацидоз. Лечение: антибиотики, ИВЛ, жидкость.');}
 
 </script>
-</body>
+<script src="practice-unified.js"></script>\n</body>
 </html>

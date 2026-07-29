@@ -6,9 +6,13 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-Q6V6R37FY9');</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Limbic KZ — Олимпиадный задачник</title>
-<meta name="description" content="Сайт для подготовки к практической части олимпиады по биологии. Уровни сложности: Областной, ЕНТ, IBO." />
-<meta property="og:title" content="Limbic KZ — Олимпиадный задачник" />
+<title>Limbic KZ — биология: олимпиадные задачи и практические тесты</title>
+<meta name="description" content="Limbic KZ — бесплатная платформа подготовки к олимпиадам по биологии: задачи по генетике, статистике, биохимии, физиологии, практические тесты и виртуальные лаборатории." />
+<meta name="keywords" content="Limbic KZ, олимпиада по биологии, задачи по биологии, подготовка к олимпиаде, генетика, биохимия, практические тесты, Казахстан" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<link rel="canonical" href="https://limbic-kz.pp.ua/" />
+<meta property="og:site_name" content="Limbic KZ" />
+<meta property="og:title" content="Limbic KZ — олимпиадная биология и практические тесты" />
 <meta property="og:description" content="Сайт для подготовки к практической части олимпиады по биологии. Уровни сложности: Областной, ЕНТ, IBO." />
 <meta property="og:image" content="https://limbic-kz.pp.ua/preview.png" />
 <meta property="og:image:width" content="1200" />
@@ -17,7 +21,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="ru_RU" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Limbic KZ — Олимпиадный задачник" />
+<meta name="twitter:title" content="Limbic KZ — олимпиадная биология и практические тесты" />
 <meta name="twitter:description" content="Сайт для подготовки к практической части олимпиады по биологии." />
 <meta name="twitter:image" content="https://limbic-kz.pp.ua/preview.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -120,7 +124,7 @@
 .answer-input.correct{border-color:var(--green);background:var(--green-dim);}
 .answer-input.wrong{border-color:var(--red);background:var(--red-dim);}
 .check-btn{background:var(--blue);color:#fff;font-size:0.76rem;font-weight:600;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
-.check-btn:hover{background:var(--blue2);}.check-btn:disabled{opacity:0.4;cursor:default;}
+.check-btn:hover{background:var(--blue2);}.retry-btn{min-height:46px;padding:8px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:.76rem;font-weight:600;cursor:pointer;align-items:center;justify-content:center}.retry-btn:hover{border-color:var(--blue2);color:var(--blue2);}.check-btn:disabled{opacity:0.4;cursor:default;}
 .answer-feedback{margin-top:8px;font-size:0.76rem;padding:6px 10px;border-radius:6px;display:none;}
 .answer-feedback.correct{display:block;color:var(--green);background:var(--green-dim);}
 .answer-feedback.wrong{display:block;color:var(--red);background:var(--red-dim);}
@@ -206,7 +210,82 @@
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
 @media(max-width:560px){.vlab-analyzer-grid{grid-template-columns:1fr 1fr;}.vlab-scene{flex-direction:column;}}
 
+
+/* ═══ Limbic 2026 responsive refresh ═══ */
+:root{--nav-h:60px;--sidebar-w:284px;--radius:16px;--surface:#0d111b;--surface2:#141a27;--border:#202a3a;--border2:#30405a;--text:#cbd5e1;--text-dim:#8290a6;--text-bright:#f8fafc;--blue:#2f8cff;--blue2:#69b4ff}
+body{background:radial-gradient(circle at 80% -10%,rgba(47,140,255,.12),transparent 32rem),radial-gradient(circle at 0 55%,rgba(114,67,255,.08),transparent 28rem),#05070b}
+#topnav{padding:0 clamp(14px,3vw,32px);background:rgba(5,7,11,.78);border-bottom:1px solid rgba(255,255,255,.08)}
+.logo{font-size:1rem}.nav-link{font-size:.8rem;padding:8px 12px}.lang-btn{min-height:34px;padding:6px 12px}
+#sidebar{padding-top:18px;background:rgba(8,11,18,.92);backdrop-filter:blur(22px);transition:transform .25s ease;box-shadow:12px 0 40px rgba(0,0,0,.16)}
+.sidebar-section-title{padding:10px 17px}.sidebar-subtopic{min-height:38px;padding:9px 16px 9px 26px;font-size:.8rem}
+.hero{min-height:calc(92vh - var(--nav-h));padding:92px 24px 68px}.hero-inner{max-width:850px}
+.hero-title{font-size:clamp(2.6rem,7vw,5.5rem);background:linear-gradient(120deg,#fff 18%,#b9dcff 54%,#75a7ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub-title{font-size:clamp(1.25rem,3.2vw,2.35rem);max-width:760px;margin:auto}.hero-desc{font-size:1rem;max-width:610px}.hero-cta{gap:12px;flex-wrap:wrap}
+.btn-primary,.btn-ghost{min-height:46px;padding:11px 24px;font-size:.86rem}
+.stats-strip{max-width:1080px;margin:0 auto;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:rgba(13,17,27,.7)}
+.intro-section{max-width:760px}.topics-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));max-width:1120px;margin-left:auto;margin-right:auto;gap:14px}
+.topic-card{padding:22px;border-radius:18px;background:linear-gradient(145deg,rgba(20,26,39,.92),rgba(10,14,23,.92));box-shadow:0 16px 50px rgba(0,0,0,.14)}
+.topic-card:hover{box-shadow:0 18px 55px rgba(47,140,255,.12)}
+.task-page-inner{max-width:940px;padding:46px 28px 100px}.subtopic-title{font-size:clamp(1.65rem,4vw,2.35rem)}.subtopic-desc{font-size:.88rem;max-width:700px}
+.task-card{border-radius:16px;margin-bottom:14px;background:linear-gradient(145deg,rgba(18,23,35,.96),rgba(10,14,22,.96));box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.task-header{padding:18px}.task-condition{font-size:.91rem;line-height:1.78}.answer-zone{padding:18px}.answer-input{min-height:46px;font-size:16px}.check-btn{min-height:46px;padding:10px 20px}
+.task-condition img,.task-condition video,.task-condition iframe{max-width:100%;height:auto}.task-condition iframe{min-height:360px}.task-condition table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.practice-btn{border-color:rgba(105,180,255,.45);color:#b9dcff;background:rgba(47,140,255,.11)}
+.limbic-dialog{position:fixed;inset:0;z-index:600;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:blur(12px)}
+.limbic-dialog.open{display:flex}.limbic-dialog-card{width:min(520px,100%);max-height:90vh;overflow:auto;background:linear-gradient(145deg,#151c2a,#0b0f18);border:1px solid #34445d;border-radius:22px;padding:24px;box-shadow:0 30px 90px rgba(0,0,0,.5)}
+.limbic-dialog-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:20px}.limbic-dialog-title{font-size:1.35rem;color:var(--text-bright);font-weight:750}.limbic-dialog-copy{font-size:.82rem;line-height:1.6;color:var(--text-dim);margin-top:5px}
+.limbic-close{width:38px;height:38px;border-radius:10px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);cursor:pointer;font-size:1.1rem}
+.practice-field{margin:14px 0}.practice-field label{display:block;font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:7px}.practice-select{width:100%;min-height:46px;border:1px solid var(--border2);border-radius:11px;background:#090d15;color:var(--text-bright);padding:10px 12px;font:inherit}
+.practice-info{padding:12px;border-radius:12px;background:rgba(47,140,255,.09);border:1px solid rgba(47,140,255,.2);font-size:.8rem;line-height:1.55;margin:16px 0}.practice-actions{display:flex;gap:10px;justify-content:flex-end}.practice-tag{display:inline-flex;border:1px solid rgba(105,180,255,.3);background:rgba(47,140,255,.1);color:#a9d4ff;border-radius:999px;padding:5px 10px;font-size:.7rem;margin-bottom:12px}
+@media(max-width:900px){.nav-links{display:none}.stats-strip{margin:0 16px}.stat-item{padding:16px 8px}.stat-num{font-size:1.5rem}}
+@media(max-width:768px){#sidebar{top:var(--nav-h);height:calc(100dvh - var(--nav-h));width:min(88vw,320px);min-width:min(88vw,320px);z-index:500;box-shadow:24px 0 70px rgba(0,0,0,.65)}body.sidebar-open:after{content:"";position:fixed;inset:var(--nav-h) 0 0;z-index:490;background:rgba(0,0,0,.56);backdrop-filter:blur(2px)}#sidebar-toggle{display:block;min-width:40px;min-height:38px}.hero{min-height:auto;padding:84px 18px 60px}.hero-desc{font-size:.92rem}.topics-grid,.diff-legend{margin-left:14px;margin-right:14px}.task-page-inner{padding:28px 14px 80px}.task-header{padding:15px;gap:9px}.task-condition{font-size:.95rem;line-height:1.72}.task-condition iframe{min-height:300px}}
+@media(max-width:560px){html{font-size:16px}.logo-dot{display:none}.logo img{width:30px!important;height:30px!important}.hero-title{font-size:2.75rem}.hero-sub-title{font-size:1.25rem}.hero-cta{flex-direction:column}.hero-cta button{width:100%}.stats-strip{display:grid;grid-template-columns:1fr 1fr}.stat-item{border-bottom:1px solid var(--border)}.answer-row{flex-direction:column}.check-btn,.retry-btn{width:100%}.task-header-content{min-width:0}.task-condition{overflow-wrap:anywhere}.practice-actions{flex-direction:column-reverse}.practice-actions button{width:100%}.limbic-dialog-card{padding:19px}.site-footer{padding:24px 16px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+
+/* ═══ Authentication ═══ */
+.account-btn{min-height:36px;padding:6px 13px;border-radius:999px;border:1px solid rgba(105,180,255,.42);background:linear-gradient(135deg,rgba(47,140,255,.22),rgba(114,67,255,.13));color:#d9ecff;font-size:.72rem;font-weight:700;cursor:pointer;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.account-btn:hover{border-color:var(--blue2);transform:translateY(-1px)}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;background:#080c14;border:1px solid var(--border);border-radius:13px;margin-bottom:18px}
+.auth-tab{min-height:38px;border:0;border-radius:9px;background:transparent;color:var(--text-dim);font:inherit;font-size:.8rem;font-weight:650;cursor:pointer}
+.auth-tab.active{background:var(--surface2);color:var(--text-bright);box-shadow:0 4px 15px rgba(0,0,0,.22)}
+.auth-field{margin:13px 0}.auth-field label{display:block;margin-bottom:6px;color:var(--text-dim);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}.auth-input{width:100%;min-height:46px;padding:10px 12px;border:1px solid var(--border2);border-radius:11px;background:#080c14;color:var(--text-bright);font:inherit;font-size:16px;outline:none}.auth-input:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(47,140,255,.12)}
+.auth-message{display:none;padding:10px 12px;margin:12px 0;border-radius:10px;font-size:.78rem;line-height:1.5}.auth-message.error{display:block;background:var(--red-dim);color:#ff8d86;border:1px solid rgba(255,69,58,.2)}.auth-message.success{display:block;background:var(--green-dim);color:#75e895;border:1px solid rgba(48,209,88,.2)}
+.auth-submit{width:100%;margin-top:6px}.auth-links{display:flex;justify-content:center;margin-top:14px}.auth-link{border:0;background:none;color:var(--blue2);font-size:.76rem;cursor:pointer}
+.user-panel{display:none}.user-panel.open{display:block}.user-email{padding:12px;border-radius:12px;background:rgba(47,140,255,.08);border:1px solid rgba(47,140,255,.18);margin:12px 0;font-size:.82rem;color:var(--text-bright);overflow-wrap:anywhere}.user-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.user-stat{padding:14px;border-radius:13px;background:#080c14;border:1px solid var(--border);text-align:center}.user-stat strong{display:block;color:var(--blue2);font-size:1.4rem}.user-stat span{font-size:.68rem;color:var(--text-dim)}
+@media(max-width:560px){.account-btn{max-width:90px;padding:6px 9px}.auth-tabs{grid-template-columns:1fr 1fr}}
+
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"EducationalOrganization",
+  "name":"Limbic KZ",
+  "url":"https://limbic-kz.pp.ua/",
+  "logo":"https://limbic-kz.pp.ua/favicon.png",
+  "image":"https://limbic-kz.pp.ua/preview.png",
+  "description":"Бесплатная платформа подготовки к олимпиадам по биологии: задачи, практические тесты и виртуальные лаборатории.",
+  "areaServed":{"@type":"Country","name":"Kazakhstan"},
+  "knowsLanguage":["ru","en"],
+  "sameAs":[]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "name":"Limbic KZ",
+  "alternateName":["Limbic","Лимбик KZ"],
+  "url":"https://limbic-kz.pp.ua/",
+  "inLanguage":["ru","en"],
+  "potentialAction":{
+    "@type":"SearchAction",
+    "target":"https://www.google.com/search?q=site%3Alimbic-kz.pp.ua+{search_term_string}",
+    "query-input":"required name=search_term_string"
+  }
+}
+</script>
 </head>
 <body>
 <nav id="topnav">
@@ -218,6 +297,8 @@
     <button class="nav-link" data-i18n="navBiochem" onclick="openSubtopic('biochemistry','titration')">Биохимия</button>
   </div>
   <div style="display:flex;align-items:center;gap:8px;">
+    <button class="lang-btn practice-btn" onclick="openPracticeBuilder()">Практика</button>
+    <button id="account-btn" class="account-btn" onclick="openAuthDialog()">Войти</button>
     <button id="lang-btn" class="lang-btn" onclick="toggleLang()">EN</button>
     <button id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
   </div>
@@ -347,6 +428,7 @@
       
       <div class="hero-cta">
         <button class="btn-primary" id="btn-start" onclick="openSubtopic('genetics','hw')">Начать решать →</button>
+        <button class="btn-ghost practice-btn" onclick="openPracticeBuilder()">⚡ Практик-тест</button>
         <button class="btn-ghost" id="btn-about" onclick="document.getElementById('intro-a').scrollIntoView({behavior:'smooth'})">О задачнике</button>
       </div>
     </div>
@@ -880,7 +962,7 @@ const SUBTOPICS = {
             hints:[{label:'Подсказка 1 — F_eff',body:'<div class="formula">F_eff = 0.20&times;(1/16) + 0.80&times;0 = 0.0125</div>'},{label:'Подсказка 2 — P(aa)',body:'<div class="formula">P(aa) = 0.04&sup2; + 0.0125&times;0.96&times;0.04 = 0.0016+0.000480</div>'},{label:'✅ Полное решение',solution:true,body:'<p>F_eff=0.0125. P(aa)=0.00208. В 1.30 раза выше. Даже 20% браков между двоюродными заметно увеличивают бремя рецессивных болезней.</p><div class="answer-box">P(aa) = 0.00208 (в 1.30 раза выше)</div>'}]},
           { num:'№56', diff:'ibo', answer:['0.00208'],
             roundHint:'До пяти знаков.',
-            condition:'q=0.04, p=0.96, F_eff=0.0125. <strong>P(aa)=q²+F_eff×p×q?</strong>',
+            condition:'Частота рецессивного аллеля a равна <strong>q = 0.04</strong>, доминантного A — <strong>p = 0.96</strong>. Эффективный коэффициент инбридинга равен <strong>F = 0.0125</strong>. Рассчитайте частоту гомозигот aa по формуле <strong>P(aa) = q² + Fpq</strong>. Ответ представьте десятичной дробью.',
             hints:[{label:'Подсказка 1',body:'<p>0.0016+0.0125×0.96×0.04=0.0016+0.00048.</p>'},{label:'✅ Решение',solution:true,body:'<p>В 1.30 раза больше панмиктической частоты.</p><div class="answer-box">P(aa) = 0.00208</div>'}]}
 ]
       },
@@ -1372,13 +1454,13 @@ C<sub>белка</sub> = 0,25 мг/мл · ε = 15 000 M⁻¹·см⁻¹ · [S] 
         desc: 'Неравновесие D и D′, скорость рекомбинации.',
         tasks: [
           { num:'№1', diff:'ibo', answer:['0.11'], roundHint:'До сотых.',
-            condition:'Хромосомы: AB=0.60, Ab=0.10, aB=0.10, ab=0.20. <strong>D = f(AB)·f(ab) − f(Ab)·f(aB)?</strong>',
+            condition:'В выборке гаплотипы двух локусов встречаются с частотами <strong>f(AB)=0.60, f(Ab)=0.10, f(aB)=0.10, f(ab)=0.20</strong>. Рассчитайте коэффициент неравновесия по сцеплению по формуле <strong>D = f(AB)·f(ab) − f(Ab)·f(aB)</strong>. Укажите знак D и определите, какие сочетания представлены чаще ожидаемого.',
             hints:[{label:'Подсказка 1',body:'<p>D = 0.60×0.20 − 0.10×0.10.</p>'},{label:'✅ Решение',solution:true,body:'<div class="answer-box">D = +0.11</div>'}]},
           { num:'№2', diff:'ibo', answer:['0.524'], roundHint:'До тысячных.',
             condition:'D=0.11, p(A)=p(B)=0.70. D_max=min(0.21,0.21)=0.21. <strong>D′=D/D_max?</strong>',
             hints:[{label:'✅ Решение',solution:true,body:'<div class="answer-box">D′ = 0.524</div>'}]},
           { num:'№3', diff:'ibo', answer:['11'], roundHint:'Целое (поколений).',
-            condition:'D₀=0.11, r=0.20. D_t=D₀×(1−r)^t. Поколений до |D|<0.01?',
+            condition:'В популяции начальное неравновесие по сцеплению составляет <strong>D₀ = 0.11</strong>, а частота рекомбинации между локусами <strong>r = 0.20</strong>. При случайном скрещивании D изменяется по формуле <strong>Dₜ = D₀(1 − r)ᵗ</strong>. Определите минимальное целое число поколений t, после которого |Dₜ| станет меньше 0.01.',
             hints:[{label:'Подсказка 1',body:'<p>t=ln(0.0909)/ln(0.80)≈10.7→11.</p>'},{label:'✅ Решение',solution:true,body:'<div class="answer-box">11 поколений</div>'}]}
         ]
       },
@@ -1387,10 +1469,10 @@ C<sub>белка</sub> = 0,25 мг/мл · ε = 15 000 M⁻¹·см⁻¹ · [S] 
         desc: 'Число копий, температура отжига, эффективность.',
         tasks: [
           { num:'№1', diff:'ibo', answer:['2310000000'], roundHint:'Введите 2310000000.',
-            condition:'N₀=10, E=0.9, 30 циклов. N=N₀×(1+E)^n. <strong>Копий?</strong>',
+            condition:'В реакции ПЦР исходно находилось <strong>N₀ = 10 копий</strong> целевого фрагмента ДНК. Эффективность амплификации составляет <strong>E = 0.90</strong>, поэтому за каждый цикл число копий умножается на (1 + E). После <strong>30 циклов</strong> вычислите ожидаемое число копий по формуле <strong>N = N₀ × (1 + E)ⁿ</strong>. Ответ запишите в научной форме и укажите порядок величины.',
             hints:[{label:'Подсказка 1',body:'<p>10×1.9³⁰≈2.31×10⁹.</p>'},{label:'✅ Решение',solution:true,body:'<div class="answer-box">2.31×10⁹</div>'}]},
           { num:'№2', diff:'ibo', answer:['44.3'], roundHint:'°C до одного знака.',
-            condition:'T_m₁=62°C, T_m₂=58°C. T_a=0.3×62+0.7×58−14.9. <strong>T_a?</strong>',
+            condition:'Для пары праймеров температуры плавления равны <strong>Tₘ₁ = 62 °C</strong> и <strong>Tₘ₂ = 58 °C</strong>. Рекомендуемую температуру отжига рассчитывают по формуле <strong>Tₐ = 0.3Tₘ₁ + 0.7Tₘ₂ − 14.9</strong>. Рассчитайте Tₐ и округлите результат до десятых градуса Цельсия.',
             hints:[{label:'✅ Решение',solution:true,body:'<div class="answer-box">44.3 °C</div>'}]},
           { num:'№3', diff:'ibo', answer:['4.6'], roundHint:'До одного знака.',
             condition:'Идеал (E=1): 1.073×10¹⁰. При E=0.9: 2.31×10⁹. Во сколько раз больше при идеале?',
@@ -1481,7 +1563,7 @@ C<sub>белка</sub> = 0,25 мг/мл · ε = 15 000 M⁻¹·см⁻¹ · [S] 
             condition:'Аэробно: 30 ATP/глюкоза. Анаэробно: 2 ATP/глюкоза. Во сколько раз больше глюкозы анаэробно?',
             hints:[{label:'✅ Решение',solution:true,body:'<div class="answer-box">В 15 раз</div>'}]},
           { num:'№4', diff:'ibo', answer:['15'], roundHint:'мкмоль ATP/мин.',
-            condition:'В покое: 0.5 мкмоль глюкозы/мин, 100% аэробно, 30 ATP/глюкоза. <strong>ATP/мин?</strong>',
+            condition:'В покое ткань потребляет <strong>0.5 мкмоль глюкозы в минуту</strong>. Считайте, что вся глюкоза окисляется аэробно и выход составляет <strong>30 молекул АТФ на одну молекулу глюкозы</strong>. Рассчитайте скорость образования АТФ в мкмоль АТФ/мин и покажите соотношение единиц.',
             hints:[{label:'✅ Решение',solution:true,body:'<div class="answer-box">15 мкмоль ATP/мин</div>'}]},
           { num:'№5', diff:'ibo', answer:['114'], roundHint:'мкмоль ATP/мин.',
             condition:'При физической нагрузке организм потребляет <strong>15 мкмоль глюкозы/мин</strong>. Из них <strong>80%</strong> сгорает анаэробно (2 АТФ/глюкоза), <strong>20%</strong> — аэробно (30 АТФ/глюкоза). Рассчитайте <strong>суммарную продукцию АТФ</strong> (мкмоль/мин).',
@@ -1491,7 +1573,7 @@ C<sub>белка</sub> = 0,25 мг/мл · ε = 15 000 M⁻¹·см⁻¹ · [S] 
               {label:'✅ Полное решение',solution:true,body:'<p>АТФ аэробно = 3×30 = 90 мкмоль/мин. АТФ анаэробно = 12×2 = 24 мкмоль/мин. Суммарно: 90+24 = 114 мкмоль/мин.</p><div class="answer-box">114 мкмоль АТФ/мин</div>'}
             ]},
           { num:'№6', diff:'ibo', answer:['24'], roundHint:'мкмоль/мин.',
-            condition:'Анаэробная глюкоза = 12 мкмоль/мин. Лактат = 2 моля/моль глюкозы. <strong>Лактата/мин?</strong>',
+            condition:'При интенсивной работе анаэробный гликолиз расходует <strong>12 мкмоль глюкозы в минуту</strong>. Из одной молекулы глюкозы образуются две молекулы лактата. Рассчитайте скорость образования лактата в <strong>мкмоль/мин</strong> и укажите использованное стехиометрическое отношение.',
             hints:[{label:'✅ Решение',solution:true,body:'<div class="answer-box">24 мкмоль/мин</div>'}]}
         ]
       },
@@ -2475,7 +2557,8 @@ function applyEN(task, sectionKey, subKey, idx) {
 }
 
 // ═══════ STATE ═══════
-const solvedTasks = new Set();
+const solvedTasks = new Set((() => { try { return JSON.parse(localStorage.getItem('limbic_solved_tasks') || '[]'); } catch (e) { return []; } })());
+function persistSolvedTasks(){ try { localStorage.setItem('limbic_solved_tasks', JSON.stringify([...solvedTasks])); } catch(e){} scheduleCloudProgressSync(); updateAuthUI(); }
 
 // ═══════ TITRATION LAB — random triplicates per subtopic visit ═══════
 function rollTitrationInstance() {
@@ -2544,6 +2627,39 @@ function lipaseLabIframeSrc() {
   }
 }
 
+
+// Normalize mathematically equivalent answers: 0.7, 0,7, p=0.7, 70%.
+function normalizeAnswerText(value) {
+  return String(value ?? '').toLowerCase()
+    .replace(/[−–—]/g, '-').replace(/,/g, '.')
+    .replace(/\s+/g, '').replace(/[;]+$/g, '');
+}
+function extractAnswerNumbers(value) {
+  const matches = normalizeAnswerText(value).match(/[-+]?\d*\.?\d+(?:e[-+]?\d+)?%?/g) || [];
+  return matches.map(token => {
+    const percent = token.endsWith('%');
+    const number = Number.parseFloat(token.replace('%',''));
+    return { value: percent ? number / 100 : number, percent };
+  }).filter(item => Number.isFinite(item.value));
+}
+function answersEquivalent(userValue, expectedValue) {
+  const user = normalizeAnswerText(userValue);
+  const expected = normalizeAnswerText(expectedValue);
+  if (user === expected) return true;
+  const stripLabel = value => value
+    .replace(/^(?:p|q|r|f|x|y|z|χ2|χ²|chi2|ответ|answer)[=:≈~]?/i, '')
+    .replace(/[()\[\]]/g, '');
+  if (stripLabel(user) === stripLabel(expected)) return true;
+  const userNums = extractAnswerNumbers(user);
+  const expectedNums = extractAnswerNumbers(expected);
+  if (!userNums.length || userNums.length !== expectedNums.length) return false;
+  return userNums.every((item,index) => {
+    const target=expectedNums[index];
+    const tolerance=Math.max(1e-6,Math.abs(target.value)*0.005);
+    return Math.abs(item.value-target.value)<=tolerance;
+  });
+}
+
 // ═══════ ANSWER CHECKING ═══════
 function checkAnswer(taskId, hintsId, inputId, feedbackId) {
   const input = document.getElementById(inputId);
@@ -2571,7 +2687,7 @@ function checkAnswer(taskId, hintsId, inputId, feedbackId) {
   }
   const task = SUBTOPICS[section].subtopics[subKey].tasks[idx];
   const answers = task.answer || [];
-  let isCorrect = answers.some(a => val === a.toString().toLowerCase());
+  let isCorrect = answers.some(a => answersEquivalent(rawVal, a));
   if (taskId === 'biochemistry_titration_0' && window.__limbicTitration) {
     const num = parseFloat(rawVal.replace(',', '.'));
     if (!Number.isNaN(num)) {
@@ -2607,6 +2723,7 @@ function checkAnswer(taskId, hintsId, inputId, feedbackId) {
     feedback.className = 'answer-feedback correct';
     feedback.textContent = t.feedOk;
     solvedTasks.add(taskId);
+    persistSolvedTasks();
     const card = document.getElementById('card_' + taskId);
     if (card) {
       card.classList.add('solved');
@@ -2622,6 +2739,8 @@ function checkAnswer(taskId, hintsId, inputId, feedbackId) {
       lastHint.querySelector('.hint-body').classList.add('open');
     }
     document.getElementById(inputId.replace('inp','btn')).disabled = true;
+    const retryButton = document.getElementById('retry_' + taskId);
+    if (retryButton) retryButton.style.display = 'inline-flex';
   } else {
     input.className = 'answer-input wrong';
     input.classList.add('shake');
@@ -2638,6 +2757,18 @@ function checkAnswer(taskId, hintsId, inputId, feedbackId) {
       }
     }
   }
+}
+
+
+function resetTaskAnswer(taskId, inputId, feedbackId) {
+  const input=document.getElementById(inputId);
+  const feedback=document.getElementById(feedbackId);
+  const checkButton=document.getElementById(inputId.replace('inp','btn'));
+  const retryButton=document.getElementById('retry_'+taskId);
+  if(input){input.value='';input.className='answer-input';input.focus();}
+  if(feedback){feedback.className='answer-feedback';feedback.textContent='';}
+  if(checkButton)checkButton.disabled=false;
+  if(retryButton)retryButton.style.display='none';
 }
 
 // ═══════ RENDER ═══════
@@ -2698,6 +2829,7 @@ function renderTask(task, sectionKey, subKey, idx) {
           <div class="answer-row">
             <input class="answer-input" id="inp_${taskId}" placeholder="${t.placeholder}" onkeydown="if(event.key==='Enter')checkAnswer('${taskId}','hints_${taskId}','inp_${taskId}','fb_${taskId}')">
             <button class="check-btn" id="btn_${taskId}" onclick="checkAnswer('${taskId}','hints_${taskId}','inp_${taskId}','fb_${taskId}')">${t.checkBtn}</button>
+            <button class="retry-btn" id="retry_${taskId}" style="display:none" onclick="resetTaskAnswer('${taskId}','inp_${taskId}','fb_${taskId}')">↻ Ещё раз</button>
           </div>
           <div class="answer-feedback" id="fb_${taskId}"></div>
         </div>
@@ -2761,6 +2893,145 @@ function renderHomeExtras() {
   }
 }
 
+
+
+// ═══════ SUPABASE AUTH & CLOUD PROGRESS ═══════
+const LIMBIC_SUPABASE_URL='https://laorgyybxvjlnjozzave.supabase.co';
+const LIMBIC_SUPABASE_KEY='sb_publishable_5RZd9SmdFv3Vh7erjHz7KQ_3s13NpcH';
+let limbicSupabase=null;
+let limbicUser=null;
+let authMode='login';
+let cloudSyncTimer=null;
+
+function showAuthMessage(text,type){
+ const el=document.getElementById('auth-message');if(!el)return;
+ el.textContent=text||'';el.className='auth-message'+(text?' '+(type||'error'):'');
+}
+function setAuthMode(mode){
+ authMode=mode;
+ document.getElementById('auth-tab-login').classList.toggle('active',mode==='login');
+ document.getElementById('auth-tab-signup').classList.toggle('active',mode==='signup');
+ document.getElementById('auth-name-field').style.display=mode==='signup'?'block':'none';
+ document.getElementById('auth-submit').textContent=mode==='signup'?'Создать аккаунт':'Войти';
+ document.getElementById('auth-password').autocomplete=mode==='signup'?'new-password':'current-password';
+ showAuthMessage('');
+}
+function openAuthDialog(){document.getElementById('auth-dialog').classList.add('open');document.body.style.overflow='hidden';updateAuthUI();}
+function closeAuthDialog(){document.getElementById('auth-dialog').classList.remove('open');document.body.style.overflow='';showAuthMessage('');}
+function friendlyAuthError(message){
+ const m=String(message||'');
+ if(m.includes('Invalid login'))return 'Неверный email или пароль.';
+ if(m.includes('already registered'))return 'Этот email уже зарегистрирован.';
+ if(m.includes('Email not confirmed'))return 'Подтвердите email по ссылке в письме.';
+ if(m.includes('Password'))return 'Пароль должен содержать минимум 6 символов.';
+ return m||'Не удалось выполнить операцию. Попробуйте ещё раз.';
+}
+async function submitAuthForm(event){
+ event.preventDefault();if(!limbicSupabase)return;
+ const email=document.getElementById('auth-email').value.trim();
+ const password=document.getElementById('auth-password').value;
+ const name=document.getElementById('auth-name').value.trim();
+ const button=document.getElementById('auth-submit');button.disabled=true;button.textContent='Подождите…';showAuthMessage('');
+ try{
+  if(authMode==='signup'){
+   const result=await limbicSupabase.auth.signUp({email:email,password:password,options:{data:{display_name:name}}});
+   if(result.error)throw result.error;
+   if(result.data.session){showAuthMessage('Аккаунт создан. Прогресс синхронизирован.','success');}
+   else{showAuthMessage('Проверьте почту и подтвердите регистрацию по ссылке.','success');}
+  }else{
+   const result=await limbicSupabase.auth.signInWithPassword({email:email,password:password});
+   if(result.error)throw result.error;
+   showAuthMessage('Вход выполнен. Загружаем прогресс…','success');
+  }
+ }catch(error){showAuthMessage(friendlyAuthError(error.message),'error');}
+ finally{button.disabled=false;button.textContent=authMode==='signup'?'Создать аккаунт':'Войти';}
+}
+async function sendPasswordReset(){
+ if(!limbicSupabase)return;
+ const email=document.getElementById('auth-email').value.trim();
+ if(!email){showAuthMessage('Сначала введите email.','error');return;}
+ const result=await limbicSupabase.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+window.location.pathname});
+ if(result.error)showAuthMessage(friendlyAuthError(result.error.message),'error');
+ else showAuthMessage('Ссылка для восстановления отправлена на почту.','success');
+}
+async function signOutUser(){if(limbicSupabase)await limbicSupabase.auth.signOut();closeAuthDialog();}
+function updateAuthUI(){
+ const guest=document.getElementById('auth-guest'),panel=document.getElementById('auth-user'),button=document.getElementById('account-btn');
+ if(!guest||!panel||!button)return;
+ if(limbicUser){
+  guest.style.display='none';panel.classList.add('open');
+  const name=(limbicUser.user_metadata&&limbicUser.user_metadata.display_name)||limbicUser.email||'Профиль';
+  button.textContent=name;document.getElementById('auth-user-email').textContent=limbicUser.email||name;
+  document.getElementById('auth-solved-count').textContent=solvedTasks.size;
+ }else{
+  guest.style.display='block';panel.classList.remove('open');button.textContent='Войти';
+ }
+}
+async function loadCloudProgress(){
+ if(!limbicSupabase||!limbicUser)return;
+ const result=await limbicSupabase.from('user_progress').select('solved_tasks').eq('user_id',limbicUser.id).maybeSingle();
+ if(result.error){console.warn('Cloud progress is not ready:',result.error.message);return;}
+ const remote=Array.isArray(result.data&&result.data.solved_tasks)?result.data.solved_tasks:[];
+ remote.forEach(id=>solvedTasks.add(id));
+ try{localStorage.setItem('limbic_solved_tasks',JSON.stringify(Array.from(solvedTasks)));}catch(e){}
+ await saveCloudProgress();
+ updateAuthUI();
+ if(currentSection&&currentSubtopic)openSubtopic(currentSection,currentSubtopic);
+}
+async function saveCloudProgress(){
+ if(!limbicSupabase||!limbicUser)return;
+ const payload={user_id:limbicUser.id,solved_tasks:Array.from(solvedTasks),display_name:(limbicUser.user_metadata&&limbicUser.user_metadata.display_name)||null};
+ const result=await limbicSupabase.from('user_progress').upsert(payload,{onConflict:'user_id'});
+ if(result.error)console.warn('Cloud progress save failed:',result.error.message);
+}
+function scheduleCloudProgressSync(){clearTimeout(cloudSyncTimer);cloudSyncTimer=setTimeout(saveCloudProgress,500);}
+async function initializeAuth(){
+ if(!window.supabase||!window.supabase.createClient){console.warn('Supabase library did not load');return;}
+ limbicSupabase=window.supabase.createClient(LIMBIC_SUPABASE_URL,LIMBIC_SUPABASE_KEY);
+ const sessionResult=await limbicSupabase.auth.getSession();
+ limbicUser=sessionResult.data&&sessionResult.data.session?sessionResult.data.session.user:null;
+ updateAuthUI();if(limbicUser)await loadCloudProgress();
+ limbicSupabase.auth.onAuthStateChange(async(event,session)=>{
+  limbicUser=session?session.user:null;updateAuthUI();
+  if(event==='SIGNED_IN'&&limbicUser)await loadCloudProgress();
+  if(event==='PASSWORD_RECOVERY'){
+   const password=window.prompt('Введите новый пароль (минимум 6 символов):');
+   if(password&&password.length>=6){const changed=await limbicSupabase.auth.updateUser({password:password});window.alert(changed.error?friendlyAuthError(changed.error.message):'Пароль изменён.');}
+  }
+ });
+}
+
+// ═══════ PRACTICE TESTS ═══════
+function practiceSectionLabel(key) {
+ const labels={all:'Все разделы',genetics:'Генетика',stats:'Статистика',biochemistry:'Биохимия',olympiad2026:'Олимпиада 2026',molbio:'Молекулярная биология',physbio:'Физиология и биохимия',ecoevo:'Экология и эволюция',anatomy:'Анатомия и физиология'};
+ return labels[key]||(SUBTOPICS[key]&&SUBTOPICS[key].label)||key;
+}
+function openPracticeBuilder(){
+ const select=document.getElementById('practice-section');
+ const sections=Object.keys(SUBTOPICS).filter(key=>SUBTOPICS[key]&&SUBTOPICS[key].subtopics);
+ select.innerHTML='<option value="all">Все разделы</option>'+sections.map(key=>'<option value="'+key+'">'+practiceSectionLabel(key)+'</option>').join('');
+ document.getElementById('practice-dialog').classList.add('open');document.body.style.overflow='hidden';
+}
+function closePracticeBuilder(){const dialog=document.getElementById('practice-dialog');if(dialog)dialog.classList.remove('open');document.body.style.overflow='';}
+function startPracticeTest(){
+ const choice=document.getElementById('practice-section').value;
+ const requested=Number(document.getElementById('practice-count').value)||10;
+ const pool=[];
+ Object.entries(SUBTOPICS).forEach(([sectionKey,section])=>{
+  if((choice!=='all'&&sectionKey!==choice)||!section||!section.subtopics)return;
+  Object.entries(section.subtopics).forEach(([subKey,sub])=>(sub.tasks||[]).forEach((task,idx)=>pool.push({task,sectionKey,subKey,idx})));
+ });
+ for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+ const chosen=pool.slice(0,Math.min(requested,pool.length));
+ document.getElementById('bc-section').textContent='Практика';document.getElementById('bc-sub').textContent=practiceSectionLabel(choice);
+ document.getElementById('sub-title').textContent='Практик-тест: '+practiceSectionLabel(choice);
+ document.getElementById('sub-desc').innerHTML='<span class="practice-tag">⚡ '+chosen.length+' случайных задач</span><br>Решайте в любом порядке. Успешные ответы сохраняются в прогрессе.';
+ document.getElementById('tasks-container').innerHTML=chosen.map(item=>renderTask(item.task,item.sectionKey,item.subKey,item.idx)).join('');
+ document.getElementById('home-page').style.display='none';document.getElementById('task-page').style.display='block';
+ closePracticeBuilder();window.scrollTo({top:0,behavior:'smooth'});
+}
+document.addEventListener('keydown',event=>{if(event.key==='Escape'){closePracticeBuilder();closeAuthDialog();}});
+
 // ═══════ UI ═══════
 function showHome() {
   document.getElementById('home-page').style.display='block';
@@ -2771,8 +3042,8 @@ function showHome() {
   if(window.innerWidth<=768)closeSidebar();
 }
 
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); }
+function toggleSidebar() { const sidebar=document.getElementById('sidebar'); sidebar.classList.toggle('open'); document.body.classList.toggle('sidebar-open',sidebar.classList.contains('open')); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.body.classList.remove('sidebar-open'); }
 
 function toggleSec(el) {
   el.classList.toggle('open');
@@ -2848,6 +3119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.documentElement.lang = LANG;
   updateStaticText();
   renderHomeExtras();
+  initializeAuth();
   const first = document.querySelector('.sidebar-section-title');
   if(first && !first.classList.contains('open')) {
     first.classList.add('open');
@@ -2889,5 +3161,37 @@ function vlabDrug(type, btn) {
   }
 }
 </script>
+
+<div class="limbic-dialog" id="practice-dialog" role="dialog" aria-modal="true" aria-labelledby="practice-title" onclick="if(event.target===this)closePracticeBuilder()">
+ <div class="limbic-dialog-card">
+  <div class="limbic-dialog-head"><div><div class="limbic-dialog-title" id="practice-title">Практик-тест</div><div class="limbic-dialog-copy">Соберите случайный тест по нужному разделу. Задачи перемешиваются, прогресс сохраняется на устройстве.</div></div><button class="limbic-close" onclick="closePracticeBuilder()" aria-label="Закрыть">×</button></div>
+  <div class="practice-field"><label for="practice-section">Раздел</label><select class="practice-select" id="practice-section"></select></div>
+  <div class="practice-field"><label for="practice-count">Количество задач</label><select class="practice-select" id="practice-count"><option value="5">5 задач · быстро</option><option value="10" selected>10 задач · стандарт</option><option value="20">20 задач · интенсив</option></select></div>
+  <div class="practice-info">Можно вводить <strong>0.7</strong>, <strong>0,7</strong>, <strong>p=0.7</strong> или эквивалентный процент.</div>
+  <div class="practice-actions"><button class="btn-ghost" onclick="closePracticeBuilder()">Отмена</button><button class="btn-primary" onclick="startPracticeTest()">Начать тест →</button></div>
+ </div>
+</div>
+
+<div class="limbic-dialog" id="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-title" onclick="if(event.target===this)closeAuthDialog()">
+ <div class="limbic-dialog-card">
+  <div class="limbic-dialog-head"><div><div class="limbic-dialog-title" id="auth-title">Личный кабинет</div><div class="limbic-dialog-copy">Синхронизируйте прогресс между телефоном и компьютером.</div></div><button class="limbic-close" onclick="closeAuthDialog()" aria-label="Закрыть">×</button></div>
+  <div id="auth-guest">
+   <div class="auth-tabs"><button id="auth-tab-login" class="auth-tab active" onclick="setAuthMode('login')">Вход</button><button id="auth-tab-signup" class="auth-tab" onclick="setAuthMode('signup')">Регистрация</button></div>
+   <form id="auth-form" onsubmit="submitAuthForm(event)">
+    <div class="auth-field" id="auth-name-field" style="display:none"><label for="auth-name">Имя</label><input class="auth-input" id="auth-name" autocomplete="name" maxlength="50" placeholder="Как к вам обращаться"></div>
+    <div class="auth-field"><label for="auth-email">Email</label><input class="auth-input" id="auth-email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+    <div class="auth-field"><label for="auth-password">Пароль</label><input class="auth-input" id="auth-password" type="password" minlength="6" autocomplete="current-password" required placeholder="Минимум 6 символов"></div>
+    <div class="auth-message" id="auth-message"></div>
+    <button class="btn-primary auth-submit" id="auth-submit" type="submit">Войти</button>
+   </form>
+   <div class="auth-links"><button class="auth-link" onclick="sendPasswordReset()">Забыли пароль?</button></div>
+  </div>
+  <div class="user-panel" id="auth-user">
+   <div class="user-email" id="auth-user-email"></div>
+   <div class="user-stats"><div class="user-stat"><strong id="auth-solved-count">0</strong><span>решено задач</span></div><div class="user-stat"><strong>☁</strong><span>облачная синхронизация</span></div></div>
+   <button class="btn-ghost" style="width:100%" onclick="signOutUser()">Выйти из аккаунта</button>
+  </div>
+ </div>
+</div>
 </body>
 </html>

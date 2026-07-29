@@ -837,6 +837,8 @@ function applyAppLanguage(){
  [['.global-search-trigger .search-label','search'],['#topnav .topbar-practice','practice'],['.sidebar-kicker','workspace'],['.sidebar-primary[data-view="home"] b','overview'],['.sidebar-primary:nth-of-type(2) b','bank'],['.sidebar-primary:nth-of-type(3) b','practiceTest'],['.sidebar-primary:nth-of-type(4) b','progress'],['.sidebar-primary[data-view="about"] b','about'],['.sidebar-catalog-title','program'],['.dashboard-welcome .eyebrow','plan'],['#dashboard-greeting','ready'],['.dashboard-welcome p','welcome'],['.continue-card .card-label','continueLearning'],['#continue-button','continue'],['.continue-visual small','next'],['.progress-card .card-label','yourProgress'],['.progress-ring small','solved'],['.progress-ring-wrap p','saved'],['.quick-action:nth-child(1) b','quickPractice'],['.quick-action:nth-child(1) small','quickPracticeSub'],['.quick-action:nth-child(2) b','bank'],['.quick-action:nth-child(2) small','bankSub'],['.quick-action:nth-child(3) b','sync'],['.quick-action:nth-child(3) small','syncSub'],['.dashboard-section .section-heading .eyebrow','sections'],['.dashboard-section .section-heading h2','choose'],['.dashboard-section .section-heading button','allProgram'],['.dashboard-about h2','chaos'],['.about-link-button','aboutAuthors'],['.back-dashboard','back'],['.about-hero-new>.eyebrow','aboutEyebrow'],['.about-hero-new h1','aboutTitle'],['.authors-section-new .eyebrow','team'],['.authors-section-new h2','authors'],['.about-values .eyebrow','approach'],['.about-values h2','learnPractice'],['#practice-title','buildTest'],['#practice-title + .limbic-dialog-copy','mixHelp'],['.practice-field-label>span:first-child','testTopics'],['.practice-field label[for="practice-count"]','taskCount'],['.practice-field label[for="practice-minutes"]','timeMinutes'],['#practice-dialog .practice-actions .btn-ghost','cancel'],['#practice-dialog .practice-actions .btn-primary','startTest'],['#practice-result-dialog .practice-actions .btn-ghost','review'],['#practice-result-dialog .practice-actions .btn-primary','newTest'],['#practice-session-bar>div:first-child span','exam'],['#practice-session-bar>button','finish']].forEach(x=>put(x[0],x[1]));
  const bs=document.querySelectorAll('.practice-field-label button');if(bs[0])bs[0].textContent=ui('selectAll');if(bs[1])bs[1].textContent=ui('clear');
  const input=document.getElementById('global-search-input');if(input)input.placeholder=ui('searchPlaceholder');
+ const searchButton=document.querySelector('.global-search-trigger');if(searchButton)searchButton.setAttribute('aria-label',ui('search'));
+ const languageButton=document.getElementById('lang-btn');if(languageButton)languageButton.setAttribute('aria-label',LANG==='en'?'Change language':LANG==='kk'?'Тілді ауыстыру':'Сменить язык');
  const empty=document.querySelector('#global-search-results .search-empty');if(empty)empty.textContent=ui('searchEmpty');
  if(!limbicUser){const a=document.getElementById('account-btn');if(a)a.textContent=ui('login')}
  renderDashboardCourses();
@@ -3080,7 +3082,7 @@ function toggleLang() {
  const order=['ru','kk','en'];LANG=order[(order.indexOf(LANG)+1)%order.length];
  localStorage.setItem('limbic_lang',LANG);document.documentElement.lang=LANG;
  document.getElementById('lang-btn').textContent=LANG==='ru'?'KZ':LANG==='kk'?'EN':'RU';
- updateStaticText();renderHomeExtras();applyAppLanguage();
+ updateStaticText();renderHomeExtras();applyAppLanguage();updateDashboardStats();
  if(currentSection&&currentSubtopic)openSubtopic(currentSection,currentSubtopic);
 }
 
@@ -3425,7 +3427,10 @@ function getTaskCatalog(){
 }
 function dashboardSectionMeta(key){
  const meta={genetics:['🧬','Наследование, популяции и эволюционные процессы'],stats:['▥','Статистические критерии и анализ данных'],biochemistry:['⚗','Эксперименты, ферменты и обмен веществ'],molbio:['⌁','ДНК, экспрессия генов и биотехнологии'],physbio:['♡','Физиология систем и биохимические расчёты'],ecoevo:['🌿','Экология, популяции и эволюция'],anatomy:['◎','Анатомия и физиология человека'],olympiad2026:['🏆','Задачи республиканской олимпиады'],botany:['✣','Физиология и систематика растений'],vsosh:['★','Архив олимпиадных практических туров']};
- return meta[key]||['•','Олимпиадные задачи и практические навыки'];
+ const item=meta[key]||['•','Олимпиадные задачи и практические навыки'];
+ const en={genetics:'Inheritance, populations, and evolutionary processes',stats:'Statistical tests and data analysis',biochemistry:'Experiments, enzymes, and metabolism',olympiad2026:'Republican olympiad problems',molbio:'DNA, gene expression, and biotechnology',physbio:'Systems physiology and biochemical calculations',ecoevo:'Ecology, populations, and evolution',anatomy:'Human anatomy and physiology',botany:'Plant physiology and systematics',vsosh:'Archived olympiad practical rounds'};
+ const kk={genetics:'Тұқымқуалау, популяциялар және эволюциялық үдерістер',stats:'Статистикалық критерийлер және деректерді талдау',biochemistry:'Тәжірибелер, ферменттер және зат алмасу',olympiad2026:'Республикалық олимпиада есептері',molbio:'ДНҚ, ген экспрессиясы және биотехнология',physbio:'Жүйелер физиологиясы және биохимиялық есептеулер',ecoevo:'Экология, популяциялар және эволюция',anatomy:'Адам анатомиясы мен физиологиясы',botany:'Өсімдіктер физиологиясы және жүйеленуі',vsosh:'Олимпиаданың практикалық турларының мұрағаты'};
+ return [item[0],LANG==='en'?(en[key]||item[1]):LANG==='kk'?(kk[key]||item[1]):item[1]];
 }
 function countSectionSolved(sectionKey){
  let count=0;

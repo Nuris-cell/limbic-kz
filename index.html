@@ -250,6 +250,7 @@ body{background:radial-gradient(circle at 80% -10%,rgba(47,140,255,.12),transpar
     <button class="nav-link" data-i18n="navBiochem" onclick="openSubtopic('biochemistry','titration')">Биохимия</button>
   </div>
   <div style="display:flex;align-items:center;gap:8px;">
+    <button class="lang-btn practice-btn" onclick="openPracticeBuilder()">Практика</button>
     <button id="lang-btn" class="lang-btn" onclick="toggleLang()">EN</button>
     <button id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
   </div>
@@ -379,6 +380,7 @@ body{background:radial-gradient(circle at 80% -10%,rgba(47,140,255,.12),transpar
       
       <div class="hero-cta">
         <button class="btn-primary" id="btn-start" onclick="openSubtopic('genetics','hw')">Начать решать →</button>
+        <button class="btn-ghost practice-btn" onclick="openPracticeBuilder()">⚡ Практик-тест</button>
         <button class="btn-ghost" id="btn-about" onclick="document.getElementById('intro-a').scrollIntoView({behavior:'smooth'})">О задачнике</button>
       </div>
     </div>
@@ -2828,6 +2830,38 @@ function renderHomeExtras() {
   }
 }
 
+
+// ═══════ PRACTICE TESTS ═══════
+function practiceSectionLabel(key) {
+ const labels={all:'Все разделы',genetics:'Генетика',stats:'Статистика',biochemistry:'Биохимия',olympiad2026:'Олимпиада 2026',molbio:'Молекулярная биология',physbio:'Физиология и биохимия',ecoevo:'Экология и эволюция',anatomy:'Анатомия и физиология'};
+ return labels[key]||(SUBTOPICS[key]&&SUBTOPICS[key].label)||key;
+}
+function openPracticeBuilder(){
+ const select=document.getElementById('practice-section');
+ const sections=Object.keys(SUBTOPICS).filter(key=>SUBTOPICS[key]&&SUBTOPICS[key].subtopics);
+ select.innerHTML='<option value="all">Все разделы</option>'+sections.map(key=>'<option value="'+key+'">'+practiceSectionLabel(key)+'</option>').join('');
+ document.getElementById('practice-dialog').classList.add('open');document.body.style.overflow='hidden';
+}
+function closePracticeBuilder(){const dialog=document.getElementById('practice-dialog');if(dialog)dialog.classList.remove('open');document.body.style.overflow='';}
+function startPracticeTest(){
+ const choice=document.getElementById('practice-section').value;
+ const requested=Number(document.getElementById('practice-count').value)||10;
+ const pool=[];
+ Object.entries(SUBTOPICS).forEach(([sectionKey,section])=>{
+  if((choice!=='all'&&sectionKey!==choice)||!section||!section.subtopics)return;
+  Object.entries(section.subtopics).forEach(([subKey,sub])=>(sub.tasks||[]).forEach((task,idx)=>pool.push({task,sectionKey,subKey,idx})));
+ });
+ for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+ const chosen=pool.slice(0,Math.min(requested,pool.length));
+ document.getElementById('bc-section').textContent='Практика';document.getElementById('bc-sub').textContent=practiceSectionLabel(choice);
+ document.getElementById('sub-title').textContent='Практик-тест: '+practiceSectionLabel(choice);
+ document.getElementById('sub-desc').innerHTML='<span class="practice-tag">⚡ '+chosen.length+' случайных задач</span><br>Решайте в любом порядке. Успешные ответы сохраняются в прогрессе.';
+ document.getElementById('tasks-container').innerHTML=chosen.map(item=>renderTask(item.task,item.sectionKey,item.subKey,item.idx)).join('');
+ document.getElementById('home-page').style.display='none';document.getElementById('task-page').style.display='block';
+ closePracticeBuilder();window.scrollTo({top:0,behavior:'smooth'});
+}
+document.addEventListener('keydown',event=>{if(event.key==='Escape')closePracticeBuilder();});
+
 // ═══════ UI ═══════
 function showHome() {
   document.getElementById('home-page').style.display='block';
@@ -2956,5 +2990,15 @@ function vlabDrug(type, btn) {
   }
 }
 </script>
+
+<div class="limbic-dialog" id="practice-dialog" role="dialog" aria-modal="true" aria-labelledby="practice-title" onclick="if(event.target===this)closePracticeBuilder()">
+ <div class="limbic-dialog-card">
+  <div class="limbic-dialog-head"><div><div class="limbic-dialog-title" id="practice-title">Практик-тест</div><div class="limbic-dialog-copy">Соберите случайный тест по нужному разделу. Задачи перемешиваются, прогресс сохраняется на устройстве.</div></div><button class="limbic-close" onclick="closePracticeBuilder()" aria-label="Закрыть">×</button></div>
+  <div class="practice-field"><label for="practice-section">Раздел</label><select class="practice-select" id="practice-section"></select></div>
+  <div class="practice-field"><label for="practice-count">Количество задач</label><select class="practice-select" id="practice-count"><option value="5">5 задач · быстро</option><option value="10" selected>10 задач · стандарт</option><option value="20">20 задач · интенсив</option></select></div>
+  <div class="practice-info">Можно вводить <strong>0.7</strong>, <strong>0,7</strong>, <strong>p=0.7</strong> или эквивалентный процент.</div>
+  <div class="practice-actions"><button class="btn-ghost" onclick="closePracticeBuilder()">Отмена</button><button class="btn-primary" onclick="startPracticeTest()">Начать тест →</button></div>
+ </div>
+</div>
 </body>
 </html>

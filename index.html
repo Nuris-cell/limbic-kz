@@ -238,7 +238,21 @@ body{background:radial-gradient(circle at 80% -10%,rgba(47,140,255,.12),transpar
 @media(max-width:560px){html{font-size:16px}.logo-dot{display:none}.logo img{width:30px!important;height:30px!important}.hero-title{font-size:2.75rem}.hero-sub-title{font-size:1.25rem}.hero-cta{flex-direction:column}.hero-cta button{width:100%}.stats-strip{display:grid;grid-template-columns:1fr 1fr}.stat-item{border-bottom:1px solid var(--border)}.answer-row{flex-direction:column}.check-btn,.retry-btn{width:100%}.task-header-content{min-width:0}.task-condition{overflow-wrap:anywhere}.practice-actions{flex-direction:column-reverse}.practice-actions button{width:100%}.limbic-dialog-card{padding:19px}.site-footer{padding:24px 16px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
+
+/* ═══ Authentication ═══ */
+.account-btn{min-height:36px;padding:6px 13px;border-radius:999px;border:1px solid rgba(105,180,255,.42);background:linear-gradient(135deg,rgba(47,140,255,.22),rgba(114,67,255,.13));color:#d9ecff;font-size:.72rem;font-weight:700;cursor:pointer;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.account-btn:hover{border-color:var(--blue2);transform:translateY(-1px)}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;background:#080c14;border:1px solid var(--border);border-radius:13px;margin-bottom:18px}
+.auth-tab{min-height:38px;border:0;border-radius:9px;background:transparent;color:var(--text-dim);font:inherit;font-size:.8rem;font-weight:650;cursor:pointer}
+.auth-tab.active{background:var(--surface2);color:var(--text-bright);box-shadow:0 4px 15px rgba(0,0,0,.22)}
+.auth-field{margin:13px 0}.auth-field label{display:block;margin-bottom:6px;color:var(--text-dim);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}.auth-input{width:100%;min-height:46px;padding:10px 12px;border:1px solid var(--border2);border-radius:11px;background:#080c14;color:var(--text-bright);font:inherit;font-size:16px;outline:none}.auth-input:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(47,140,255,.12)}
+.auth-message{display:none;padding:10px 12px;margin:12px 0;border-radius:10px;font-size:.78rem;line-height:1.5}.auth-message.error{display:block;background:var(--red-dim);color:#ff8d86;border:1px solid rgba(255,69,58,.2)}.auth-message.success{display:block;background:var(--green-dim);color:#75e895;border:1px solid rgba(48,209,88,.2)}
+.auth-submit{width:100%;margin-top:6px}.auth-links{display:flex;justify-content:center;margin-top:14px}.auth-link{border:0;background:none;color:var(--blue2);font-size:.76rem;cursor:pointer}
+.user-panel{display:none}.user-panel.open{display:block}.user-email{padding:12px;border-radius:12px;background:rgba(47,140,255,.08);border:1px solid rgba(47,140,255,.18);margin:12px 0;font-size:.82rem;color:var(--text-bright);overflow-wrap:anywhere}.user-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.user-stat{padding:14px;border-radius:13px;background:#080c14;border:1px solid var(--border);text-align:center}.user-stat strong{display:block;color:var(--blue2);font-size:1.4rem}.user-stat span{font-size:.68rem;color:var(--text-dim)}
+@media(max-width:560px){.account-btn{max-width:90px;padding:6px 9px}.auth-tabs{grid-template-columns:1fr 1fr}}
+
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <nav id="topnav">
@@ -251,6 +265,7 @@ body{background:radial-gradient(circle at 80% -10%,rgba(47,140,255,.12),transpar
   </div>
   <div style="display:flex;align-items:center;gap:8px;">
     <button class="lang-btn practice-btn" onclick="openPracticeBuilder()">Практика</button>
+    <button id="account-btn" class="account-btn" onclick="openAuthDialog()">Войти</button>
     <button id="lang-btn" class="lang-btn" onclick="toggleLang()">EN</button>
     <button id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
   </div>
@@ -2510,7 +2525,7 @@ function applyEN(task, sectionKey, subKey, idx) {
 
 // ═══════ STATE ═══════
 const solvedTasks = new Set((() => { try { return JSON.parse(localStorage.getItem('limbic_solved_tasks') || '[]'); } catch (e) { return []; } })());
-function persistSolvedTasks(){ try { localStorage.setItem('limbic_solved_tasks', JSON.stringify([...solvedTasks])); } catch(e){} }
+function persistSolvedTasks(){ try { localStorage.setItem('limbic_solved_tasks', JSON.stringify([...solvedTasks])); } catch(e){} scheduleCloudProgressSync(); updateAuthUI(); }
 
 // ═══════ TITRATION LAB — random triplicates per subtopic visit ═══════
 function rollTitrationInstance() {
@@ -2846,6 +2861,113 @@ function renderHomeExtras() {
 }
 
 
+
+// ═══════ SUPABASE AUTH & CLOUD PROGRESS ═══════
+const LIMBIC_SUPABASE_URL='https://laorgyybxvjlnjozzave.supabase.co';
+const LIMBIC_SUPABASE_KEY='sb_publishable_5RZd9SmdFv3Vh7erjHz7KQ_3s13NpcH';
+let limbicSupabase=null;
+let limbicUser=null;
+let authMode='login';
+let cloudSyncTimer=null;
+
+function showAuthMessage(text,type){
+ const el=document.getElementById('auth-message');if(!el)return;
+ el.textContent=text||'';el.className='auth-message'+(text?' '+(type||'error'):'');
+}
+function setAuthMode(mode){
+ authMode=mode;
+ document.getElementById('auth-tab-login').classList.toggle('active',mode==='login');
+ document.getElementById('auth-tab-signup').classList.toggle('active',mode==='signup');
+ document.getElementById('auth-name-field').style.display=mode==='signup'?'block':'none';
+ document.getElementById('auth-submit').textContent=mode==='signup'?'Создать аккаунт':'Войти';
+ document.getElementById('auth-password').autocomplete=mode==='signup'?'new-password':'current-password';
+ showAuthMessage('');
+}
+function openAuthDialog(){document.getElementById('auth-dialog').classList.add('open');document.body.style.overflow='hidden';updateAuthUI();}
+function closeAuthDialog(){document.getElementById('auth-dialog').classList.remove('open');document.body.style.overflow='';showAuthMessage('');}
+function friendlyAuthError(message){
+ const m=String(message||'');
+ if(m.includes('Invalid login'))return 'Неверный email или пароль.';
+ if(m.includes('already registered'))return 'Этот email уже зарегистрирован.';
+ if(m.includes('Email not confirmed'))return 'Подтвердите email по ссылке в письме.';
+ if(m.includes('Password'))return 'Пароль должен содержать минимум 6 символов.';
+ return m||'Не удалось выполнить операцию. Попробуйте ещё раз.';
+}
+async function submitAuthForm(event){
+ event.preventDefault();if(!limbicSupabase)return;
+ const email=document.getElementById('auth-email').value.trim();
+ const password=document.getElementById('auth-password').value;
+ const name=document.getElementById('auth-name').value.trim();
+ const button=document.getElementById('auth-submit');button.disabled=true;button.textContent='Подождите…';showAuthMessage('');
+ try{
+  if(authMode==='signup'){
+   const result=await limbicSupabase.auth.signUp({email:email,password:password,options:{data:{display_name:name}}});
+   if(result.error)throw result.error;
+   if(result.data.session){showAuthMessage('Аккаунт создан. Прогресс синхронизирован.','success');}
+   else{showAuthMessage('Проверьте почту и подтвердите регистрацию по ссылке.','success');}
+  }else{
+   const result=await limbicSupabase.auth.signInWithPassword({email:email,password:password});
+   if(result.error)throw result.error;
+   showAuthMessage('Вход выполнен. Загружаем прогресс…','success');
+  }
+ }catch(error){showAuthMessage(friendlyAuthError(error.message),'error');}
+ finally{button.disabled=false;button.textContent=authMode==='signup'?'Создать аккаунт':'Войти';}
+}
+async function sendPasswordReset(){
+ if(!limbicSupabase)return;
+ const email=document.getElementById('auth-email').value.trim();
+ if(!email){showAuthMessage('Сначала введите email.','error');return;}
+ const result=await limbicSupabase.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+window.location.pathname});
+ if(result.error)showAuthMessage(friendlyAuthError(result.error.message),'error');
+ else showAuthMessage('Ссылка для восстановления отправлена на почту.','success');
+}
+async function signOutUser(){if(limbicSupabase)await limbicSupabase.auth.signOut();closeAuthDialog();}
+function updateAuthUI(){
+ const guest=document.getElementById('auth-guest'),panel=document.getElementById('auth-user'),button=document.getElementById('account-btn');
+ if(!guest||!panel||!button)return;
+ if(limbicUser){
+  guest.style.display='none';panel.classList.add('open');
+  const name=(limbicUser.user_metadata&&limbicUser.user_metadata.display_name)||limbicUser.email||'Профиль';
+  button.textContent=name;document.getElementById('auth-user-email').textContent=limbicUser.email||name;
+  document.getElementById('auth-solved-count').textContent=solvedTasks.size;
+ }else{
+  guest.style.display='block';panel.classList.remove('open');button.textContent='Войти';
+ }
+}
+async function loadCloudProgress(){
+ if(!limbicSupabase||!limbicUser)return;
+ const result=await limbicSupabase.from('user_progress').select('solved_tasks').eq('user_id',limbicUser.id).maybeSingle();
+ if(result.error){console.warn('Cloud progress is not ready:',result.error.message);return;}
+ const remote=Array.isArray(result.data&&result.data.solved_tasks)?result.data.solved_tasks:[];
+ remote.forEach(id=>solvedTasks.add(id));
+ try{localStorage.setItem('limbic_solved_tasks',JSON.stringify(Array.from(solvedTasks)));}catch(e){}
+ await saveCloudProgress();
+ updateAuthUI();
+ if(currentSection&&currentSubtopic)openSubtopic(currentSection,currentSubtopic);
+}
+async function saveCloudProgress(){
+ if(!limbicSupabase||!limbicUser)return;
+ const payload={user_id:limbicUser.id,solved_tasks:Array.from(solvedTasks),display_name:(limbicUser.user_metadata&&limbicUser.user_metadata.display_name)||null};
+ const result=await limbicSupabase.from('user_progress').upsert(payload,{onConflict:'user_id'});
+ if(result.error)console.warn('Cloud progress save failed:',result.error.message);
+}
+function scheduleCloudProgressSync(){clearTimeout(cloudSyncTimer);cloudSyncTimer=setTimeout(saveCloudProgress,500);}
+async function initializeAuth(){
+ if(!window.supabase||!window.supabase.createClient){console.warn('Supabase library did not load');return;}
+ limbicSupabase=window.supabase.createClient(LIMBIC_SUPABASE_URL,LIMBIC_SUPABASE_KEY);
+ const sessionResult=await limbicSupabase.auth.getSession();
+ limbicUser=sessionResult.data&&sessionResult.data.session?sessionResult.data.session.user:null;
+ updateAuthUI();if(limbicUser)await loadCloudProgress();
+ limbicSupabase.auth.onAuthStateChange(async(event,session)=>{
+  limbicUser=session?session.user:null;updateAuthUI();
+  if(event==='SIGNED_IN'&&limbicUser)await loadCloudProgress();
+  if(event==='PASSWORD_RECOVERY'){
+   const password=window.prompt('Введите новый пароль (минимум 6 символов):');
+   if(password&&password.length>=6){const changed=await limbicSupabase.auth.updateUser({password:password});window.alert(changed.error?friendlyAuthError(changed.error.message):'Пароль изменён.');}
+  }
+ });
+}
+
 // ═══════ PRACTICE TESTS ═══════
 function practiceSectionLabel(key) {
  const labels={all:'Все разделы',genetics:'Генетика',stats:'Статистика',biochemistry:'Биохимия',olympiad2026:'Олимпиада 2026',molbio:'Молекулярная биология',physbio:'Физиология и биохимия',ecoevo:'Экология и эволюция',anatomy:'Анатомия и физиология'};
@@ -2875,7 +2997,7 @@ function startPracticeTest(){
  document.getElementById('home-page').style.display='none';document.getElementById('task-page').style.display='block';
  closePracticeBuilder();window.scrollTo({top:0,behavior:'smooth'});
 }
-document.addEventListener('keydown',event=>{if(event.key==='Escape')closePracticeBuilder();});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'){closePracticeBuilder();closeAuthDialog();}});
 
 // ═══════ UI ═══════
 function showHome() {
@@ -2964,6 +3086,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.documentElement.lang = LANG;
   updateStaticText();
   renderHomeExtras();
+  initializeAuth();
   const first = document.querySelector('.sidebar-section-title');
   if(first && !first.classList.contains('open')) {
     first.classList.add('open');
@@ -3013,6 +3136,28 @@ function vlabDrug(type, btn) {
   <div class="practice-field"><label for="practice-count">Количество задач</label><select class="practice-select" id="practice-count"><option value="5">5 задач · быстро</option><option value="10" selected>10 задач · стандарт</option><option value="20">20 задач · интенсив</option></select></div>
   <div class="practice-info">Можно вводить <strong>0.7</strong>, <strong>0,7</strong>, <strong>p=0.7</strong> или эквивалентный процент.</div>
   <div class="practice-actions"><button class="btn-ghost" onclick="closePracticeBuilder()">Отмена</button><button class="btn-primary" onclick="startPracticeTest()">Начать тест →</button></div>
+ </div>
+</div>
+
+<div class="limbic-dialog" id="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-title" onclick="if(event.target===this)closeAuthDialog()">
+ <div class="limbic-dialog-card">
+  <div class="limbic-dialog-head"><div><div class="limbic-dialog-title" id="auth-title">Личный кабинет</div><div class="limbic-dialog-copy">Синхронизируйте прогресс между телефоном и компьютером.</div></div><button class="limbic-close" onclick="closeAuthDialog()" aria-label="Закрыть">×</button></div>
+  <div id="auth-guest">
+   <div class="auth-tabs"><button id="auth-tab-login" class="auth-tab active" onclick="setAuthMode('login')">Вход</button><button id="auth-tab-signup" class="auth-tab" onclick="setAuthMode('signup')">Регистрация</button></div>
+   <form id="auth-form" onsubmit="submitAuthForm(event)">
+    <div class="auth-field" id="auth-name-field" style="display:none"><label for="auth-name">Имя</label><input class="auth-input" id="auth-name" autocomplete="name" maxlength="50" placeholder="Как к вам обращаться"></div>
+    <div class="auth-field"><label for="auth-email">Email</label><input class="auth-input" id="auth-email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+    <div class="auth-field"><label for="auth-password">Пароль</label><input class="auth-input" id="auth-password" type="password" minlength="6" autocomplete="current-password" required placeholder="Минимум 6 символов"></div>
+    <div class="auth-message" id="auth-message"></div>
+    <button class="btn-primary auth-submit" id="auth-submit" type="submit">Войти</button>
+   </form>
+   <div class="auth-links"><button class="auth-link" onclick="sendPasswordReset()">Забыли пароль?</button></div>
+  </div>
+  <div class="user-panel" id="auth-user">
+   <div class="user-email" id="auth-user-email"></div>
+   <div class="user-stats"><div class="user-stat"><strong id="auth-solved-count">0</strong><span>решено задач</span></div><div class="user-stat"><strong>☁</strong><span>облачная синхронизация</span></div></div>
+   <button class="btn-ghost" style="width:100%" onclick="signOutUser()">Выйти из аккаунта</button>
+  </div>
  </div>
 </div>
 </body>
